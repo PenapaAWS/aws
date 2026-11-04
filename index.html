@@ -1,0 +1,2137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#C8202A">
+<title>IKM Activities Work Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: field-log app. Sticky top bar, list of sheets → editor with stacked form sections → paper-replica form view.
+   Rows become labelled cards under 720px so the same sheet works on a phone in the field and on a desk computer. */
+:root{
+  --bg:#F3F4F6; --surface:#FFFFFF; --sunk:#EEF0F3; --ink:#15181C; --muted:#5B636E; --line:#D9DDE3;
+  --accent:#C8202A; --accent-ink:#FFFFFF; --accent-soft:#FBE9EA;
+  --ok:#1D7348; --ok-soft:#E3F2EA; --warn:#94590A; --warn-soft:#FBF0DE;
+  --pad-ink:#1B2A6B; --pad-bg:#FFFFFF; --info:#1D63C9; --info-soft:#E4EEFC; --bad:#B42318; --bad-soft:#FDECEA;
+  --f-ui:"IBM Plex Sans Thai","Leelawadee UI","Tahoma",system-ui,sans-serif;
+  --f-num:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111316; --surface:#1A1D21; --sunk:#22262B; --ink:#E8EAED; --muted:#9AA2AD; --line:#2E333A;
+  --accent:#E8434B; --accent-ink:#FFFFFF; --accent-soft:#3A1D20;
+  --ok:#5BC98F; --ok-soft:#173226; --warn:#E3A84E; --warn-soft:#352915; --info:#6EA8FF; --info-soft:#17263D; --bad:#FF7A6E; --bad-soft:#3A1A17; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111316; --surface:#1A1D21; --sunk:#22262B; --ink:#E8EAED; --muted:#9AA2AD; --line:#2E333A;
+  --accent:#E8434B; --accent-ink:#FFFFFF; --accent-soft:#3A1D20;
+  --ok:#5BC98F; --ok-soft:#173226; --warn:#E3A84E; --warn-soft:#352915; --info:#6EA8FF; --info-soft:#17263D; --bad:#FF7A6E; --bad-soft:#3A1A17; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;margin:0}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+
+/* top bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.bar-in{max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.mark{display:flex;align-items:center;gap:10px;min-width:0}
+.logo{flex:none;width:44px;height:44px;border-radius:7px;background:#FFFFFF;display:grid;place-items:center;border:1px solid var(--line)}
+.logo img{width:34px;height:auto;display:block}
+.who{display:flex;align-items:center;gap:8px;min-width:0}
+.who .nm{font-size:13px;font-weight:600;max-width:16ch;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.role{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:5px;padding:1px 7px;background:var(--sunk);color:var(--muted);flex:none}
+.role.admin{background:var(--accent-soft);color:var(--accent)}
+/* gate + users */
+.gate{max-width:520px;margin:6vh auto 0;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px 24px;text-align:center}
+.gate img{width:72px;margin:0 auto 14px;display:block}
+.gate h1{font-size:20px;margin:0 0 8px}
+.gate p{color:var(--muted);margin:0 0 16px}
+.gate .id{background:var(--sunk);border-radius:8px;padding:10px;margin-bottom:16px;font-size:14px}
+.ulist{display:flex;flex-direction:column}
+.urow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--line)}
+.urow:last-child{border-bottom:0}
+.urow .u{flex:1 1 200px;min-width:0}
+.urow .u b{display:block;font-size:14px;overflow-wrap:anywhere}
+.urow .u small{color:var(--muted);font-size:12.5px;overflow-wrap:anywhere}
+.urow .acts{display:flex;gap:6px;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:none;padding:6px 12px;font-weight:600;font-size:13px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.muted{color:var(--muted)}
+.rule-list{margin:0;padding-left:18px;color:var(--muted);font-size:13.5px}
+@media (max-width:720px){ .who .nm{display:none} }
+.mark-t{min-width:0}
+.mark-t b{display:block;font-size:15px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mark-t small{display:block;color:var(--muted);font-size:11.5px;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spacer{flex:1}
+.lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;flex:none}
+.lang button{border:0;background:none;padding:5px 10px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--muted)}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+
+.wrap{max-width:1200px;margin:0 auto;padding-inline:16px;padding-block:18px 96px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-weight:600;font-size:14px;white-space:nowrap}
+.btn:hover{border-color:var(--muted)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.pri:hover{filter:brightness(1.06)}
+.btn.ghost{border-color:transparent;background:none}
+.btn.danger{color:var(--accent)}
+.btn.sm{min-height:32px;padding:0 10px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.icon-btn{width:36px;height:36px;border-radius:8px;border:1px solid transparent;background:none;cursor:pointer;display:grid;place-items:center;color:var(--muted);flex:none}
+.icon-btn:hover{border-color:var(--line);color:var(--accent)}
+svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* banners */
+.note{border-radius:8px;padding:10px 12px;font-size:13.5px;background:var(--warn-soft);color:var(--warn);margin-bottom:14px}
+
+/* list view */
+.list-head{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px;margin-bottom:16px}
+.list-head h1{font-size:24px;line-height:1.2;margin:0;text-wrap:balance}
+.list-head p{margin:2px 0 0;color:var(--muted);font-size:13.5px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.search{flex:1 1 240px;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:0 12px;min-height:42px;color:var(--muted)}
+.search input{border:0;background:none;outline:none;flex:1;min-width:0;color:var(--ink)}
+.stats{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-bottom:12px}
+.stats b{color:var(--ink);font-family:var(--f-num);font-weight:600;margin-right:4px}
+.sheets{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.sheet{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;cursor:pointer;width:100%}
+.sheet:hover{border-color:var(--muted)}
+.cal{grid-row:span 3;width:52px;border:1px solid var(--line);border-radius:8px;text-align:center;overflow:hidden;align-self:start}
+.cal i{display:block;font-style:normal;background:var(--accent);color:var(--accent-ink);font-size:10.5px;font-weight:700;letter-spacing:.08em;padding:2px 0}
+.cal b{display:block;font-family:var(--f-num);font-size:20px;line-height:1.5}
+.cal small{display:block;font-size:10.5px;color:var(--muted);padding-bottom:3px}
+.sheet .job{font-family:var(--f-num);font-size:12.5px;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sheet .ttl{font-weight:600;font-size:15.5px;line-height:1.3;overflow-wrap:anywhere}
+.sheet .meta{display:flex;gap:10px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--f-ui);font-size:11.5px;font-weight:600;border-radius:999px;padding:1px 8px;letter-spacing:.02em}
+.pill.draft{background:var(--warn-soft);color:var(--warn)}
+.pill.signed{background:var(--ok-soft);color:var(--ok)}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:var(--r);padding:36px 20px;text-align:center;color:var(--muted)}
+.empty h2{color:var(--ink);font-size:18px;margin:0 0 6px}
+.empty p{max-width:46ch;margin:0 auto 16px}
+
+/* editor */
+.ed-top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.ed-top .desk{display:flex;gap:8px;flex-wrap:wrap}
+.ed-top h1{font-size:20px;margin:0;line-height:1.25;min-width:0;overflow-wrap:anywhere}
+.status{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.status.err{color:var(--accent)}
+.older{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:center;margin:16px 0 8px;font-size:13px}
+.req{color:var(--accent);margin-left:3px}
+.field.bad .inp{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.status.unsaved{color:#B58900;font-weight:600}
+.status.unsaved::before{background:#B58900}
+.status::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.status.busy::before{background:var(--warn)}
+.status.err::before{background:var(--accent)}
+.tabs{display:flex;gap:4px;background:var(--sunk);padding:4px;border-radius:9px;margin-bottom:14px;width:max-content;max-width:100%;overflow-x:auto}
+.tabs button{border:0;background:none;padding:7px 14px;border-radius:6px;font-weight:600;font-size:13.5px;cursor:pointer;color:var(--muted);white-space:nowrap}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.jump{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.jump a{font-size:12.5px;font-weight:600;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:3px 10px;background:var(--surface)}
+.jump a:hover{color:var(--accent);border-color:var(--accent)}
+
+.sec{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);margin-bottom:14px;scroll-margin-top:80px}
+.sec-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--line)}
+.sec-h h2{font-size:15px;margin:0;display:flex;align-items:baseline;gap:8px}
+.sec-h h2 small{font-weight:500;color:var(--muted);font-size:12.5px}
+.sec-h .sum{margin-left:auto;font-size:12.5px;color:var(--muted)}
+.sec-h .sum b{font-family:var(--f-num);color:var(--ink)}
+.sec-b{padding:14px 16px}
+
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label,.lbl{font-size:11.5px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase}
+.inp{width:100%;min-width:0;min-height:40px;border:1px solid var(--line);border-radius:7px;background:var(--surface);padding:7px 10px;outline:none}
+.inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+textarea.inp{resize:vertical;min-height:40px;line-height:1.45}
+.inp[readonly]{background:var(--sunk)}
+.info{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+
+/* rows */
+.rows{display:flex;flex-direction:column}
+.r{display:grid;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+.r:last-child{border-bottom:0}
+.r.hd{font-size:11.5px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;padding-top:0}
+.r .no{font-family:var(--f-num);color:var(--muted);font-size:13px;text-align:center}
+.r .cl{display:none}
+.mp{grid-template-columns:34px minmax(0,2fr) minmax(0,1.4fr) 118px 118px 36px}
+.eq{grid-template-columns:34px minmax(0,3fr) 110px 36px}
+.wk{grid-template-columns:34px 170px minmax(0,1fr) 36px}
+.hrs{font-family:var(--f-num);font-size:13.5px;text-align:right}
+.add{margin-top:10px}
+
+/* signatures */
+.sigs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.sig{border:1px solid var(--line);border-radius:9px;padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.sig h3{margin:0;font-size:14px;display:flex;align-items:center;gap:8px}
+.sig h3 .pill{margin-left:auto}
+.pad{position:relative;border:1px dashed var(--line);border-radius:7px;background:var(--pad-bg);height:120px;touch-action:none}
+.pad canvas{width:100%;height:100%;display:block;border-radius:7px;cursor:crosshair}
+.pad .hint{position:absolute;inset:auto 0 8px 0;text-align:center;font-size:12px;color:#8a919b;pointer-events:none}
+.pad .base{position:absolute;left:14px;right:14px;bottom:28px;border-top:1px solid #c9cdd3;pointer-events:none}
+.sig-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.sig .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+/* paper form view (always paper-white: it represents the printed form) */
+.paper-wrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--line);background:#e7e9ec}
+.paper{background:#fff;color:#111;width:1100px;margin:16px auto;padding:22px 26px;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.view-actions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+
+/* overlay + toast */
+.ov{position:fixed;inset:0;background:rgba(10,12,15,.45);display:grid;place-items:center;padding:16px;z-index:50}
+.dlg{background:var(--surface);border-radius:12px;padding:20px;max-width:400px;width:100%;border:1px solid var(--line)}
+.dlg h2{margin:0 0 6px;font-size:17px}
+.dlg p{margin:0 0 16px;color:var(--muted)}
+.dlg .acts{display:flex;justify-content:flex-end;gap:8px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:13.5px;z-index:60;max-width:calc(100% - 32px)}
+
+/* mobile action bar */
+.mbar{display:none}
+.abar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
+.abar-in{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center}
+.abar-in .hint2{flex-basis:100%;text-align:center;font-size:12px;color:var(--muted);margin-bottom:-2px}
+.abar .btn{min-width:140px;min-height:44px}
+.pill.pend{background:var(--info-soft);color:var(--info)}
+.pill.ret{background:var(--warn-soft);color:var(--warn)}
+.pill.appr{background:var(--ok);color:var(--surface)}
+.pill.appr::before{background:var(--surface)}
+.pill.rej{background:var(--bad-soft);color:var(--bad)}
+.btn.info{background:var(--info);border-color:var(--info);color:#fff}
+.btn.okb{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.btn.warnb{background:var(--warn-soft);border-color:var(--warn);color:var(--warn)}
+.btn.rejb{background:var(--surface);border-color:var(--bad);color:var(--bad)}
+.btn.info:hover,.btn.okb:hover{filter:brightness(1.08)}
+.qtabs{display:flex;gap:6px;flex-wrap:wrap;margin:-4px 0 14px}
+.qtabs button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-weight:600;font-size:13.5px;cursor:pointer;color:var(--muted);display:inline-flex;gap:8px;align-items:center}
+.qtabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.qtabs .badge{font-family:var(--f-num);font-size:12px;min-width:22px;padding:1px 7px;border-radius:999px;background:var(--sunk);color:var(--muted)}
+.qtabs .hot .badge{background:var(--info);color:#fff}
+.sheet.needs{border-color:var(--info);box-shadow:inset 3px 0 0 var(--info)}
+.dsel input{border:0;background:none;outline:none;font-family:var(--f-num);padding:8px 0;min-width:0}
+.whosel{flex:0 1 220px}
+.roles-chips{display:inline-flex;gap:4px;flex-wrap:wrap}
+.role.approver{background:var(--info-soft);color:var(--info)}
+.role.viewer{background:var(--ok-soft);color:var(--ok)}
+.role.manager{background:#EDE7FB;color:#5B3CC4}
+.route{list-style:none;margin:0 0 12px;padding:0;display:flex;gap:8px;flex-wrap:wrap}
+.stepc{border:1px solid var(--line);border-radius:8px;padding:6px 12px;display:flex;flex-direction:column;min-width:120px}
+.stepc small{font-size:11px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.stepc b{font-size:14px}
+.stepc.done{border-color:var(--ok);background:var(--ok-soft)}
+.stepc.cur{border-color:var(--info);background:var(--info-soft)}
+.stepc.rej{border-color:var(--bad);background:var(--bad-soft)}
+.ap-box{border:1px solid var(--info);border-radius:9px;padding:12px;margin-bottom:14px;display:flex;flex-direction:column;gap:8px;background:var(--surface)}
+.ap-btns{display:flex;gap:8px;flex-wrap:wrap}
+.ap-btns .btn{flex:1 1 140px;min-height:44px}
+.h3{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:6px 0 8px}
+.hist{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-direction:column;gap:8px}
+.hist li{border-left:3px solid var(--line);padding:2px 0 2px 10px;font-size:13.5px}
+.hist li p{margin:2px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.hist .h-approve{border-color:var(--ok)} .hist .h-reject{border-color:var(--bad)} .hist .h-return{border-color:var(--warn)} .hist .h-submit{border-color:var(--info)}
+.note.ret{background:var(--warn-soft);color:var(--ink)}
+.atts{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:10px;margin-bottom:12px}
+.att{display:grid;grid-template-columns:64px 1fr;grid-template-rows:auto auto;gap:6px 10px;border:1px solid var(--line);border-radius:9px;padding:8px;min-width:0}
+button.att-thumb{border:0;padding:0;cursor:pointer;font:inherit;color:inherit}
+[data-gdthumb]{display:contents}
+.att-thumb{grid-row:span 2;width:64px;height:64px;border-radius:6px;overflow:hidden;background:var(--sunk);display:grid;place-items:center;text-decoration:none}
+.att-thumb img{width:100%;height:100%;object-fit:cover}
+.att-ico{font-family:var(--f-num);font-weight:600;font-size:12px;color:var(--bad)}
+.att-meta{min-width:0}.att-meta b{display:block;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.att-acts{display:flex;gap:6px;flex-wrap:wrap}
+.att-acts .btn{text-decoration:none}
+.checks{display:flex;gap:14px;flex-wrap:wrap}
+.field .chk,.chk{display:inline-flex;gap:6px;align-items:center;font-size:14px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:500;color:var(--ink)}
+.chk input{width:18px;height:18px;accent-color:var(--accent)}
+.loc .sec-h .loc-name{max-width:320px;font-weight:600}
+.loc-acts{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+.dlg{max-height:calc(100vh - 32px);overflow:auto}
+.combo select+input{margin-top:6px}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;align-items:start}
+.mgrid .sec{margin:0}
+.m-add{display:flex;gap:8px;flex-wrap:wrap}
+.m-add .inp{flex:1 1 140px;min-width:0}
+.mlist{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.mlist li{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.mlist li:last-child{border-bottom:0}
+.mlist .inp{flex:1 1 140px;min-width:0;min-height:36px;padding:5px 9px}
+.m-btns{display:flex;gap:6px}
+.msel{font-size:13px}
+.pill.saved{background:var(--ok-soft);color:var(--ok)}
+.pill.locked{background:var(--sunk);color:var(--ink)}
+.whosel{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:0 10px;min-height:42px;flex:0 1 260px}
+.whosel span{font-size:12.5px;color:var(--muted);white-space:nowrap}
+.whosel select{border:0;background:none;outline:none;min-width:0;flex:1;font-weight:600;padding:8px 0}
+.ready{display:flex;flex-direction:column;gap:10px}
+.ready .btn{width:100%;min-height:46px;text-decoration:none}
+.busy-ov{position:fixed;inset:0;background:rgba(10,12,15,.55);display:grid;place-items:center;z-index:70;color:#fff;font-weight:600}
+
+@media (max-width:900px){
+  .info{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sigs{grid-template-columns:1fr}
+}
+@media (max-width:720px){
+  .r.hd{display:none}
+  .r{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 10px;padding:12px;margin-bottom:10px;border:1px solid var(--line);border-radius:9px;background:var(--sunk);position:relative}
+  .r:last-child{border-bottom:1px solid var(--line)}
+  .r .cl{display:block;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:3px}
+  .r > div{min-width:0}
+  .r .no{position:absolute;top:10px;left:12px;text-align:left;font-weight:600}
+  .r .del{position:absolute;top:4px;right:4px}
+  .r .wide{grid-column:1/-1}
+  .r .first{padding-top:22px}
+  .r .inp{background:var(--surface)}
+  .hrs{text-align:left;padding:9px 0}
+  .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);padding:8px 16px calc(8px + env(safe-area-inset-bottom,0px));gap:8px}
+  .mbar .btn{flex:1}
+  .abar{padding-right:64px}
+  .mbar{padding-right:64px}
+  .abar .btn{flex:1;min-width:0;padding:4px 6px;font-size:12.5px;white-space:normal;line-height:1.2;text-align:center;min-height:48px}
+  .who .roles-chips{display:none}
+  .who #users-btn{padding:0 8px;font-size:12.5px}
+  .bar-in{gap:8px}
+  .mark-t b{font-size:14px}
+  .whosel{flex:1 1 100%}
+  .abar-in .hint2{display:none}
+  .mark-t small{display:none}
+}
+@media (max-width:420px){ .info{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+
+.ptabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:-4px 0 14px;overflow-x:auto}
+.ptabs button{border:0;background:none;padding:10px 14px;font-weight:600;font-size:14.5px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.ptabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.trk-tabs{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.ytabs,.mtabs{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.ytabs [role=tab],.mtabs [role=tab]{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 12px;font-weight:600;font-size:13.5px;cursor:pointer;color:var(--muted)}
+.ytabs [role=tab][aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.mtabs [role=tab][aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.trk-adm{display:flex;gap:4px}
+.trk-title{font-size:16px;margin:16px 0 6px}
+.trk-stats .bad b{color:var(--bad)}
+.trk-legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--muted);margin-bottom:8px}
+.lg{display:inline-flex;align-items:center;gap:5px}
+.lg::before{content:"";width:12px;height:12px;border-radius:3px;border:1px solid var(--line)}
+.lg.lg-ok::before{background:var(--ok-soft);border-color:var(--ok)} .lg.lg-draft::before{background:var(--warn-soft);border-color:var(--warn)}
+.lg.lg-miss::before{background:var(--bad-soft);border-color:var(--bad)} .lg.lg-wait::before{background:var(--sunk)} .lg.lg-extra::before{background:var(--info-soft);border-color:var(--info)}
+.lg.lg-tb::before{display:none}
+.trk-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);margin-bottom:12px}
+.trk{border-collapse:separate;border-spacing:0;font-size:12px;min-width:100%}
+.trk th,.trk td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:3px;text-align:center;min-width:64px;height:32px;vertical-align:middle;background:var(--surface)}
+.trk thead th{position:sticky;top:0;z-index:2;font-weight:600;font-family:var(--f-num);background:var(--sunk);line-height:1.1}
+.trk thead th small{display:block;font-family:var(--f-ui);font-weight:500;color:var(--muted);font-size:10.5px}
+.trk .c-job{position:sticky;left:0;z-index:3;min-width:110px;max-width:150px;text-align:left;padding:6px 8px;font-family:var(--f-num);font-size:12.5px;background:var(--surface)}
+.trk .c-tg{position:sticky;left:110px;z-index:3;min-width:58px;font-weight:600;color:var(--muted);background:var(--surface)}
+.trk thead .c-job,.trk thead .c-tg{z-index:4;background:var(--sunk)}
+.trk .we{background:color-mix(in srgb, var(--sunk) 70%, var(--surface))}
+.trk th.td,.trk td.td{box-shadow:inset 0 0 0 2px var(--info)}
+.trk tr.ac td{border-bottom:2px solid var(--line)}
+.jn{display:block;font-weight:600;overflow-wrap:anywhere}
+.rw-acts{display:flex;gap:2px;margin-top:2px}
+.rw-acts .icon-btn{width:26px;height:26px}
+.rw-acts svg{width:14px;height:14px}
+.pcell{border:1px dashed var(--line);background:none;border-radius:5px;width:100%;min-height:24px;font-size:11.5px;cursor:pointer;color:var(--muted);padding:0 2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pcell.has{border-style:solid;color:var(--ink);font-weight:600;background:var(--surface)}
+.pcell:hover{border-color:var(--accent)}
+.pname{font-weight:600}.pname.me{color:var(--accent)}
+.pname{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11.5px;line-height:1.35}
+.pcell{white-space:normal;padding:2px}
+.trk-filt{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:flex-end;margin:4px 0 10px}
+.trk-filt .tf{display:flex;flex-direction:column;gap:3px;font-size:12.5px;font-weight:600;color:var(--muted)}
+.trk-filt .tf>span{display:flex;align-items:center;gap:4px}
+.trk-filt .tf svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2}
+.trk-filt #tf-job,.trk-filt #tf-name{width:240px}
+.trk .c-no{position:sticky;left:0;z-index:3;min-width:44px;width:44px;background:var(--surface);font-family:var(--f-num);color:var(--muted)}
+.trk thead .c-no{z-index:4;background:var(--sunk);color:var(--ink)}
+.trk .c-month{position:sticky;top:0;z-index:2;background:var(--sunk);font-family:var(--f-ui);text-align:left;padding-left:12px;height:28px;font-weight:700}
+.trk-p thead tr.r-days th{top:29px}
+.trk .c-name{position:sticky;left:44px;z-index:3;min-width:180px;max-width:230px;text-align:left;padding:6px 8px;background:var(--surface)}
+.trk thead .c-name{z-index:4;background:var(--sunk);font-family:var(--f-ui)}
+.trk .c-name small{display:block;font-size:11px;font-weight:500}
+.trk-p td{min-width:78px}
+#tf-clr[hidden]{display:none}
+.trk-p .achip{padding:3px 2px}
+@media (max-width:560px){.trk-filt .tf:first-child{flex:1 1 100%}.trk-filt #tf-job,.trk-filt #tf-name{width:100%}.trk .c-name{min-width:120px;max-width:140px}.trk .c-no{min-width:32px;width:32px}.trk .c-name{left:32px}}
+.trk-filt select.inp{width:auto;min-width:92px}
+.trk-filt .tf-n{font-size:12.5px;align-self:center}
+.pchips{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 8px}
+.pchip{display:inline-flex;align-items:center;gap:6px;padding:4px 4px 4px 10px;border-radius:999px;background:var(--accent-soft);font-size:13px;font-weight:600}
+.pchip small{font-weight:600;color:var(--ok);font-size:11.5px}
+.pchip.done{background:var(--ok-soft)}
+.pchip button{border:0;background:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--muted)}
+.pchip button:hover{background:rgba(0,0,0,.08);color:var(--ink)}
+.pchip button svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2}
+.trk .miss{display:block;line-height:1.3}
+.trk td.st-ok{background:var(--ok-soft)} .trk td.st-draft{background:var(--warn-soft)} .trk td.st-miss{background:var(--bad-soft)} .trk td.st-extra{background:var(--info-soft)}
+.miss{color:var(--bad);font-weight:600;font-size:11px}
+.achip{display:flex;flex-direction:column;align-items:center;gap:1px;width:100%;border:0;border-radius:4px;padding:2px;font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:var(--ink);overflow:hidden}
+.achip+.achip{margin-top:3px}
+.achip .an{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.ast{display:inline-block;font-size:9.5px;font-weight:700;line-height:1.3;padding:0 4px;border-radius:3px;white-space:nowrap;background:var(--sunk);color:var(--muted)}
+.ast.s-draft{background:#fff;color:#1D4ED8} .ast.s-saved{background:#fff;color:#B58900}
+.ast.s-submitted,.ast.s-pending{background:#fff;color:#16A34A} .ast.s-returned{background:var(--warn);color:#fff}
+.ast.s-approved{background:var(--ok);color:#fff} .ast.s-rejected{background:var(--bad);color:#fff}
+.achip .ast.s-draft,.achip .ast.s-saved,.achip .ast.s-pending,.achip .ast.s-submitted{border:1px solid currentColor}
+.trk-legend .ast{margin-left:4px;border:1px solid currentColor}
+.achip i{font-style:normal;font-size:9px;margin-left:2px;padding:0 2px;border-radius:3px;background:var(--ink);color:var(--bg)}
+
+.trk-add{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.trk-add .inp{max-width:220px}
+.checks.col{flex-direction:column;gap:8px}
+.vh{position:fixed;left:-9999px;width:1px;height:1px;opacity:0}
+.sec.tbx{border:2px solid var(--ok);background:var(--ok-soft)}
+.sec.tbx .sec-h{border-bottom-color:var(--ok);background:var(--ok);color:#fff;border-radius:8px 8px 0 0}
+.sec.tbx .sec-h h2,.sec.tbx .sec-h .sum,.sec.tbx .sec-h .sum b{color:#fff}
+.sec.tbx .sec-h h2 small{font-weight:600;font-size:13px;color:#fff;opacity:.95}
+.sec.tbx .att{background:var(--surface)}
+.modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.mode-opt{display:flex;gap:10px;align-items:flex-start;border:1.5px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;background:var(--surface)}
+.mode-opt.on{border-color:var(--accent);background:var(--accent-soft)}
+.mode-opt input{width:18px;height:18px;margin-top:2px;accent-color:var(--accent)}
+.mode-opt b{display:block;font-size:15px}.mode-opt small{color:var(--muted);font-size:12.5px}
+.paper-att{margin-top:14px}
+.mwide{grid-column:1/-1}
+@media (max-width:520px){ .modes{grid-template-columns:1fr} }
+.ac{position:relative}
+.ac-list{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:25;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.14);max-height:260px;overflow:auto;padding:4px}
+.ac-it{padding:8px 10px;border-radius:6px;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.ac-it b{font-weight:600;font-size:14px}.ac-it small{color:var(--muted);font-size:12.5px;text-align:right}
+.ac-it:hover,.ac-it.on{background:var(--accent-soft)}
+.btn.bdraft{background:#1D4ED8;border-color:#1D4ED8;color:#fff}
+.btn.breview{background:#F5C518;border-color:#E0B000;color:#2A2100}
+.btn.bsubmit{background:#16A34A;border-color:#16A34A;color:#fff}
+.btn.bdraft:hover,.btn.breview:hover,.btn.bsubmit:hover{filter:brightness(1.07)}
+.btn.bdup{background:#fff;border-color:#1D4ED8;color:#1D4ED8}
+.btn.bdup:hover{background:#EEF3FF}
+/* login + users */
+.auth{max-width:400px;margin:5vh auto 0;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:26px 22px}
+.auth img{width:76px;display:block;margin:0 auto 12px}
+.auth h1{font-size:20px;text-align:center;margin:0 0 4px}
+.auth p{color:var(--muted);text-align:center;margin:0 0 18px;font-size:14px}
+.auth form{display:flex;flex-direction:column;gap:12px}
+.auth .btn{width:100%;min-height:44px}
+.err{color:var(--accent);font-size:13.5px;min-height:1.2em}
+.utable{width:100%;border-collapse:collapse;font-size:14px}
+.utable th{text-align:left;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--line)}
+.utable td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.utable tr:last-child td{border-bottom:0}
+.utable .acts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.tbl-wrap{overflow-x:auto}
+.off{opacity:.55}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;align-items:end}
+.dlg .field{margin-bottom:10px}
+.menu{position:relative}
+.menu-pop{position:absolute;right:0;top:calc(100% + 6px);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px;min-width:200px;z-index:40;box-shadow:0 8px 24px rgba(0,0,0,.12);display:flex;flex-direction:column}
+.menu-pop button{border:0;background:none;text-align:left;padding:9px 10px;border-radius:6px;cursor:pointer;font-size:14px}
+.menu-pop button:hover{background:var(--sunk)}
+.menu-pop .who-line{padding:8px 10px;font-size:12.5px;color:var(--muted);border-bottom:1px solid var(--line);margin-bottom:4px}
+@media (max-width:720px){
+  .utable thead{display:none}
+  .utable tr{display:grid;grid-template-columns:1fr auto;gap:4px 10px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .utable td{border:0;padding:0}
+  .utable td.c-acts{grid-column:1/-1}
+  .utable .acts{justify-content:flex-start}
+}
+</style>
+</head>
+<body>
+
+<header class="bar"><div class="bar-in">
+  <div class="mark"><span class="logo"><img id="logo-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACZCAIAAABGwIRdAAAX6ElEQVR42u1de5BU1Zn/feec28959DxgZkBAEBGjggmsuqghRRJXs7VqYVh2Na5uomykjEDwSR5UUSUqiY+oqBUtBI1J1qigLBGjsD6ASAoBJT4QROWlwzDMs7un7+N8+8ft7ml6emaaRNy+M/cr/qDPPffce8/vfO/vnCFmxuAjBgDW7AAsYBAh9fn+I88+a+7bCyGEoJJ+eXZs28bpE2gwg0capqAAkPz4/QN3LIm8+lrAjpvaCQUCR/WmkpoiYrsrlbIS37lMDULYCCAwmFhAAu1/ea1lyZKK7W8HwyE2wgogCjC6mY9JlxB0IB2MkrIcWw4u8JgdTUK48BEY3PT8C5333BH7eE+kstICIAM2kWROM2dpLj7mAKCCYlCBx0QQIFtrIQRZZuPyx5MPLS1rbxLVMdPhND9mxWqpfoVkgFkEBhPnMQgsCTCEMJv3f3Lvg6FVzw/r6uwKB7UGU1pOCgZApYwfAw4AYFCBByZIIPHp7sOLfhpcty5aHnMiYZfbiInJE7YbZRT3wAZPawih0xYKBACgZfOG9jvvMt7aFK6stJVIMAsmlVFy3Ot8lZT0B8Me4OBpsGB2dR0BYOfQs//d+cgjFR/tMmI1zDAcnXEa+ma70nIViIm1yWCVK1RyWJI8Dx1DC2nCCjEDAZ3qPPDww3r5irpEu1Ne5qRFZQYW5qO/mEpWgjIRgx0twKSOXlyc4wt5nAgSzIBFATQ1Nd1xl37hmUoDHAw5RMQE6g5P8NHsRWkRW4okwCAIAlE35wkMOCKQwUb71q0dixYa//tKpLYCjuoyUyxYaeSCV8pSMk/3OkwEQirhdJnK6uxMdrST45ArPbwOGME19VnDSia4JfHZr5dGD+yUk79iGkGGNC1bCdv26nJkW0sBAW1RdR199vqm1qUPhBKfiWCAhOFV/CjNMimbpSSjy2pFMHzpRbEzT5NGVMkwZ5cmwfNKQdta2ypWpex4W2DLnyvihygSFVBM7DWdxwCICQCDI5Yp43arClXNvqb+kstkbd0ANaQhAAUIEYtKVcvBkOaSjy705rQyASTYUYi3nTg0NHdO1eVXkAxkVqLroFMpe2/FLlV2NAkCMbOChCDSzOB0lMFrcpMBZmLp6A4zZU04s3r+LeXnTQXAzMRwBBFIeG5N9rpUhbtWmUi5689dvWnZU/IkmFwNpgWISUBIy+x0uOvcqcNuvSU8fgIAdhwSmokUZIbP+mA1dgCA5FEub44uLaXwisi8pALDa6KSbEFSAwRbkOFAxzuSoTLzsukjr/+RUT88PdlSUBq2fjUmGGSzTcSCJEGghAUsAZmAX8ZJZ88IDWiwqciwbOXYwpFWvDNRVh6ZM6fhe1epcJmryYud7EzajoAgCxZEQGfrYbZL1/NlYkcwaS1FJiXkFc7TBA0qs9i2HRNsx9sTo0bHblxYe/F3AGkfFXE4BgS1gICAnTr4+99Yzz0TcGCX7HwIQUntmJYz9etpncceYDnXJYAEawihhQ10nDGp/qcLKs/5BgMakDqtEgHuj3MyRmgaOdhtnx94eKl86jfVbXFblHJyiGCZlul0njRCgSEEC8ApVQQ1wGQrLUCCGFoKO9XVZbN94T+NvGFeeNypbuhBuhynqT/bRAOsAWLp9pVAcveuA/feH1y3eghzojqmAUMTgykndl06QRYwUolOigQVAK2JASYSDGJmcrPJpfK2gm1mm4VBIBCQiCchxPf/s+GH/xWobshnJtE3uzGDBLulfUxEAmjduKH5jrsi72wrrwglpBAOS0CTm94ruQXNgGBI0sSksu+nCQxIJgCWKKm3VSDDERSwTBm3jgTLInN+OOT714hAtBuz9D/uxx3MYMsEgATQuvbFI3fdKT/aEaqIsRDa9aQ8Yr8pMDuWhmVLZek0U4JKKfjA7DDb5JgdnDJHfyU2e37V9MtAgjVANpHI0XDUt9ZMo0IQgHY6mx553Hp8RXnzvkB5uZCGwyw5C60nwDNUYkgNusBK6YhGJkJWYvYVuDNl/eMZ9fNuin31LLcMlglEsj9u6447UHcDrLZDhx68Tz/5+3LHpooKaNbMnAmTlnawIpMwJyazpclpbYXNACBL7p0ZDCLSgCZZU62qqxkQzMUJB7ZBAhBwwDIrXxN7dzfdfrt4eW15OERS2QRNpLRnfF1ibZtmx4XfUUasxojVlrRvl2P1M0NQsWKdQQIgbVlkCwpKEgDaN7955M7bI2/9OVheCeHKUfJgiDpdPebaxFya0aDcSIcDEB3DRDOYWDtMpgiEIBhO0+qVySUPRHa/r2rLQRLMnHULPUgKzEykj0KsBBciE4qJVOajzsRCqijAduLQI4+mli4NWnFRX8WaWbuyl10jjT3IfYqJBFiXeoysKIbTWczS/ycJRYB1pKnxgXudJ5+qlmSXl7FmwcxU2su1d3EpMrEh5RoumfyHt+sDRM4XumxqOk5ix9Yjd/8q+KfVoUggocKqM5FJAHmUSNtdtmk6Zkql4nG0tTAzSKYtZM/mLAnEQqc30timpQW3Nu958KHq3dsxqjqlyqQK2gNgPyJr24FdOZT2v/Fa+4P3B1ubWQEkiJR30VMsbXIESZhmq4rICy4cPu38sLRBEjQgKokzoSKtGeU1yk52Bt5/r6q1kRURSfL4pi9JQKKjNRCtufa6hu9dpqrqMXBJSUgYikJlFAx7kefcaKTUZAtI1lZnMll3SvjmubHv/psS0rIspQw3uEJgLiIckx/IAENTYbuG/9aWvKGKb3E/g4TQIIICiMgN2npSiwuQTbC1KW1OstN18pjaBT8vm/pN95OklBmjsi/f3t3xJrO7z4k5bdO4TnwO5CTgxndYZ8pcim/JboogEB3dkrGp3WRG7y1ERNAkwOx4LJPekxyCIEGpzpStu6b987Ab54e+MsENxhCIRFH5EQIkmACHSGRB6r7KBdyWozyN4ltyWPioFvRi7+e3MDPggCTI4ztjNUESqc5EEwfo8hnD5twcqhvGYGiL00YKF+X/MAjE0O6EUgnvk8pdD14Fz/VqFKCT8cPhiLhmdv2sa4OhKFgTCRYGdfvpRcVvLLAAKdjxpkZt5wW+ubAu/LtaCoq8fjukOZFBKhRVOSus5GoUj3rpTKaNMvlGFuwkks1D66tumj/k0n93rRcWnDkWgAWBegmfuCEYwaC0elOCiFNtjStXtb3wQtixIbvFpqNLiAuZNdhxHDbO/bryRO1RJvZIjoChyXEsx0ylLJ0648y6m2+qOH9aupyIkK7VpH4iapw1U1i60QkdbzuwdCn95smK1mapSHL3ktdcWrlp0o5l2Ymaag/VbaYTsOxY2jSdOHdNPb924c+j409HJm1EREWGKt0TBAjSvSe+f/fnv/ql8T9/GupoKxazXKWXMfFkSU0PEWmGaVE4klvuXsIhBZAlSDGHLMeyEp1UYVx7+cg51xnVdQwNFoI0ATrXRuzf2GEBIqD97Y0ti5eU/eUv5eGwFQqkBMCQXKqBQobrsLLWigkapXQ+UyGTUgCkbQnSKau5ckjFNdfWXPV9FS4DAHb3kDBT/8hldwwBQoIAHFm7pv0Xt5d/8qEqqzIpXXllcCkniTjjOgrFrNnWQVs7yi7BhSYAAUoJRGwrmTTbxp1aPWt2zXcvZRjMIEof9NCvUckAQ2czzwToRLzlid+2/Pq+io4WFalxyx/dYojSK+PJVR6UlQkKjtUWithdplZGCcpLARDIImYnED7n7Nof/yh61tfZVYDHug+UNRFpSAEkWw813nsPLVteZ0i7vFyzZ5Ip6eIod8V2tB7SBw7Asku3kkMQpyyHZWjksNDQYQ5gMDPcI+CO5WRMFyES8U8+bVy8SK5dVR4KqXCFyZbQNomAR/BzC5CsjgsvUpHKIaJyiJeCmQwmpozSOqav1qD41j8f+dmiyFtbQzUVkIEUbAHyaCJMZY53YvQSUSgB4elGeQnsgIQmAoRMh2s53yPMxpZd/xosmBnCjQN/vuq5+L13Vx34UNREbCNAzMoxQQFKW5eeiAi6p/4BIAUqEP5zZ+WLSoD8nS3ZE26YBLLb7whcgPM0w8k4DAxAaNsRChAi1fXZ48tTjz4wtKNDR6q1YKU1AIigG2/xSqKWQEzMBE22ykwVZ7SCW6zv1jxyd2Ip25Lu7+Y7spmOni0Mt7KpQIt0eQis0ymP7nsLtUCk35Ayuot1QXuQSIBJZfZoa4IkQ0J2HjrUtnSp/O3jdYAdCWtAacrnWK+AR3AdVNZauV4UZ4+ZzPscKvSB2RwVjt66fQwtqsdV0X9L9wuIXt04gg1oQiCzqTn59tbWe34h168NgnS0Qqe6WKc0FJHhQT1HGia0rWwpTa2sVIfoTA6Ao4+ytVOaHEEwE5YOlx/Z8/5nv7yzYet7RtmQtqjhAFEGdNgWyoslLQSkoC12tKNFVTntW/9Sxy/vMlqaEQiRV3FjkwwBrViDhSnISJpxI6QvuXT4t75ZETYUCYhMuoGz+U0vno/H7B5IyEyVMcUWRw4cqGw9jHA5l6Kx2b8CB7MgIQAbNsPW7V3toXD5rGuHX3WFMaSeB+SheK6rQCTIUDACUIrcE06gPbUWQSDStiSRsp02MylOOLHq+h+WXfEfUoSdbuR4oJT+5YCXjtSyBYInq8cEGETasdkxLVgnTKhb9LPYN74FQIMlPHJgwrEpvix43jOXKTfi7x4dKmwnkbLi513UcMuPK86YYLJDIAMCpNMxMSavOQX9yxzllhYIGdSlXQaRJYeIwEojJUkxS7CIx1OWtmfMPOHHt4UbGgAYlD1JR9CAOKWx4CJW2fObvLHYCAAHNDIbuOB0dLYGjdANc4fNvkEFQ91WzEBUcj10Xo6XVPokGJLZJgG2IjYlOuMtQ0fU3ji/6l8vA4xMqIg8Fzf52w0WDyl0hlvhTUJze2c88dWz6m6aV3nuNA2As4UNg4UUg2VpH0apieAeTUXu8QLswG5LdjkX/cuQW26tGD3WchySEiT42HfPehs8DbJ1+m9HlCALEoi0BSYipUFEcEyzNWBg5neHzb0xVDeKGSodMScQBhUpaRORZqEJpAlOyekLYg4YzJoBOOgy28LlxjVX18+apYIxuNWZNMhA6waPTEp0yUQHmAWnDRguqdNBmbWGlqTbOpKnjC27fk7t9MtsGbWAwCAwKfsCj6Rorx3eVR5G0ChNvcfsaM3KITr9HyrnXx+bMo1ASrvHOBANXuxAiebDXQcPsG0dS8Hq/8eLam0Mq4/UDXcAI13GMohxy2gUL8X9MlWzgx22tNfrsbU2OLzvgQmeTz54Png++eD55IPng+eTD55PPng++eD54Pnkg+eTD55PPng+eD754Pnkg+eD55M3SO3du3fjxo2mafpz4S2qqqrCmjVrAoGAPxeeo9GjR4tQKFRVVeXPheeooqJCMLM/Eb7B4pMPnk8+eD54Pvng+eSD55MPng+eTz54Pvng+eD55IPnkw+eTz54Png++eD59AXTcf+Dv5FIJBQKaX3UudVElEwmu7q6ihyEiAKBAFH+wSNaa8uyuj9GKaVUXh8hBDMX/ywAwWAwf40LYVmWbdt5jYFAIO9xRGSaZt73ehI8pdTcuXNnzpyZTCZzP09KuXTp0scff7zIcWpra+fOnTtixIhcqIQQW7Zseeihh9zpi8Vit956a0NDQ94UR6PRNWvWPPnkk0U+a+LEiTfccENuCzOHQqGdO3c+/PDDhw8fzrZPnz794osvzn0lAIZhrF69+g9/+MOXwXqvvPJKXV3dcRo8EAgsX76cC9GiRYuKP3rq5JNP3rlzZ89BnnnmGZH5M/YLFiwo+KDGxsZp06YV/87z5s0rOE5LS8u5556b7VZWVrZmzZqCPVeuXJl9q+NHEydOPO7PyOODLDmOU/wgzJy3wF3q6Ohw2W7cuHGXX355wRsXL168fv36Yk0AIU4++eSCl2Kx2PDhw7M/J0yYMHHixII9x4wZ8yWA5yWDpbdCKbf9qquuOu2003peXbdu3bJly45Jzo8aNaq3q2eddVa2THL06NHDhg0r2K2iouLLKevytrXpztGkSZOuvPLKnlebm5vnz5/f0dFR/IBE1Ad4U6dOHTJkiGvRTJkypTexX1FRMWnSpEEHXjAYLCsrK75/S0sLEV1xxRUjRozoefXuu+9+5513egrGPh4RjUZdeArShAkTXPtgxIgRfejRaDR65plnDgRXoXiP4rzzzrv00ksrKytfe+21559/vrGxsd+7TNOcMmXKlVdeycx5fPDqq6+uWLEir//kyZOnT58+atSoLVu2vPzyy3/96197CsZoNNqH/TVp0qStW7cOHz583LhxfSzBE088cSBYm4899lhBk2zhwoXZ6Q6FQosXL869+tJLL1VUVGTHGTt27I4dO/JGsG176dKlTz/9NDM7jpN7qampKdcydOmSSy45cOBAts+uXbvOP//8vD5z5syxLIt7p9/97nfhcPjmm2/mPmn58uUDwdoshr797W/Pmzcvt+WCCy6YPXu2Un0JBq31+PHjL774YlcY5l5atmzZ5s2bc1tGjx69cOHCXBNj7Nixt912W3l5eV63vh86adKkkSNH9ut79GbLDECdd84554RCoZ6M0ocEAyClnDx5cl40hJnfeOONJUuW5LkoX/va13r6AGeffXbePo0xY8b0Gy6IxWKnnnpq393q6+sbGhoGr7XZb4RJCJErWl3q6upasWJFc3NzMZ6GYRh5mrK+vj6vTzweP3jwYPZnKBSaNWtWbjfbtvfv3593V11d3RlnnDEowNu4cWNPg/7FF1/s7Ow81qFCodDUqVMjkUhe+/bt23fu3JnXuGHDhra2tuzPE044IRaL5fVpamrKtWtCodDMmTNzN8V1dHSsX78+b3FUVVV9CTZLSYD3xz/+8a677srFb9WqVY8++mjfURhm7rknlIhmzJhx9dVX57Xv2bNn0aJFn376abblgw8+WLBgQWtra64JUF1d3RO8V199NXf8PGH+3nvv7dixI4+DDcMYOnToYHEV7rzzzvfee8/1fHfv3v3UU0/161zbtr1ly5bJkyfnbQ4NhULz589fv379Bx98kNv+wgsvHD58eNq0aUOGDDly5MiqVavefvvt3A5jx46trKzMe8rhw4dff/11y7IMwyj4Gs8++2xBr+b42fAlB57jOCtXrly5cmXxt0gpt2/f/uGHH+bxmeM4Y8aMWbhw4XXXXZfLWAA2bdq0adOm3gZsaGjoaWo2Nzc3NjZ++OGHBcNvqVRq9erVBQ2rkSNHRqPReDzuh8cKGyytra33339/rkGRdRtmzJhRMFTdBxXklZaWln379r300ksFb9m+ffv+/ftzE15ZOumkk4632vN2bDMSiWzbti0v9OyqHynlT37yk/Hjxxc5VG9a6tChQ6lUav369QWt31WrVnV1dQkhEolEz6WQm4Xwwcsn1zh84okntm3bVtBTvueee3pangXplFNOKcgoLlvv2bPno48+6ikzN2zY4ArqXKvVpcrKyp7mjw9evnm5a9eu3kzTCy644Ac/+EEx44waNaog5+3evRvAJ5988vrrr+dd2rJly8cff+w6l7kZ9iwrH2+bRXwJk3tM7cc0Trbxueeee+ONNwoaNbfddtuUKVP6HX/EiBG1tbW9cV4ymcyLtwFYu3ate9W27YJqr4/skjfA6y2nfKy55oLgRSIRt72xsfGxxx4raNo1NDQsXry4YM4oL+5V0AbOvueOHTv27t2bG8p55513XN/csqz29vaet59++ul9JJhK3VWwLGvz5s01NTVtbW25sx+NRt99993i081HjhxZvnx5Q0NDrlceDAa3bduWHeTpp5+urq4eNWpUXlRTKUVE1dXV+/bt6+MRO3bsuO+++1KpVO7yamtra2pqcn++9dZbd9xxx/jx45PJZCgUOnjw4Jtvvuleam9vX7Zs2bvvvptMJt3PZOZgMHjw4MHjm1I/rikhdwqUUuJocluOk0Au+A79Po6IihnQ7dO3DP+bVcMx0cSJE4+7k6617mlkfyFljcUv6mIeV+RobreCnXs2Hu9KFr9i2sPkg+eD55MPnk8+eD54Pvng+eSD55MPng+eTz54Pvng+eD55IPnkw+eTz54gwI8/4+aeJGYWZimWbDyyacSp1QqRbt27Vq3bl0qlfpyjg7x6QshrXVNTc3/Afewyt6hqSZcAAAAAElFTkSuQmCC" alt="IKM"></span>
+    <div class="mark-t"><b data-t="appTitle">Activities Work Sheet</b><small>IKM Testing (Thailand) · TH-OPS-FRM-071 Rev 1</small></div></div>
+  <div class="spacer"></div>
+  <div id="who" class="who"></div>
+  <div class="lang" role="group" aria-label="Language">
+    <button id="lang-en" type="button" aria-pressed="true">EN</button>
+    <button id="lang-th" type="button" aria-pressed="false">ไทย</button>
+  </div>
+</div></header>
+
+<main class="wrap" id="app"></main>
+<div id="mbar-slot"></div>
+<div id="ov-slot"></div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
+<script>
+/* ===== Connection settings (Supabase project: QHSE Management's Project) ===== */
+const SUPABASE_URL = "https://gmittgdhjacfovgftrel.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtaXR0Z2RoamFjZm92Z2Z0cmVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxMzA3NjksImV4cCI6MjEwODcwNjc2OX0.xW24I93akepAlVqIL0nwibEEhRKgdNvWarZrzFtSJy4";
+const EMAIL_DOMAIN = "users.ikm-aws.internal";   // must match the aws-admin function
+/* ============================================================================ */
+(() => {
+"use strict";
+/* ---------- i18n ---------- */
+const T = {
+ en:{appTitle:"Activities Work Sheet",sheets:"Work sheets",sheetsSub:"Daily record of manpower, equipment and work done on site.",
+  newSheet:"New work sheet",search:"Search job no., client, project, name…",total:"sheets",draftN:"draft",signedN:"saved",thisMonth:"this month",
+  emptyT:"No work sheets yet",emptyP:"Create the first sheet for today's job. It saves as you type and opens on both phone and computer.",
+  noMatch:"No sheets match your search.",loading:"Loading…",
+  back:"Back",edit:"Edit",form:"Form view",duplicate:"Duplicate",del:"Delete",refresh:"Refresh",
+  info:"Job details",date:"Date",client:"Client name",jobNo:"Job No.",project:"Project name",
+  manpower:"Manpower",no:"No",employee:"Employee",position:"Position",start:"Start",finish:"Finish",hrs:"Hours",
+  people:"people",equipment:"Equipment",type:"Type",qty:"Q'ty",items:"items",
+  work:"Work description",time:"Time",activity:"Activity",entries:"entries",
+  addPerson:"Add person",addEquip:"Add equipment",addWork:"Add activity",removeRow:"Remove row",
+  signatures:"Signatures",ikmRep:"IKM Representative",clientRep:"Client Representative",
+  signature:"Signature",signHere:"Sign here with finger or mouse",clear:"Clear",printName:"Print name",
+  draft:"Draft",savedSt:"Saved",locked:"Signed · locked",signedOne:"Signed",unsigned:"Not signed",
+  btnDraft:"Save as draft",btnSaved:"Submit Draft",draftDone:"Saved as draft",savedDone:"Saved as Submit Draft",
+  lockT:"Save and lock this work sheet?",lockP:"The client has signed. After saving you can no longer edit this sheet — only an admin can.",lockOk:"Save and lock",
+  lockedNote:"Saved with client signature — locked. Only an admin can edit.",reopenNote:"Editing changes this sheet back to Draft. Press Saved again when done.",
+  showFor:"Show",everyone:"Everyone",hintBtns:"Nothing is saved until you press a button.",empN:"users",empActiveN:"with work sheets",sheetsN:"work sheets",empName:"Name",noEmp:"No users yet. An admin adds them in Settings → Users.",noEmpAdm:"No employees yet. Add them in Settings → Employees.",noEmpMatch:"No one matches this name",needInfo:"Please fill in",noTbT:"No Toolbox talk attached",noTbP:"This work sheet has no Toolbox talk photo or file. Do you want to send it anyway?",sendAnyway:"Send anyway",olderNote:"Showing work sheets of the last 30 days and any still open.",olderBtn:"Load older work sheets",purgeNote:"Approved sheets are removed automatically 30 days after the final approval. This sheet will be removed on {d} — download the PDF and files before then if you need to keep them.",attNeedSaveT:"Save as draft to attach files",attNeedSaveP:"A new work sheet must be saved as a draft before photos or files can be attached.",attSaveGo:"Save draft & attach",restoredAfterCam:"The page reloaded while the camera was open. Your typing was restored — please attach the photo again.",btnKeep:"Save changes",keptDone:"Changes saved",unsaved:"Not saved yet",leaveT:"Save changes?",leaveP:"You have changes on this work sheet that are not saved yet. Do you want to save them before leaving?",leaveYes:"Save",leaveNo:"Don't save",saveFirst:"Press Save as draft first, then attach files.",
+  readyT:"File ready",readyP:"Choose how to save it on this phone.",share:"Share / Save to Files",openFile:"Download / Open",lineTip:"If nothing happens inside LINE or Facebook, open this page in Safari or Chrome.",
+  act_submit:"Submitted",act_approve:"Approved",act_reject:"Rejected",act_return:"Returned for revision",act_reopen:"Reopened by admin",
+  addFile:"Add file",addLoc:"Add location",allSheets:"All work sheets",apprBarHint:"This work sheet is waiting for your approval.",
+  apprCanEdit:"Waiting for your approval. You can correct the sheet before you approve.",approval:"Approval",approve:"Approve",approvedN:"approved",
+  badType:"Only images or PDF files",btnSubmit:"Submit Completed AWS",clearF:"Clear filters",comment:"Comment",commentPh:"Required for Return or Reject",
+  dateFrom:"From",dateTo:"To",delFileT:"Delete this file?",delLocT:"Delete this location?",delLocP:"Users in this location will have no location until you set a new one.",
+  done_approve:"Approved",done_reject:"Rejected",done_return:"Returned to the owner for revision",files:"files",goApprove:"Go to approval",history:"History",
+  locDup:"A location with this name already exists.",locDupApprover:"Each approver can appear only once.",locHint:"Used when the work sheet's Job No., Project and Client have no location set. With several, the first one is used.",
+  locName:"Location name",locPh:"e.g. Rayong Site",locSaved:"Location saved",locSub:"Set up to 3 approvers per location. Sheets are approved in this order.",
+  location:"Location",locations:"Locations & approvers",membersN:"users",needComment:"Please add a comment.",needRole:"Choose at least one role.",
+  noApprovers:"No users have the Approver role yet. Give someone the Approver role on the Users tab first.",noFiles:"No Toolbox files yet.",
+  noLocation2:"No location set",noLocs:"No locations yet.",noRoute:"No approver is set for this user's location.",none:"— None —",
+  pendingN:"waiting approval",queueBtn:"Waiting for my approval",queueEmpty:"Nothing is waiting for your approval.",queueP:"Work sheets that need your decision.",queueT:"Waiting for my approval",
+  rApprover:"Approver: sees sheets routed to them, can correct them, then Approve, Return for revision or Reject with a comment.",
+  reject:"Reject",rejectT:"Reject this work sheet?",rejectP:"Rejected sheets can't be edited or resubmitted. Only an admin can reopen them.",
+  reopen:"Reopen for editing",reopenT:"Reopen this work sheet?",reopenP:"It goes back to Draft so the owner can edit and submit it again.",reopenedDone:"Reopened as draft",
+  returnFix:"Return for revision",returnedBy:"Returned by",returnedN:"returned",roApproved:"Approved — locked. Only an admin can change it.",
+  roRejected:"Rejected — locked. Only an admin can reopen it.",roSubmitted:"Submitted — waiting for approval. You can't edit it now.",
+  roleApprover:"Approver",roleViewer:"Viewer",roleManager:"Manager",rManager:"Manager: sees and searches every work sheet and can edit sheets that are Draft, Submit Draft or returned for revision — not after Submit Completed AWS. Cannot approve, delete or change settings.",rViewer:"Viewer: sees every user's work sheets, downloads PDF / Excel and Toolbox files, and sees Submission tracking. Cannot create, edit or approve.",roles:"Roles",
+  st_draft:"Draft",st_saved:"Submit Draft",st_submitted:"Submitted · no approver set",st_pending:"Waiting for",st_returned:"Returned for revision",st_approved:"Approved",st_rejected:"Rejected",
+  statusAll:"All statuses",stepN:"Step {n}",submitT:"Submit Completed AWS?",submitP:"After submitting you can't edit it. Approval route:",
+  submitNoRoute:"After submitting you can't edit it. No approver is set for your location yet — an admin will review it.",submittedDone:"Submitted for approval",
+  tooBig:"File is larger than 10 MB",toolbox:"Toolbox documents",toolboxHint:"Attach Toolbox talk photos or PDF files. They are kept with this sheet but are not part of the PDF form.",
+  uploaded:"{n} file(s) added",uploading:"Uploading…",view:"View",
+  locationsMulti:"Locations (choose one or more)",settings:"Settings",masters:"Job data",mastersSub:"Lists people pick from on a work sheet (they can still choose Other and type), including employees and their positions. The location decides who approves: Job No. first, then Project, then Client. With none set, the user's first location is used.",noLocOpt:"— No location —",
+  addNew:"New",add:"Add",noItems:"Nothing added yet.",mSaved:"Saved",mDup:"This name is already in the list.",mDelT:"Delete this item?",mDelP:"Work sheets that already use it keep their text.",
+  pickOne:"— Choose —",otherType:"Other (type it)",typeHere:"Type here",typeToFind:"Type a name to search",any:"All",pickLoc:"Choose the location for this work sheet",
+  rUser:"User: create work sheets, see only their own, edit them until submitted, delete their own drafts.",
+  rAdmin:"Admin: manage users and locations, see and edit every work sheet at any status, reopen sheets.",
+  trackT:"Submission tracking",trackP:"Each employee's Activity Work Sheet status for every day of the month.",
+  trackHead:"AWS & Toolbox talk",addYear:"Add year",editYear:"Edit year",delYear:"Delete year",addMonth:"Add month",editMonth:"Edit month",delMonth:"Delete month",
+  trackEmpty:"No tracking months yet. An admin will set them up.",trackEmptyAdm:"No tracking months yet. Add a year to start.",
+  jobsN:"jobs",plannedN:"planned",doneN:"filed on plan (to date)",missingN:"missing",onPlan:"on plan",target:"Target",plan:"Plan",actual:"Actual",notSent:"Missing",
+  lg_ok:"Filed by planned person",lg_draft:"Started, not submitted",lg_miss:"Planned, not filed",lg_wait:"Planned, upcoming",lg_extra:"Filed without plan",
+  noJobsYet:"No jobs in this month yet.",addJobRow:"Add job",jobInTable:"This job is already in the table.",delJobRowT:"Remove this job from the month?",editJobRow:"Edit job",
+  yearCE:"Year (e.g. 2026)",firstMonth:"First month",month:"Month",copyJobs:"Copy the job list from the month shown now",periodDup:"That month already exists.",yearExists:"That year already exists.",
+  delYearT:"Delete year {y}?",delYearP:"All months and plans in this year are removed. Work sheets are not affected.",delMonthT:"Delete this month?",delMonthP:"Its plan is removed. Work sheets are not affected.",
+  whoSubmits:"Who must file the work sheet",fJob:"Search job no.",fDays:"Dates",toDay:"to",allDays:"All",noJobMatch:"No job matches the filter",addPerson:"Type a name to add",filedAlready:"filed",noPeople:"Nobody planned yet",showing:"Showing",nobody:"— Nobody —",applyTo:"Apply to",thisDay:"This day only",weekdaysRest:"This day to month end, Mon–Fri",allRest:"This day to month end, every day",
+  noSheetAccess:"You don't have access to that work sheet.",
+  sheetMode:"Sheet type",modeManual:"Fill in the form here",modePaper:"Attach the paper Activity Work Sheet",paperAws:"Paper Activity Work Sheet",
+  paperHint:"Attach a scan or photo of the paper form (image or PDF). Manpower, Equipment and Work description are not needed. The IKM signature is still required; Toolbox talk photos and the client signature are optional.",
+  addPaper:"Add paper AWS",addToolbox:"Add Toolbox photo / file",replaceFile:"Replace",replaced:"File replaced",download:"Download",
+  toolboxFB:"(send photos of the front and back of the Toolbox talk)",needPaper:"Attach the AWS Draft Report or Completed Report first.",needToolbox:"Attach the Toolbox talk photos (front and back) first.",
+  needSigs:"The IKM signature is required.",paperFormNote:"This is a Paper work sheet. The filled form is in the attached paper AWS files on the Edit tab.",
+  employees:"Employees",employeesHint:"Picking an employee on a work sheet fills in their position. The position can still be changed on the sheet.",
+  ts_draft:"Draft",ts_saved:"Submit Draft",ts_submitted:"Submit Completed",ts_pending:"Submit Completed",ts_returned:"Revise",ts_approved:"Approved",ts_rejected:"Rejected",statusInCell:"Status",
+    noFilesAny:"No files yet.",awsComplete:"Completed AWS",awsCompleteHint:"Attach the completed Activity Work Sheet (image or PDF). Kept with this sheet, not shown on the form.",addComplete:"Add completed AWS",awsDraftRpt:"AWS Draft Report",awsDoneRpt:"AWS Completed Report",addDraftRpt:"Add Draft Report",addDoneRpt:"Add Completed Report",
+    saved:"Saved",saving:"Saving…",notSaved:"Not saved",untitled:"Untitled sheet",
+  dlXlsx:"Download Excel",dlPdf:"Download PDF",makingPdf:"Creating PDF…",dlFail:"Couldn't create the file. Check the internet connection and try again.",
+  formHint:"This is the TH-OPS-FRM-071 layout. Download it as a PDF (A4 landscape) to print, email or file.",
+  delT:"Delete this work sheet?",delP:"It is removed for everyone. This cannot be undone.",cancel:"Cancel",
+  deleted:"Work sheet deleted",duplicated:"Copy created — dates and signatures reset",
+  phTime:"08:00–10:00",phAct:"Describe the work done",phEmp:"Full name",phPos:"e.g. Technician",phType:"e.g. UT flaw detector",
+  by:"By",roOther:"Read-only — this sheet belongs to another user.",
+  loginT:"Sign in",loginP:"Activities Work Sheet · IKM Testing (Thailand)",username:"Username",password:"Password",signIn:"Sign in",signingIn:"Signing in…",
+  badLogin:"Incorrect username or password.",noAccess:"This account is inactive or has no access to the Work Sheet system. Contact your admin.",
+  netErr:"Can't reach the server. Check the internet connection.",
+  setupT:"Create the first admin",setupP:"No users exist yet. The account you create now becomes the system admin.",
+  fullName:"Full name",confirmPw:"Confirm password",pwMismatch:"Passwords don't match.",pwShort:"Password must be at least 6 characters.",
+  unameRule:"3–32 letters, numbers, dot, dash or underscore. No spaces.",createAdmin:"Create admin account",
+  logout:"Log out",changePw:"Change password",newPw:"New password",savePw:"Save password",pwChanged:"Password changed",
+  users:"Users",usersSub:"Admins create accounts, set roles and reset passwords.",addUser:"Add user",role:"Role",status:"Status",
+  roleAdmin:"Admin",roleUser:"User",active:"Active",inactive:"Inactive",deactivate:"Deactivate",activate:"Activate",
+  resetPw:"Reset password",editUser:"Edit user",save:"Save",create:"Create user",userCreated:"User created",userSaved:"User updated",
+  delUserT:"Delete this user?",delUserP:"The account is removed for good. Users who have work sheets can only be deactivated.",
+  userDeleted:"User deleted",you:"you",
+  rulesT:"What each role can do"},
+ th:{appTitle:"ใบบันทึกกิจกรรมการทำงาน",sheets:"ใบบันทึกงาน",sheetsSub:"บันทึกกำลังคน อุปกรณ์ และงานที่ทำในแต่ละวัน",
+  newSheet:"สร้างใบงานใหม่",search:"ค้นหาเลขที่งาน ลูกค้า โครงการ ชื่อ…",total:"ใบ",draftN:"ฉบับร่าง",signedN:"บันทึกแล้ว",thisMonth:"เดือนนี้",
+  emptyT:"ยังไม่มีใบบันทึกงาน",emptyP:"สร้างใบแรกสำหรับงานวันนี้ ระบบบันทึกอัตโนมัติขณะพิมพ์ และเปิดได้ทั้งมือถือและคอมพิวเตอร์",
+  noMatch:"ไม่พบใบงานที่ตรงกับคำค้นหา",loading:"กำลังโหลด…",
+  back:"กลับ",edit:"แก้ไข",form:"ดูแบบฟอร์ม",duplicate:"ทำสำเนา",del:"ลบ",refresh:"รีเฟรช",
+  info:"ข้อมูลงาน",date:"วันที่",client:"ชื่อลูกค้า",jobNo:"เลขที่งาน",project:"ชื่อโครงการ",
+  manpower:"กำลังคน",no:"ลำดับ",employee:"พนักงาน",position:"ตำแหน่ง",start:"เริ่ม",finish:"เสร็จ",hrs:"ชม.",
+  people:"คน",equipment:"อุปกรณ์",type:"ประเภท",qty:"จำนวน",items:"รายการ",
+  work:"รายละเอียดงาน",time:"เวลา",activity:"กิจกรรม",entries:"รายการ",
+  addPerson:"เพิ่มพนักงาน",addEquip:"เพิ่มอุปกรณ์",addWork:"เพิ่มกิจกรรม",removeRow:"ลบแถว",
+  signatures:"ลายมือชื่อ",ikmRep:"ตัวแทน IKM",clientRep:"ตัวแทนลูกค้า",
+  signature:"ลายเซ็น",signHere:"เซ็นชื่อด้วยนิ้วหรือเมาส์",clear:"ล้าง",printName:"ชื่อ (ตัวบรรจง)",
+  draft:"ฉบับร่าง",savedSt:"บันทึกแล้ว",locked:"ลงนามแล้ว · ล็อก",signedOne:"เซ็นแล้ว",unsigned:"ยังไม่เซ็น",
+  btnDraft:"บันทึกร่าง (Draft)",btnSaved:"Submit Draft",draftDone:"บันทึกร่างแล้ว",savedDone:"บันทึกเป็น Submit Draft แล้ว",
+  lockT:"บันทึกและล็อกใบงานนี้?",lockP:"ลูกค้าเซ็นชื่อแล้ว หลังบันทึกคุณจะแก้ไขใบงานนี้ไม่ได้ — แก้ไขได้เฉพาะ Admin",lockOk:"บันทึกและล็อก",
+  lockedNote:"บันทึกพร้อมลายเซ็นลูกค้าแล้ว — ล็อก แก้ไขได้เฉพาะ Admin",reopenNote:"การแก้ไขจะเปลี่ยนใบงานกลับเป็นฉบับร่าง แก้เสร็จแล้วกด บันทึก (Saved) อีกครั้ง",
+  showFor:"แสดง",everyone:"ทุกคน",hintBtns:"ระบบจะบันทึกเมื่อกดปุ่มเท่านั้น",empN:"ผู้ใช้งาน",empActiveN:"คนที่มีใบงาน",sheetsN:"ใบงาน",empName:"ชื่อ",noEmp:"ยังไม่มีผู้ใช้งาน Admin เพิ่มได้ที่ ตั้งค่า → ผู้ใช้",noEmpAdm:"ยังไม่มีรายชื่อพนักงาน เพิ่มได้ที่ ตั้งค่า → พนักงาน",noEmpMatch:"ไม่พบชื่อนี้",needInfo:"กรุณากรอก",noTbT:"ยังไม่ได้แนบ Toolbox talk",noTbP:"ใบงานนี้ยังไม่มีรูปหรือไฟล์ Toolbox talk ต้องการส่งต่อหรือไม่",sendAnyway:"ส่งต่อ",olderNote:"แสดงใบงาน 30 วันล่าสุด และใบที่ยังไม่ปิดงาน",olderBtn:"โหลดใบงานเก่ากว่านี้",purgeNote:"ใบงานที่อนุมัติครบแล้วจะถูกลบออกจากระบบอัตโนมัติหลังอนุมัติ 30 วัน ใบงานนี้จะถูกลบวันที่ {d} หากต้องการเก็บไว้ กรุณาดาวน์โหลด PDF และไฟล์แนบก่อน",attNeedSaveT:"ต้องบันทึกร่างก่อนแนบไฟล์",attNeedSaveP:"ใบงานใหม่ต้องบันทึกเป็นฉบับร่าง (Draft) ก่อน จึงจะถ่ายรูปหรือแนบไฟล์ได้",attSaveGo:"บันทึกร่างและแนบไฟล์",restoredAfterCam:"หน้าเว็บโหลดใหม่ระหว่างเปิดกล้อง ระบบกู้ข้อมูลที่พิมพ์ไว้ให้แล้ว กรุณาถ่าย/แนบรูปอีกครั้ง",btnKeep:"บันทึกการแก้ไข",keptDone:"บันทึกการแก้ไขแล้ว",unsaved:"ยังไม่ได้บันทึก",leaveT:"ต้องการบันทึกหรือไม่?",leaveP:"ใบงานนี้มีการแก้ไขที่ยังไม่ได้บันทึก ต้องการบันทึกก่อนออกหรือไม่",leaveYes:"บันทึก",leaveNo:"ไม่บันทึก",saveFirst:"กรุณากดบันทึกร่าง (Draft) ก่อน แล้วจึงแนบไฟล์",
+  readyT:"ไฟล์พร้อมแล้ว",readyP:"เลือกวิธีบันทึกไฟล์บนมือถือ",share:"แชร์ / บันทึกลงไฟล์",openFile:"ดาวน์โหลด / เปิดไฟล์",lineTip:"ถ้าเปิดผ่าน LINE หรือ Facebook แล้วไม่มีอะไรเกิดขึ้น ให้เปิดหน้านี้ด้วย Safari หรือ Chrome",
+  act_submit:"ส่งอนุมัติ",act_approve:"อนุมัติ",act_reject:"ไม่อนุมัติ",act_return:"ส่งกลับแก้ไข",act_reopen:"Admin เปิดให้แก้ไขใหม่",
+  addFile:"เพิ่มไฟล์",addLoc:"เพิ่ม Location",allSheets:"ใบงานทั้งหมด",apprBarHint:"ใบงานนี้รอการอนุมัติจากคุณ",
+  apprCanEdit:"รอการอนุมัติจากคุณ คุณแก้ไขใบงานได้ก่อนกดอนุมัติ",approval:"การอนุมัติ",approve:"อนุมัติ",approvedN:"อนุมัติแล้ว",
+  badType:"รองรับเฉพาะไฟล์รูปหรือ PDF",btnSubmit:"Submit Completed AWS",clearF:"ล้างตัวกรอง",comment:"ความเห็น",commentPh:"จำเป็นเมื่อส่งกลับแก้ไขหรือไม่อนุมัติ",
+  dateFrom:"ตั้งแต่",dateTo:"ถึง",delFileT:"ลบไฟล์นี้?",delLocT:"ลบ Location นี้?",delLocP:"ผู้ใช้ใน Location นี้จะไม่มี Location จนกว่าจะกำหนดใหม่",
+  done_approve:"อนุมัติแล้ว",done_reject:"ไม่อนุมัติแล้ว",done_return:"ส่งกลับให้เจ้าของแก้ไขแล้ว",files:"ไฟล์",goApprove:"ไปที่การอนุมัติ",history:"ประวัติ",
+  locDup:"มี Location ชื่อนี้แล้ว",locDupApprover:"ผู้อนุมัติแต่ละคนเลือกได้ครั้งเดียว",locHint:"ใช้เมื่อเลขที่งาน โครงการ และลูกค้าในใบงานไม่ได้ระบุ Location ถ้ามีหลายแห่ง ระบบใช้แห่งแรก",
+  locName:"ชื่อ Location",locPh:"เช่น ไซต์ระยอง",locSaved:"บันทึก Location แล้ว",locSub:"กำหนดผู้อนุมัติได้สูงสุด 3 คนต่อ Location และอนุมัติตามลำดับนี้",
+  location:"Location",locations:"Location และผู้อนุมัติ",membersN:"ผู้ใช้",needComment:"กรุณาใส่ความเห็น",needRole:"เลือกอย่างน้อย 1 สิทธิ์",
+  noApprovers:"ยังไม่มีผู้ใช้ที่มีสิทธิ์ Approver ให้กำหนดสิทธิ์ Approver ในแท็บผู้ใช้งานก่อน",noFiles:"ยังไม่มีไฟล์ Toolbox",
+  noLocation2:"ยังไม่กำหนด Location",noLocs:"ยังไม่มี Location",noRoute:"Location ของผู้ใช้นี้ยังไม่มีผู้อนุมัติ",none:"— ไม่มี —",
+  pendingN:"รออนุมัติ",queueBtn:"รอการอนุมัติจากฉัน",queueEmpty:"ไม่มีใบงานที่รอการอนุมัติจากคุณ",queueP:"ใบงานที่รอการตัดสินใจจากคุณ",queueT:"รอการอนุมัติจากฉัน",
+  rApprover:"Approver: เห็นใบงานที่ส่งมาให้ แก้ไขได้ แล้วกดอนุมัติ ส่งกลับแก้ไข หรือไม่อนุมัติ พร้อมความเห็น",
+  reject:"ไม่อนุมัติ (Reject)",rejectT:"ไม่อนุมัติใบงานนี้?",rejectP:"ใบงานที่ไม่อนุมัติจะแก้ไขหรือส่งใหม่ไม่ได้ เปิดใหม่ได้เฉพาะ Admin",
+  reopen:"เปิดให้แก้ไขใหม่",reopenT:"เปิดใบงานนี้ให้แก้ไขใหม่?",reopenP:"ใบงานจะกลับเป็นฉบับร่าง เจ้าของแก้ไขและส่งอนุมัติใหม่ได้",reopenedDone:"เปิดเป็นฉบับร่างแล้ว",
+  returnFix:"ส่งกลับแก้ไข",returnedBy:"ส่งกลับแก้ไขโดย",returnedN:"ส่งกลับแก้ไข",roApproved:"อนุมัติแล้ว — ล็อก เปลี่ยนแปลงได้เฉพาะ Admin",
+  roRejected:"ไม่อนุมัติ — ล็อก เปิดใหม่ได้เฉพาะ Admin",roSubmitted:"ส่งอนุมัติแล้ว — รอการอนุมัติ ตอนนี้แก้ไขไม่ได้",
+  roleApprover:"Approver",roleViewer:"Viewer",roleManager:"Manager",rManager:"Manager: ดูและค้นหาใบงานได้ทุกใบ แก้ไขได้เฉพาะใบที่เป็นฉบับร่าง, Submit Draft หรือส่งกลับแก้ไข หลังกด Submit Completed AWS แล้วแก้ไขไม่ได้ อนุมัติ ลบ หรือเปลี่ยนการตั้งค่าไม่ได้",rViewer:"Viewer: ดูใบงานของทุกคน ดาวน์โหลด PDF / Excel และไฟล์ Toolbox และดูตารางการส่งงานได้ แต่สร้าง แก้ไข หรืออนุมัติไม่ได้",roles:"สิทธิ์",
+  st_draft:"ฉบับร่าง",st_saved:"Submit Draft",st_submitted:"ส่งแล้ว · ยังไม่มีผู้อนุมัติ",st_pending:"รออนุมัติจาก",st_returned:"ส่งกลับแก้ไข",st_approved:"อนุมัติแล้ว",st_rejected:"ไม่อนุมัติ",
+  statusAll:"ทุกสถานะ",stepN:"ลำดับ {n}",submitT:"Submit Completed AWS เพื่ออนุมัติ?",submitP:"หลังส่งแล้วคุณจะแก้ไขไม่ได้ ลำดับผู้อนุมัติ:",
+  submitNoRoute:"หลังส่งแล้วคุณจะแก้ไขไม่ได้ Location ของคุณยังไม่มีผู้อนุมัติ Admin จะเป็นผู้ตรวจสอบ",submittedDone:"ส่งอนุมัติแล้ว",
+  tooBig:"ไฟล์ใหญ่เกิน 10 MB",toolbox:"เอกสาร Toolbox",toolboxHint:"แนบรูปหรือไฟล์ PDF ของ Toolbox talk ไฟล์จะเก็บไว้กับใบงานนี้ แต่ไม่แสดงในแบบฟอร์ม PDF",
+  uploaded:"เพิ่มแล้ว {n} ไฟล์",uploading:"กำลังอัปโหลด…",view:"ดู",
+  locationsMulti:"Location (เลือกได้หลายแห่ง)",settings:"ตั้งค่า",masters:"ข้อมูลงาน",mastersSub:"รายการให้เลือกในใบงาน รวมถึงรายชื่อพนักงานและตำแหน่ง (ผู้ใช้ยังเลือก อื่นๆ แล้วพิมพ์เองได้) Location ใช้กำหนดผู้อนุมัติ โดยดูจากเลขที่งานก่อน แล้วชื่อโครงการ แล้วชื่อลูกค้า ถ้าไม่ได้กำหนดเลย ระบบใช้ Location แรกของผู้ใช้",noLocOpt:"— ไม่ระบุ Location —",
+  addNew:"เพิ่ม",add:"เพิ่ม",noItems:"ยังไม่มีรายการ",mSaved:"บันทึกแล้ว",mDup:"มีชื่อนี้ในรายการแล้ว",mDelT:"ลบรายการนี้?",mDelP:"ใบงานที่ใช้ชื่อนี้อยู่แล้วจะไม่เปลี่ยนแปลง",
+  pickOne:"— เลือก —",otherType:"อื่นๆ (พิมพ์เอง)",typeHere:"พิมพ์ที่นี่",typeToFind:"พิมพ์ชื่อเพื่อค้นหา",any:"ทั้งหมด",pickLoc:"เลือก Location ของใบงานนี้",
+  rUser:"User: สร้างใบงาน เห็นเฉพาะของตนเอง แก้ไขได้จนกว่าจะส่งอนุมัติ ลบได้เฉพาะฉบับร่างของตนเอง",
+  rAdmin:"Admin: จัดการผู้ใช้และ Location ดูและแก้ไขใบงานทุกใบได้ทุกสถานะ เปิดใบงานให้แก้ไขใหม่ได้",
+  trackT:"ตารางการส่งงาน",trackP:"สถานะใบงาน Activity Work Sheet ของพนักงานแต่ละคนในแต่ละวัน",
+  trackHead:"AWS & Toolbox talk",addYear:"เพิ่มปี",editYear:"แก้ไขปี",delYear:"ลบปี",addMonth:"เพิ่มเดือน",editMonth:"แก้ไขเดือน",delMonth:"ลบเดือน",
+  trackEmpty:"ยังไม่มีตารางเดือนใด Admin จะเป็นผู้สร้าง",trackEmptyAdm:"ยังไม่มีตาราง กด เพิ่มปี เพื่อเริ่ม",
+  jobsN:"งาน",plannedN:"วันที่วางแผน",doneN:"ส่งตามแผน (ถึงวันนี้)",missingN:"ไม่ส่ง",onPlan:"ตามแผน",target:"Target",plan:"Plan",actual:"Actual",notSent:"ไม่ส่ง",
+  lg_ok:"ส่งแล้วโดยผู้ที่วางแผน",lg_draft:"เริ่มทำแต่ยังไม่ส่ง",lg_miss:"มีแผนแต่ไม่ส่ง",lg_wait:"มีแผน ยังไม่ถึงวัน",lg_extra:"ส่งโดยไม่มีแผน",
+  noJobsYet:"เดือนนี้ยังไม่มีงาน",addJobRow:"เพิ่มงาน",jobInTable:"งานนี้มีในตารางแล้ว",delJobRowT:"ลบงานนี้ออกจากเดือนนี้?",editJobRow:"แก้ไขงาน",
+  yearCE:"ปี ค.ศ. (เช่น 2026)",firstMonth:"เดือนแรก",month:"เดือน",copyJobs:"คัดลอกรายการงานจากเดือนที่แสดงอยู่",periodDup:"มีเดือนนี้อยู่แล้ว",yearExists:"มีปีนี้อยู่แล้ว",
+  delYearT:"ลบปี {y}?",delYearP:"ทุกเดือนและแผนในปีนี้จะถูกลบ ใบงานไม่ได้รับผลกระทบ",delMonthT:"ลบเดือนนี้?",delMonthP:"แผนของเดือนนี้จะถูกลบ ใบงานไม่ได้รับผลกระทบ",
+  whoSubmits:"ใครต้องส่งใบงาน",fJob:"ค้นหาเลขที่งาน",fDays:"วันที่",toDay:"ถึง",allDays:"ทั้งหมด",noJobMatch:"ไม่พบเลขที่งานตามตัวกรอง",addPerson:"พิมพ์ชื่อเพื่อเพิ่ม",filedAlready:"ส่งแล้ว",noPeople:"ยังไม่มีผู้ต้องส่ง",showing:"แสดง",nobody:"— ไม่มี —",applyTo:"ใช้กับ",thisDay:"วันนี้เท่านั้น",weekdaysRest:"วันนี้ถึงสิ้นเดือน เฉพาะ จ.–ศ.",allRest:"วันนี้ถึงสิ้นเดือน ทุกวัน",
+  noSheetAccess:"คุณไม่มีสิทธิ์เปิดใบงานนั้น",
+  sheetMode:"รูปแบบใบงาน",modeManual:"กรอกแบบฟอร์มในระบบ",modePaper:"แนบใบงาน Activity Work Sheet แบบกระดาษ",paperAws:"ใบงานแบบกระดาษ (AWS)",
+  paperHint:"แนบไฟล์สแกนหรือรูปถ่ายใบงานกระดาษ (รูปหรือ PDF) ไม่ต้องกรอกกำลังคน อุปกรณ์ และรายละเอียดงาน แต่ยังต้องมีลายเซ็น IKM (รูป Toolbox talk และลายเซ็นลูกค้าไม่บังคับ)",
+  addPaper:"แนบใบงานกระดาษ",addToolbox:"แนบรูป / ไฟล์ Toolbox",replaceFile:"เปลี่ยนไฟล์",replaced:"เปลี่ยนไฟล์แล้ว",download:"ดาวน์โหลด",
+  toolboxFB:"(ส่งรูปหน้า และหลังของ toolbox talk)",needPaper:"กรุณาแนบ AWS Draft Report หรือ Completed Report ก่อน",needToolbox:"กรุณาแนบรูป Toolbox talk (หน้าและหลัง) ก่อน",
+  needSigs:"ต้องมีลายเซ็นของ IKM",paperFormNote:"ใบงานนี้เป็นแบบกระดาษ ดูแบบฟอร์มที่กรอกแล้วได้จากไฟล์ใบงานกระดาษที่แนบไว้ในแท็บแก้ไข",
+  employees:"พนักงาน",employeesHint:"เมื่อเลือกพนักงานในใบงาน ระบบจะใส่ตำแหน่งให้อัตโนมัติ และยังแก้ตำแหน่งในใบงานได้",
+  ts_draft:"Draft",ts_saved:"Submit Draft",ts_submitted:"Submit Completed",ts_pending:"Submit Completed",ts_returned:"รอการแก้ไข",ts_approved:"Approved",ts_rejected:"ไม่อนุมัติ",statusInCell:"สถานะ",
+    noFilesAny:"ยังไม่มีไฟล์",awsComplete:"เอกสาร AWS ฉบับสมบูรณ์",awsCompleteHint:"แนบไฟล์ Activity Work Sheet ฉบับสมบูรณ์ (รูปหรือ PDF) เก็บไว้กับใบงานนี้ แต่ไม่แสดงในแบบฟอร์ม",addComplete:"แนบ AWS ฉบับสมบูรณ์",awsDraftRpt:"AWS Draft Report",awsDoneRpt:"AWS Completed Report",addDraftRpt:"แนบ Draft Report",addDoneRpt:"แนบ Completed Report",
+    saved:"บันทึกแล้ว",saving:"กำลังบันทึก…",notSaved:"บันทึกไม่สำเร็จ",untitled:"ใบงานไม่มีชื่อ",
+  dlXlsx:"ดาวน์โหลด Excel",dlPdf:"ดาวน์โหลด PDF",makingPdf:"กำลังสร้าง PDF…",dlFail:"สร้างไฟล์ไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วลองอีกครั้ง",
+  formHint:"รูปแบบตามฟอร์ม TH-OPS-FRM-071 ดาวน์โหลดเป็น PDF (A4 แนวนอน) เพื่อพิมพ์ ส่งอีเมล หรือจัดเก็บ",
+  delT:"ลบใบงานนี้?",delP:"ใบงานจะถูกลบสำหรับทุกคน และกู้คืนไม่ได้",cancel:"ยกเลิก",
+  deleted:"ลบใบงานแล้ว",duplicated:"สร้างสำเนาแล้ว — รีเซ็ตวันที่และลายเซ็น",
+  phTime:"08:00–10:00",phAct:"อธิบายงานที่ทำ",phEmp:"ชื่อ-นามสกุล",phPos:"เช่น ช่างเทคนิค",phType:"เช่น เครื่อง UT",
+  by:"โดย",roOther:"อ่านอย่างเดียว — ใบงานนี้เป็นของผู้ใช้อื่น",
+  loginT:"เข้าสู่ระบบ",loginP:"ใบบันทึกกิจกรรมการทำงาน · IKM Testing (Thailand)",username:"ชื่อผู้ใช้ (Username)",password:"รหัสผ่าน (Password)",signIn:"เข้าสู่ระบบ",signingIn:"กำลังเข้าสู่ระบบ…",
+  badLogin:"ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง",noAccess:"บัญชีนี้ถูกระงับหรือไม่มีสิทธิ์ใช้ระบบ Work Sheet กรุณาติดต่อ Admin",
+  netErr:"เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ตรวจสอบอินเทอร์เน็ต",
+  setupT:"สร้างบัญชี Admin คนแรก",setupP:"ระบบยังไม่มีผู้ใช้ บัญชีที่สร้างตอนนี้จะเป็น Admin ของระบบ",
+  fullName:"ชื่อ-นามสกุล",confirmPw:"ยืนยันรหัสผ่าน",pwMismatch:"รหัสผ่านไม่ตรงกัน",pwShort:"รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
+  unameRule:"ภาษาอังกฤษ ตัวเลข จุด ขีด หรือขีดล่าง 3–32 ตัว ห้ามเว้นวรรค",createAdmin:"สร้างบัญชี Admin",
+  logout:"ออกจากระบบ",changePw:"เปลี่ยนรหัสผ่าน",newPw:"รหัสผ่านใหม่",savePw:"บันทึกรหัสผ่าน",pwChanged:"เปลี่ยนรหัสผ่านแล้ว",
+  users:"ผู้ใช้งาน",usersSub:"Admin สร้างบัญชี กำหนดสิทธิ์ และรีเซ็ตรหัสผ่าน",addUser:"เพิ่มผู้ใช้",role:"สิทธิ์",status:"สถานะ",
+  roleAdmin:"Admin",roleUser:"User",active:"ใช้งาน",inactive:"ระงับ",deactivate:"ระงับบัญชี",activate:"เปิดใช้งาน",
+  resetPw:"รีเซ็ตรหัสผ่าน",editUser:"แก้ไขผู้ใช้",save:"บันทึก",create:"สร้างผู้ใช้",userCreated:"สร้างผู้ใช้แล้ว",userSaved:"อัปเดตผู้ใช้แล้ว",
+  delUserT:"ลบผู้ใช้นี้?",delUserP:"บัญชีจะถูกลบถาวร ผู้ใช้ที่มีใบงานแล้วทำได้เพียงระงับบัญชี",
+  userDeleted:"ลบผู้ใช้แล้ว",you:"คุณ",
+  rulesT:"สิทธิ์ของแต่ละบทบาท"}
+};
+const SRV = { // server error codes → translated text
+  en:{bad_username:"Username: 3–32 letters, numbers, dot, dash or underscore.",short_password:"Password must be at least 6 characters.",taken:"This username is already taken.",
+      last_admin:"Keep at least one active admin.",self:"You can't do this to your own account.",has_sheets:"This user has work sheets. Deactivate the account instead.",
+      setup_done:"Setup is already done. Sign in instead.",unauthenticated:"Please sign in again.",forbidden:"Admin access required."},
+  th:{bad_username:"ชื่อผู้ใช้: ภาษาอังกฤษ ตัวเลข จุด ขีด หรือขีดล่าง 3–32 ตัว",short_password:"รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",taken:"ชื่อผู้ใช้นี้ถูกใช้แล้ว",
+      last_admin:"ต้องมี Admin ที่ใช้งานอยู่อย่างน้อย 1 คน",self:"ทำรายการนี้กับบัญชีของตัวเองไม่ได้",has_sheets:"ผู้ใช้นี้มีใบงานแล้ว ให้ใช้การระงับบัญชีแทน",
+      setup_done:"ตั้งค่าเรียบร้อยแล้ว กรุณาเข้าสู่ระบบ",unauthenticated:"กรุณาเข้าสู่ระบบอีกครั้ง",forbidden:"ต้องเป็น Admin เท่านั้น"}
+};
+let lang = "th";
+try { lang = localStorage.getItem("ikm-aws-lang") || "th"; } catch(e){}
+const t = k => (T[lang] && T[lang][k]) || T.en[k] || k;
+const srvMsg = (code, fallback) => (SRV[lang] && SRV[lang][code]) || fallback || t("notSaved");
+
+/* ---------- helpers ---------- */
+const $ = (s, r=document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const today = () => { const d=new Date(); return new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10); };
+const clone = o => JSON.parse(JSON.stringify(o));
+const uuid = () => crypto.randomUUID ? crypto.randomUUID() : "10000000-1000-4000-8000-100000000000".replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16));
+const I = {
+  plus:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
+  x:'<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  back:'<svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>',
+  search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
+  dl:'<svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>',
+  copy:'<svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h10"/></svg>',
+  trash:'<svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
+  user:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',
+  refresh:'<svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg>',
+  edit:'<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4"/></svg>',
+};
+function mins(s){ const m=/^(\d{1,2}):(\d{2})$/.exec(s||""); return m? (+m[1])*60+(+m[2]) : null; }
+function hours(r){ const a=mins(r.start), b=mins(r.finish); if(a==null||b==null) return null; let d=b-a; if(d<0) d+=1440; return d/60; }
+const fmtH = h => h==null ? "–" : (Math.round(h*100)/100).toFixed(2).replace(/\.?0+$/,"");
+const hasSig = s => !!(s && s.sig);
+const clientSignedOf = w => { const s=w.sign||{}; return hasSig(s.client1)||hasSig(s.client2); };
+const PURGE_DAYS = 30;   // approved sheets are removed by the daily aws-purge job after this many days
+const purgeDate = iso => { const d=new Date(Date.parse(iso)+PURGE_DAYS*864e5); return d.toLocaleDateString(lang==="th"?"th-TH":"en-GB",{day:"numeric",month:"short",year:"numeric"}); };
+const OPEN_ST = ["draft","saved","returned"];          // owner can still edit
+const FLOW_ST = ["submitted","pending"];                // waiting for approval
+function stInfo(w){
+  const s=w.status||"draft";
+  if(s==="pending"){ const n=(w.chain||[]).length; return { cls:"pend", text:`${t("st_pending")} ${nameOf(w.chain[w.step-1])} (${w.step}/${n})` }; }
+  return ({ draft:{cls:"draft",text:t("st_draft")}, saved:{cls:"saved",text:t("st_saved")}, submitted:{cls:"pend",text:t("st_submitted")},
+            returned:{cls:"ret",text:t("st_returned")}, approved:{cls:"appr",text:t("st_approved")}, rejected:{cls:"rej",text:t("st_rejected")} })[s] || {cls:"draft",text:s};
+}
+function blank(){
+  const e = () => ({sig:"",name:"",position:"",date:""});
+  return { date: today(), client:"", jobNo:"", project:"",
+    manpower:[{name:"",position:"",start:"08:00",finish:"17:00"}], equipment:[{type:"",qty:""}], work:[{time:"",activity:""}],
+    sign:{ikm:e(),client1:e(),client2:e()}, mode:"manual", status:"draft", chain:[], step:0, createdBy:"", updatedBy:"", updatedAt:0 };
+}
+function normalize(d){ const o=Object.assign(blank(), clone(d||{}));
+  o.sign = Object.assign(blank().sign, o.sign||{});
+  ["manpower","equipment","work"].forEach(k=>{ if(!Array.isArray(o[k])||!o[k].length) o[k]=blank()[k]; });
+  if(!Array.isArray(o.chain)) o.chain=[];
+  return o; }
+
+/* ---------- Supabase ---------- */
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth:{ persistSession:true, autoRefreshToken:true, storageKey:"ikm-aws-auth" } });
+const toEmail = u => `${u.trim().toLowerCase()}@${EMAIL_DOMAIN}`;
+const S = { phase:"boot", me:null, profile:null, list:[], users:{}, locs:[], logs:{}, atts:{}, masters:{client:[],job:[],project:[],employee:[]} };
+const hasRole = r => !!(S.profile && S.profile.active && (S.profile.roles||[]).includes(r));
+const isAdmin = () => hasRole("admin");
+const seesAll = () => isAdmin() || hasRole("viewer") || hasRole("manager");   // these roles see every work sheet   // admins and viewers see every work sheet
+const myRoles = () => (S.profile && S.profile.roles) || [];
+const canCreateSheet = () => hasRole("user") || isAdmin();
+const isOwner = w => !!w && w.createdBy===S.me;
+const isCurrentApprover = w => !!w && w.status==="pending" && hasRole("approver") && w.chain[w.step-1]===S.me;
+const canEditSheet = w => !!w && (isAdmin() || (hasRole("manager") && OPEN_ST.includes(w.status||"draft")) || (isOwner(w) && OPEN_ST.includes(w.status||"draft")) || isCurrentApprover(w));
+const canDeleteSheet = w => !!w && (isAdmin() || (isOwner(w) && (w.status||"draft")==="draft"));
+const canSubmit = w => !!w && (isOwner(w) || isAdmin()) && OPEN_ST.includes(w.status||"draft");
+const canAct = w => !!w && (isCurrentApprover(w) || (isAdmin() && FLOW_ST.includes(w.status)));
+const nameOf = id => { const u=S.users[id]; return u ? (u.full_name||u.username) : "—"; };
+const locName = id => { const l=S.locs.find(x=>x.id===id); return l ? l.name : ""; };
+const userLocs = id => { const u=S.users[id]; return (u && u.location_ids) || []; };
+// Locations a sheet can be filed under: the owner's locations (an admin owner may use any)
+function sheetLocOptions(w){
+  const owner=S.users[w.createdBy];
+  if(owner && (owner.roles||[]).includes("admin")) return S.locs;
+  const ids=userLocs(w.createdBy); return S.locs.filter(l=>ids.includes(l.id));
+}
+// Same rule as the server: Job No. location, then Project, then Client (admin lists), else the owner's first location.
+// Once submitted, the location the server stored is the one shown.
+function sheetLoc(w){
+  if(!OPEN_ST.includes(w.status||"draft") && w.locationId) return w.locationId;
+  const norm=s=>(s||"").trim().toLowerCase();
+  for(const [kind,k] of [["job","jobNo"],["project","project"],["client","client"]]){
+    const m=(S.masters[kind]||[]).find(x=>x.location_id && norm(x.value)===norm(w[k]) && norm(w[k]));
+    if(m) return m.location_id;
+  }
+  return userLocs(w.createdBy)[0] || null;
+}
+function routeFor(w){
+  const loc=S.locs.find(l=>l.id===sheetLoc(w));
+  return ((loc && loc.approvers)||[]).filter(id=> id && id!==w.createdBy && S.users[id] && S.users[id].active && (S.users[id].roles||[]).includes("approver"));
+}
+
+function rowToSheet(r){
+  return normalize(Object.assign({}, r.data||{}, { id:r.id, date:r.work_date||"", jobNo:r.job_no, client:r.client, project:r.project,
+    status:r.status||"draft", chain:r.approval_chain||[], step:r.current_step||0, locationId:r.location_id,
+    submittedAt:r.submitted_at, decidedAt:r.decided_at,
+    createdBy:r.created_by, updatedBy:r.updated_by, updatedAt: Date.parse(r.updated_at)||0 }));
+}
+function sheetToRow(w){
+  return { work_date: w.date || null, job_no: w.jobNo||"", client: w.client||"", project: w.project||"", status: w.status||"draft", location_id: w.locationId||null,
+    data: { mode:w.mode||"manual", manpower:w.manpower, equipment:w.equipment, work:w.work, sign:w.sign } };
+}
+async function adminCall(body, anon){
+  let token = SUPABASE_KEY;
+  if(!anon){ const { data } = await sb.auth.getSession(); token = data.session ? data.session.access_token : SUPABASE_KEY; }
+  let res;
+  try{ res = await fetch(`${SUPABASE_URL}/functions/v1/aws-admin`, { method:"POST",
+    headers:{ "Content-Type":"application/json", apikey:SUPABASE_KEY, Authorization:"Bearer "+token }, body:JSON.stringify(body) }); }
+  catch(e){ throw { message:t("netErr") }; }
+  let j={}; try{ j=await res.json(); }catch(e){}
+  if(!res.ok) throw { code:j.code, message: srvMsg(j.code, j.error) };
+  return j;
+}
+const USER_COLS="id, username, full_name, position, roles, location_ids, active, created_at";
+async function loadProfile(){
+  const { data: { session } } = await sb.auth.getSession();
+  if(!session){ S.me=null; S.profile=null; return false; }
+  S.me = session.user.id;
+  const { data, error } = await sb.from("aws_users").select(USER_COLS).eq("id", S.me).maybeSingle();
+  if(error) throw error;
+  S.profile = data;
+  return !!(data && data.active);
+}
+async function loadUsers(){
+  const { data, error } = await sb.from("aws_users").select(USER_COLS).order("username");
+  if(!error){ S.users = Object.fromEntries(data.map(u=>[u.id,u])); const me=S.users[S.me]; if(me) S.profile=me; }
+}
+async function loadLocs(){
+  const { data, error } = await sb.from("aws_locations").select("id, name, approvers").order("name");
+  if(!error) S.locs = data;
+}
+async function loadMasters(){
+  const { data, error } = await sb.from("aws_masters").select("id, kind, value, location_id, position").order("value");
+  if(error) return; const m={client:[],job:[],project:[],employee:[]};
+  data.forEach(r=>{ if(m[r.kind]) m[r.kind].push(r); }); S.masters=m;
+}
+/* The list never downloads signatures (≈27 KB each, 98% of a row). Full rows are fetched only when a sheet is opened.
+   After the first load, sync downloads only rows changed since the last check — this keeps Supabase egress low. */
+const LIST_COLS = "id, work_date, job_no, client, project, status, approval_chain, current_step, location_id, submitted_at, decided_at, created_by, updated_by, updated_at, mode:data->>mode, manpower:data->manpower, equipment:data->equipment, work:data->work";
+const lightRow = r => Object.assign({}, r, { data:{ mode:r.mode||"manual", manpower:r.manpower||[], equipment:r.equipment||[], work:r.work||[] } });
+let sheetsAt = "", delAt = "", sheetsChanged = false;
+const LIST_DAYS = 30;            // the list first loads work sheets of the last 30 days (plus any still open); older ones on request
+let listAll = false;
+const listCut = () => { const d=new Date(Date.now()-LIST_DAYS*864e5); return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; };
+async function loadOlder(){ if(listAll) return; listAll=true; busy(true); try{ await loadSheets(true); }catch(e){ toast(t("netErr")); } busy(false); renderList(); }
+async function loadSheets(full){
+  if(full || !sheetsAt){
+    let q = sb.from("aws_worksheets").select(LIST_COLS);
+    if(!listAll) q = q.or(`work_date.gte.${listCut()},work_date.is.null,status.in.(draft,saved,submitted,pending,returned)`);
+    const { data, error } = await q.order("work_date",{ascending:false, nullsFirst:false}).order("updated_at",{ascending:false}).limit(5000);
+    if(error) throw error;
+    S.list = data.map(r=>Object.assign(rowToSheet(lightRow(r)),{ _light:true }));
+    sheetsAt = data.reduce((m,r)=> r.updated_at>m ? r.updated_at : m, "");
+    delAt = new Date(Date.now()-10*60e3).toISOString();   // small overlap for clock differences
+    sheetsChanged = true;
+    return;
+  }
+  // only rows changed since the last check, plus ids of sheets deleted since then (aws_deleted log)
+  const [chg, del] = await Promise.all([
+    sb.from("aws_worksheets").select(LIST_COLS).gt("updated_at", sheetsAt).limit(1000),
+    sb.from("aws_deleted").select("id, deleted_at").gte("deleted_at", delAt).limit(1000)]);
+  if(chg.error) throw chg.error;
+  sheetsChanged = chg.data.length>0;
+  chg.data.forEach(r=>{ const w=Object.assign(rowToSheet(lightRow(r)),{ _light:true }); const i=S.list.findIndex(x=>x.id===w.id);
+    if(i<0) S.list.unshift(w); else if(w.updatedAt>=S.list[i].updatedAt) S.list[i]=w;
+    if(r.updated_at>sheetsAt) sheetsAt=r.updated_at; });
+  if(!del.error && del.data.length){ const gone=new Set(del.data.map(x=>x.id)); const n=S.list.length; S.list=S.list.filter(w=>!gone.has(w.id)); if(S.list.length!==n) sheetsChanged=true;
+    del.data.forEach(x=>{ if(x.deleted_at>delAt) delAt=x.deleted_at; }); }
+  S.list.sort((a,b)=>(b.date||"").localeCompare(a.date||"") || b.updatedAt-a.updatedAt);
+}
+async function fetchFull(id){
+  const { data, error } = await sb.from("aws_worksheets").select("*").eq("id", id).maybeSingle();
+  if(error || !data) return null;
+  const w=rowToSheet(data); const i=S.list.findIndex(x=>x.id===id); if(i>=0) S.list[i]=w; else S.list.push(w); return w;
+}
+async function loadLog(id){
+  const { data, error } = await sb.from("aws_approval_log").select("actor, action, step, comment, created_at").eq("sheet_id", id).order("created_at");
+  if(!error) S.logs[id]=data;
+}
+let fullAt=0;
+async function refreshAll(force){
+  // users / locations / lists change rarely: reload them every 10 minutes or when asked
+  // the full sheet list downloads only at sign-in or on the refresh button; every other check is incremental
+  const lists = force || Date.now()-fullAt > 600e3;
+  try{ await Promise.all([...(lists ? [loadUsers(), loadLocs(), loadMasters()] : []), loadSheets(!!force)]); if(lists) fullAt=Date.now(); }catch(e){ toast(t("netErr")); }
+}
+
+/* ---------- view state ---------- */
+const view = { name:"list", id:null, tab:"edit", q:"", who:"all", st:"all", from:"", to:"", queue:false, utab:"users", fjob:"", fclient:"", fproject:"", page:"sheets", ty:null, tm:null, tjob:"", td1:0, td2:0 };
+let RO=true, cur=null, isNew=false, dirty=false, inflight=false, pending=false, saveTimer=null, saveState="saved", saveErr="";
+
+async function openSheet(id){
+  const [w] = await Promise.all([fetchFull(id), loadLog(id), loadAtts(id)]); if(!w){ toast(t("noSheetAccess")); return; }
+  Object.keys(comboOpen).forEach(k=>delete comboOpen[k]); Object.keys(empOpen).forEach(k=>delete empOpen[k]);
+  cur=normalize(w); cur.id=id; isNew=false; dirty=false; saveState="saved";
+  view.name="edit"; view.id=id; view.tab="edit"; render(); window.scrollTo(0,0);
+}
+async function createSheet(fromId){
+  let d;
+  if(fromId){ const src=(cur && cur.id===fromId) ? cur : S.list.find(x=>x.id===fromId); d=normalize(src);
+    d.date=today(); d.sign=blank().sign; d.work=[{time:"",activity:""}];
+  } else d=blank();
+  d.id=uuid(); d.createdBy=S.me; d.updatedBy=S.me; d.updatedAt=0; d.status="draft"; d.chain=[]; d.step=0; { const ids=userLocs(S.me); d.locationId = fromId ? (d.locationId||null) : (ids.length===1?ids[0]:null); }
+  Object.keys(comboOpen).forEach(k=>delete comboOpen[k]); Object.keys(empOpen).forEach(k=>delete empOpen[k]);
+  cur=d; isNew=true; S.logs[d.id]=[]; S.atts[d.id]=[]; view.name="edit"; view.id=d.id; view.tab="edit"; dirty=!!fromId; saveState="saved"; render(); window.scrollTo(0,0);
+  if(fromId){ paintStatus(); toast(t("duplicated")); }
+}
+function scheduleSave(){
+  if(RO) return;
+  dirty=true; saveState="dirty"; paintStatus();   // manual save only: nothing is stored until a save button is pressed
+}
+async function flush(){
+  clearTimeout(saveTimer);
+  if(!cur || !dirty) return;
+  if(inflight){ pending=true; return; }
+  inflight=true; dirty=false; saveState="busy"; paintStatus();
+  const w=clone(cur); const row=sheetToRow(w);
+  try{
+    let res;
+    if(isNew){ res = await sb.from("aws_worksheets").insert(Object.assign({ id:w.id, created_by:S.me }, row)).select(LIST_COLS).single(); }
+    else { res = await sb.from("aws_worksheets").update(row).eq("id", w.id).select(LIST_COLS).single(); }   // no signatures in the reply
+    if(!res.error && res.data) res.data = lightRow(res.data);
+    if(res.error) throw res.error;
+    isNew=false;
+    const saved=rowToSheet(res.data);
+    if(cur && cur.id===saved.id) cur.updatedAt=saved.updatedAt;
+    const i=S.list.findIndex(x=>x.id===saved.id); if(i>=0) S.list[i]=saved; else S.list.unshift(saved);
+    saveState="saved"; saveErr="";
+  }catch(e){ saveState="err"; saveErr=(e&&e.message)||""; dirty=true; }
+  inflight=false; paintStatus();
+  if(pending){ pending=false; flush(); }
+}
+function backToList(msg){ if(msg) toast(msg); view.name="list"; cur=null; RO=true; render(); window.scrollTo(0,0); }
+["input","change"].forEach(ev=>document.addEventListener(ev,e=>{ const f=e.target.closest && e.target.closest(".field.bad"); if(f) f.classList.remove("bad"); }));
+function checkInfo(){
+  const miss=missingInfo(cur); if(!miss.length) return true;
+  const lbl={ date:t("date"), client:t("client"), jobNo:t("jobNo"), project:t("project") };
+  toast(t("needInfo")+": "+miss.map(k=>lbl[k]).join(", "));
+  document.querySelectorAll("#sec-info .field").forEach(f=>f.classList.remove("bad"));
+  miss.forEach(k=>{ const el=$("#f-"+k+"-sel")||$("#f-"+k); if(el) el.closest(".field").classList.add("bad"); });
+  const s=$("#sec-info"); if(s) s.scrollIntoView({block:"start"});
+  return false;
+}
+async function commit(st){
+  if(RO || !cur) return;
+  if(st==="saved" && !checkInfo()) return;
+  if(st) cur.status=st; dirty=true; await flush();
+  if(saveState==="err"){ toast(t("notSaved")+(saveErr?" — "+saveErr:"")); return; }
+  if(!st){ toast(t("keptDone")); const y=window.scrollY; renderEdit(); window.scrollTo(0,y); return; }  // Save changes keeps status and stays
+  if(st==="draft"){ toast(t("draftDone")); const y=window.scrollY; renderEdit(); window.scrollTo(0,y); return; }  // Save Draft keeps the sheet open
+  backToList(t("savedDone"));
+}
+async function rpcAct(id, action, comment){
+  const { data, error } = await sb.rpc("aws_act", { p_id:id, p_action:action, p_comment:comment||"" });
+  if(error) throw { message: srvMsg(null, error.message) };
+  return data;
+}
+function submitSheet(){
+  if(!canSubmit(cur)) return;
+  if(!checkInfo()) return;
+  if(cur.mode==="paper"){
+    const need = !(attsOf("paper").length || attsOf("paper_draft").length) ? ["needPaper","#sec-mode"]
+      : !hasSig(cur.sign.ikm) ? ["needSigs","#sec-sg"] : null;
+    if(need){ toast(t(need[0])); const s=$(need[1]); if(s) s.scrollIntoView({block:"start"}); return; }
+  }
+  else if(!hasSig(cur.sign.ikm)){ toast(t("needSigs")); const s=$("#sec-sg"); if(s) s.scrollIntoView({block:"start"}); return; }
+  const go=()=>{
+  const route=routeFor(cur);
+  const body = route.length ? t("submitP")+" "+route.map((id,i)=>`${i+1}. ${nameOf(id)}`).join("  →  ") : t("submitNoRoute");
+  confirmBox(t("submitT"), body, t("btnSubmit"), async()=>{
+    dirty=true; await flush();
+    if(saveState==="err"){ toast(t("notSaved")+(saveErr?" — "+saveErr:"")); return; }
+    try{ await rpcAct(cur.id,"submit",""); await refreshAll(); backToList(t("submittedDone")); }
+    catch(e){ toast(e.message); }
+  }, "info");
+  };
+  // Toolbox talk is optional, but warn before sending without it
+  if(!attsOf("toolbox").length) confirmBox(t("noTbT"), t("noTbP"), t("sendAnyway"), ()=>setTimeout(go,0), "info"); else go();
+}
+async function act(action){
+  if(!cur) return;
+  const box=$("#ap-c"); const comment=box?box.value.trim():"";
+  if((action==="reject"||action==="return") && !comment){ toast(t("needComment")); if(box) box.focus(); return; }
+  const run = async()=>{
+    if(dirty){ await flush(); if(saveState==="err"){ toast(t("notSaved")); return; } }
+    try{
+      await rpcAct(cur.id, action, comment); await refreshAll();
+      if(action==="reopen"){ await openSheet(cur.id); toast(t("reopenedDone")); return; }
+      backToList(t("done_"+action));
+    }catch(e){ toast(e.message); }
+  };
+  if(action==="reject") confirmBox(t("rejectT"), t("rejectP"), t("reject"), run);
+  else if(action==="reopen") confirmBox(t("reopenT"), t("reopenP"), t("reopen"), run, "plain");
+  else run();
+}
+function paintStatus(){
+  document.querySelectorAll(".status").forEach(el=>{
+    const un = saveState!=="busy" && saveState!=="err" && (dirty || isNew);
+    el.className="status"+(saveState==="busy"?" busy":saveState==="err"?" err":un?" unsaved":"");
+    el.textContent = saveState==="busy"?t("saving"):saveState==="err"?t("notSaved")+(saveErr?" — "+saveErr:""):un?t("unsaved"):t("saved");
+  });
+}
+/* pick up changes made on another device */
+async function sync(){
+  if(S.phase!=="app" || document.visibilityState!=="visible") return;
+  if(view.name==="edit" && (dirty||inflight)) return;
+  await refreshAll();
+  if(view.name==="edit" && cur && !dirty && !inflight){
+    const lw=S.list.find(x=>x.id===cur.id);
+    if(lw && lw.updatedAt>(cur.updatedAt||0)){
+      const a=document.activeElement; if(a && $("#app").contains(a) && /INPUT|TEXTAREA/.test(a.tagName)) return;
+      const [w] = await Promise.all([fetchFull(lw.id), loadLog(lw.id)]); if(!w) return;
+      const tab=view.tab; cur=normalize(w); view.tab=tab; render();
+    }
+    return;
+  }
+  if(view.name==="list" && view.page==="track"){ if($("#ov-slot").innerHTML || !sheetsChanged) return; if(view.tm) await loadActual(view.tm); renderTrack(); return; }
+  if(view.name!=="edit"){ const a=document.activeElement; if(a && /INPUT|SELECT/.test(a.tagName) && $("#app").contains(a)) return; render(); }
+}
+setInterval(sync, 60000);
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") sync(); });
+
+/* ---------- render ---------- */
+function render(){
+  document.documentElement.lang = lang==="th"?"th":"en";
+  document.querySelectorAll("[data-t]").forEach(el=>el.textContent=t(el.dataset.t));
+  $("#lang-en").setAttribute("aria-pressed", lang==="en"); $("#lang-th").setAttribute("aria-pressed", lang==="th");
+  renderWho();
+  if(S.phase==="boot"){ $("#mbar-slot").innerHTML=""; $("#app").innerHTML=`<div class="empty"><p>${esc(t("loading"))}</p></div>`; return; }
+  if(S.phase==="login") return renderLogin();
+  if(S.phase==="setup") return renderSetup();
+  if(view.name==="users" && isAdmin()) return renderUsers();
+  if(view.name==="users") view.name="list";
+  if(view.name==="edit" && cur) return renderEdit();
+  view.name="list";
+  if(view.page==="track") return renderTrack();
+  renderList();
+}
+
+function renderWho(){
+  const el=$("#who");
+  if(S.phase!=="app" || !S.profile){ el.innerHTML=""; return; }
+  const rl={admin:t("roleAdmin"),user:t("roleUser"),approver:t("roleApprover"),viewer:t("roleViewer"),manager:t("roleManager")};
+  el.innerHTML = `${isAdmin()?`<button class="btn sm" id="users-btn">${esc(t("settings"))}</button>`:""}
+    <span class="roles-chips">${myRoles().map(r=>`<span class="role ${r}">${esc(rl[r]||r)}</span>`).join("")}</span>
+    <div class="menu"><button class="icon-btn" id="me-btn" aria-haspopup="true" aria-expanded="false" aria-label="${esc(S.profile.username)}">${I.user}</button></div>`;
+  const ub=$("#users-btn"); if(ub) ub.onclick=()=>guardLeave(()=>{ cur=null; view.name="users"; render(); window.scrollTo(0,0); });
+  $("#me-btn").onclick=(e)=>{ e.stopPropagation(); toggleMenu(); };
+}
+function toggleMenu(){
+  const host=$(".menu"); const open=$(".menu-pop");
+  if(open){ open.remove(); $("#me-btn").setAttribute("aria-expanded","false"); return; }
+  const pop=document.createElement("div"); pop.className="menu-pop";
+  pop.innerHTML=`<div class="who-line"><b class="m-n"></b><br><span class="m-u"></span></div>
+    <button id="m-pw">${esc(t("changePw"))}</button><button id="m-out">${esc(t("logout"))}</button>`;
+  pop.querySelector(".m-n").textContent=S.profile.full_name||S.profile.username;
+  pop.querySelector(".m-u").textContent="@"+S.profile.username;
+  host.appendChild(pop); $("#me-btn").setAttribute("aria-expanded","true");
+  $("#m-pw").onclick=()=>{ pop.remove(); changePwDialog(); };
+  $("#m-out").onclick=()=>{ pop.remove(); guardLeave(async()=>{ await sb.auth.signOut(); S.profile=null; S.me=null; cur=null; Object.assign(view,{name:"list",q:"",who:"all",st:"all",from:"",to:"",queue:false,utab:"users",fjob:"",fclient:"",fproject:"",page:"sheets",ty:null,tm:null,tjob:"",td1:0,td2:0}); S.list=[]; sheetsAt=""; delAt=""; fullAt=0; listAll=false; S.logs={}; S.atts={}; S.phase="login"; render(); }); };
+}
+document.addEventListener("click",e=>{ const p=$(".menu-pop"); if(p && !p.contains(e.target)) { p.remove(); const b=$("#me-btn"); if(b) b.setAttribute("aria-expanded","false"); } });
+
+/* ---------- login / first-time setup ---------- */
+function renderLogin(msg){
+  $("#mbar-slot").innerHTML="";
+  $("#app").innerHTML=`<div class="auth"><img src="${LOGO()}" alt="IKM"><h1>${esc(t("loginT"))}</h1><p>${esc(t("loginP"))}</p>
+    <form id="login" novalidate>
+      <div class="field"><label for="l-u">${esc(t("username"))}</label><input class="inp" id="l-u" autocomplete="username" autocapitalize="none" spellcheck="false" required></div>
+      <div class="field"><label for="l-p">${esc(t("password"))}</label><input class="inp" id="l-p" type="password" autocomplete="current-password" required></div>
+      <div class="err" id="l-err" role="alert">${esc(msg||"")}</div>
+      <button class="btn pri" id="l-go" type="submit">${esc(t("signIn"))}</button>
+    </form></div>`;
+  $("#l-u").focus();
+  $("#login").onsubmit=async e=>{
+    e.preventDefault();
+    const u=$("#l-u").value.trim(), p=$("#l-p").value, err=$("#l-err"), go=$("#l-go");
+    if(!u||!p){ err.textContent=t("badLogin"); return; }
+    go.disabled=true; go.textContent=t("signingIn"); err.textContent="";
+    try{
+      const { error } = await sb.auth.signInWithPassword({ email: toEmail(u), password: p });
+      if(error){ err.textContent = /fetch|network/i.test(error.message) ? t("netErr") : (/banned/i.test(error.message)? t("noAccess") : t("badLogin")); return; }
+      const ok = await loadProfile();
+      if(!ok){ await sb.auth.signOut(); err.textContent=t("noAccess"); return; }
+      await refreshAll(true); S.phase="app"; view.name="list"; view.queue = S.list.some(canAct); render();
+    }catch(ex){ err.textContent=t("netErr"); }
+    finally{ if(go.isConnected){ go.disabled=false; go.textContent=t("signIn"); } }
+  };
+}
+function renderSetup(){
+  $("#mbar-slot").innerHTML="";
+  $("#app").innerHTML=`<div class="auth"><img src="${LOGO()}" alt="IKM"><h1>${esc(t("setupT"))}</h1><p>${esc(t("setupP"))}</p>
+    <form id="setup" novalidate>
+      <div class="field"><label for="s-f">${esc(t("fullName"))}</label><input class="inp" id="s-f" autocomplete="name"></div>
+      <div class="field"><label for="s-u">${esc(t("username"))}</label><input class="inp" id="s-u" autocomplete="username" autocapitalize="none" spellcheck="false"><small class="muted">${esc(t("unameRule"))}</small></div>
+      <div class="field"><label for="s-p">${esc(t("password"))}</label><input class="inp" id="s-p" type="password" autocomplete="new-password"></div>
+      <div class="field"><label for="s-p2">${esc(t("confirmPw"))}</label><input class="inp" id="s-p2" type="password" autocomplete="new-password"></div>
+      <div class="err" id="s-err" role="alert"></div>
+      <button class="btn pri" id="s-go" type="submit">${esc(t("createAdmin"))}</button>
+    </form></div>`;
+  $("#setup").onsubmit=async e=>{
+    e.preventDefault();
+    const f=$("#s-f").value.trim(), u=$("#s-u").value.trim(), p=$("#s-p").value, p2=$("#s-p2").value, err=$("#s-err"), go=$("#s-go");
+    if(p.length<6){ err.textContent=t("pwShort"); return; } if(p!==p2){ err.textContent=t("pwMismatch"); return; }
+    go.disabled=true; err.textContent="";
+    try{
+      await adminCall({ action:"setup", username:u, password:p, full_name:f }, true);
+      const { error } = await sb.auth.signInWithPassword({ email: toEmail(u), password: p });
+      if(error) throw { message:error.message };
+      await loadProfile(); await refreshAll(true); S.phase="app"; render();
+    }catch(ex){ err.textContent=ex.message||t("notSaved"); if(ex.code==="setup_done"){ S.phase="login"; setTimeout(()=>renderLogin(ex.message),1200); } }
+    finally{ if(go.isConnected) go.disabled=false; }
+  };
+}
+
+/* ---------- list ---------- */
+function renderList(){
+  $("#mbar-slot").innerHTML="";
+  const app=$("#app");
+  const canCreate = canCreateSheet();
+  const showQueue = hasRole("approver") || isAdmin();
+  if(!showQueue) view.queue=false;
+  const queue = S.list.filter(canAct);
+  let base = view.queue ? queue : S.list;
+  if(seesAll() && view.who!=="all") base = base.filter(w=>w.createdBy===view.who);
+  if(view.st.startsWith("wait:")){ const uid=view.st.slice(5); base = base.filter(w=>w.status==="pending" && (w.chain||[])[(w.step||1)-1]===uid); }
+  else if(view.st!=="all") base = base.filter(w=> view.st==="pending" ? FLOW_ST.includes(w.status) : w.status===view.st);
+  const pool = base;
+  if(view.fjob) base = base.filter(w=>(w.jobNo||"")===view.fjob);
+  if(view.fclient) base = base.filter(w=>(w.client||"")===view.fclient);
+  if(view.fproject) base = base.filter(w=>(w.project||"")===view.fproject);
+  if(seesAll() && view.from) base = base.filter(w=>(w.date||"")>=view.from);
+  if(seesAll() && view.to) base = base.filter(w=>(w.date||"")<=view.to);
+  const q=view.q.trim().toLowerCase();
+  const all=[...base].sort((a,b)=> (b.date||"").localeCompare(a.date||"") || (b.updatedAt||0)-(a.updatedAt||0));
+  const rows = q ? all.filter(w=>[w.jobNo,w.client,w.project,w.date,nameOf(w.createdBy),...(w.manpower||[]).map(m=>m.name),...(w.work||[]).map(m=>m.activity)].join(" ").toLowerCase().includes(q)) : all;
+  const cnt = st => all.filter(w=> st==="pending" ? FLOW_ST.includes(w.status) : w.status===st).length;
+  const head = `<div class="list-head"><div><h1>${esc(view.queue?t("queueT"):t("sheets"))}</h1><p>${esc(view.queue?t("queueP"):t("sheetsSub"))}</p></div>
+    <div class="spacer"></div><button class="btn" id="rf" aria-label="${esc(t("refresh"))}">${I.refresh}</button>${canCreate?`<button class="btn pri" id="new">${I.plus}${esc(t("newSheet"))}</button>`:""}</div>
+    ${pageTabs()}
+    ${showQueue?`<div class="qtabs" role="tablist"><button role="tab" id="q-all" aria-selected="${!view.queue}">${esc(t("allSheets"))}</button><button role="tab" id="q-mine" class="${queue.length?"hot":""}" aria-selected="${view.queue}">${esc(t("queueBtn"))} <span class="badge">${queue.length}</span></button></div>`:""}`;
+  const owners=Object.values(S.users).sort((x,y)=>(x.full_name||x.username).localeCompare(y.full_name||y.username));
+  const apprs=Object.values(S.users).filter(u=>u.active && (u.roles||[]).includes("approver")).sort((x,y)=>(x.username||"").localeCompare(y.username||""));
+  const stOpts=["all","draft","saved",...apprs.map(u=>"wait:"+u.id),"returned","approved","rejected"];
+  const stLabel = s => s==="all" ? t("statusAll") : s.startsWith("wait:") ? `${t("st_pending")} ${S.users[s.slice(5)].username}` : t("st_"+s);
+  const distinct = (k, kind) => [...new Set([...(S.masters[kind]||[]).map(m=>m.value), ...pool.map(w=>w[k]||"")].filter(Boolean))].sort((x,y)=>x.localeCompare(y));
+  const fsel = (id, key, label, vals) => `<label class="whosel"><span>${esc(label)}</span><select id="${id}"><option value="">${esc(t("any"))}</option>${vals.map(v=>`<option ${view[key]===v?"selected":""}>${esc(v)}</option>`).join("")}</select></label>`;
+  const anyF = view.from||view.to||view.who!=="all"||view.st!=="all"||view.fjob||view.fclient||view.fproject;
+  const filters = `<div class="tools">
+    <label class="whosel"><span>${esc(t("status"))}</span><select id="st-sel">${stOpts.map(s=>`<option value="${s}" ${view.st===s?"selected":""}>${esc(stLabel(s))}</option>`).join("")}</select></label>
+    ${fsel("fj-sel","fjob",t("jobNo"),distinct("jobNo","job"))}${fsel("fc-sel","fclient",t("client"),distinct("client","client"))}${fsel("fp-sel","fproject",t("project"),distinct("project","project"))}
+    ${seesAll()?`<label class="whosel"><span>${esc(t("showFor"))}</span><select id="who-sel"><option value="all">${esc(t("everyone"))}</option>${owners.map(u=>`<option value="${esc(u.id)}" ${view.who===u.id?"selected":""}>${esc((u.full_name||u.username)+" (@"+u.username+")")}</option>`).join("")}</select></label>
+      <label class="whosel dsel"><span>${esc(t("dateFrom"))}</span><input type="date" id="d-from" value="${esc(view.from)}"></label>
+      <label class="whosel dsel"><span>${esc(t("dateTo"))}</span><input type="date" id="d-to" value="${esc(view.to)}"></label>
+`:""}${anyF?`<button class="btn ghost sm" id="f-clear">${esc(t("clearF"))}</button>`:""}
+    <label class="search">${I.search}<input id="q" type="search" placeholder="${esc(t("search"))}" value="${esc(view.q)}" aria-label="${esc(t("search"))}"></label></div>`;
+  let body;
+  if(!S.list.length && !view.queue) body=`<div class="empty"><h2>${esc(t("emptyT"))}</h2><p>${esc(t("emptyP"))}</p>${canCreate?`<button class="btn pri" id="new2">${I.plus}${esc(t("newSheet"))}</button>`:""}</div>`;
+  else body = filters + `<div class="stats"><span><b>${all.length}</b>${esc(t("total"))}</span><span><b>${cnt("draft")+cnt("saved")}</b>${esc(t("draftN"))}</span><span><b>${cnt("pending")}</b>${esc(t("pendingN"))}</span><span><b>${cnt("returned")}</b>${esc(t("returnedN"))}</span><span><b>${cnt("approved")}</b>${esc(t("approvedN"))}</span></div>
+    ${rows.length? `<div class="sheets">${rows.map(card).join("")}</div>` : `<div class="empty"><p>${esc(view.queue?t("queueEmpty"):t("noMatch"))}</p></div>`}
+    ${listAll?"":`<div class="older"><span class="muted">${esc(t("olderNote"))}</span><button class="btn sm" id="older">${esc(t("olderBtn"))}</button></div>`}`;
+  app.innerHTML = head+body;
+  [["#new",()=>createSheet()],["#new2",()=>createSheet()],["#rf",async()=>{ await refreshAll(true); render(); }],
+   ["#older",loadOlder],["#q-all",()=>{ view.queue=false; renderList(); }],["#q-mine",()=>{ view.queue=true; renderList(); }],
+   ["#f-clear",()=>{ Object.assign(view,{from:"",to:"",who:"all",st:"all",fjob:"",fclient:"",fproject:""}); renderList(); }]].forEach(([s,f])=>{ const b=$(s); if(b) b.onclick=f; });
+  wirePageTabs();
+  const qi=$("#q"); if(qi){ qi.oninput=e=>{ view.q=e.target.value; const pos=e.target.selectionStart; renderList(); const n=$("#q"); n.focus(); try{n.setSelectionRange(pos,pos);}catch(_){} }; }
+  app.querySelectorAll(".sheet").forEach(b=>b.onclick=()=>openSheet(b.dataset.id));
+  [["#who-sel","who"],["#st-sel","st"],["#d-from","from"],["#d-to","to"],["#fj-sel","fjob"],["#fc-sel","fclient"],["#fp-sel","fproject"]].forEach(([s,k])=>{ const el=$(s); if(el) el.onchange=()=>{ view[k]=el.value; if((k==="from"&&view.from&&view.from<listCut()) || (k==="to"&&view.to&&view.to<listCut())) loadOlder(); else renderList(); }; });
+}
+function card(w){
+  const d=w.date? new Date(w.date+"T00:00:00") : null; const ok=d&&!isNaN(d);
+  const si=stInfo(w); const loc=lang==="th"?"th-TH":"en-GB";
+  const mp=(w.manpower||[]).filter(m=>m.name).length, eq=(w.equipment||[]).filter(e=>e.type).length;
+  return `<button class="sheet ${canAct(w)?"needs":""}" data-id="${esc(w.id)}">
+    <div class="cal"><i>${ok?esc(d.toLocaleDateString(loc,{month:"short"}).toUpperCase()):"—"}</i><b>${ok?d.getDate():"–"}</b><small>${ok?esc(d.toLocaleDateString(loc,{year:"numeric"})):""}</small></div>
+    <div class="job"><span>${esc(w.jobNo||"—")}</span><span class="pill ${si.cls}">${esc(si.text)}</span></div>
+    <div class="ttl">${esc(w.project||w.client||t("untitled"))}</div>
+    <div class="meta"><span>${esc(w.client||"")}</span><span>${mp} ${esc(t("people"))}</span><span>${eq} ${esc(t("items"))}</span><span>${esc(t("by"))}: ${esc(nameOf(w.createdBy))}</span>${locName(sheetLoc(w))?`<span>${esc(locName(sheetLoc(w)))}</span>`:""}</div>
+  </button>`;
+}
+
+/* ---------- approval panel ---------- */
+function approvalPanel(){
+  const st=cur.status||"draft";
+  const log=S.logs[cur.id]||[];
+  const inFlow = !OPEN_ST.includes(st) || log.length;
+  const chain = ["draft","saved"].includes(st) || (st==="returned" && !cur.chain.length) ? routeFor(cur) : cur.chain;
+  const stepCls = i => st==="approved" ? "done" : st==="pending" ? (i<cur.step-1?"done":i===cur.step-1?"cur":"wait") : st==="rejected" ? (i<cur.step-1?"done":i===cur.step-1?"rej":"wait") : "wait";
+  const route = chain.length
+    ? `<ol class="route">${chain.map((id,i)=>`<li class="stepc ${inFlow?stepCls(i):"wait"}"><small>${esc(t("stepN").replace("{n}",i+1))}</small><b>${esc(nameOf(id))}</b></li>`).join("")}</ol>`
+    : `<p class="muted" style="margin:0">${esc(st==="submitted"?t("st_submitted"):t("noRoute"))}</p>`;
+  const when = s => { const d=new Date(s); return isNaN(d)?"":d.toLocaleString(lang==="th"?"th-TH":"en-GB",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}); };
+  const hist = log.length ? `<ul class="hist">${[...log].reverse().map(l=>`<li class="h-${esc(l.action)}"><div><b>${esc(t("act_"+l.action))}</b> · ${esc(nameOf(l.actor))}${l.step?` <small>(${esc(t("stepN").replace("{n}",l.step))})</small>`:""}<span class="muted"> · ${esc(when(l.created_at))}</span></div>${l.comment?`<p>${esc(l.comment)}</p>`:""}</li>`).join("")}</ul>` : "";
+  const acts = canAct(cur) ? `<div class="ap-box"><label class="lbl" for="ap-c">${esc(t("comment"))}</label>
+      <textarea class="inp" id="ap-c" rows="2" placeholder="${esc(t("commentPh"))}"></textarea>
+      <div class="ap-btns"><button class="btn okb" id="ap-ok">${esc(t("approve"))}</button><button class="btn warnb" id="ap-ret">${esc(t("returnFix"))}</button><button class="btn rejb" id="ap-rej">${esc(t("reject"))}</button></div></div>` : "";
+  const reopen = isAdmin() && !["draft","saved"].includes(st) ? `<button class="btn sm" id="ap-reopen">${esc(t("reopen"))}</button>` : "";
+  return `<section class="sec" id="sec-ap"><div class="sec-h"><h2>${esc(t("approval"))}</h2>${locName(sheetLoc(cur))?`<span class="sum">${esc(t("location"))}: <b>${esc(locName(sheetLoc(cur)))}</b></span>`:`<span class="sum">${esc(t("noLocation2"))}</span>`}</div>
+    <div class="sec-b ap">${route}${acts}${hist?`<h3 class="h3">${esc(t("history"))}</h3>${hist}`:""}${reopen?`<div>${reopen}</div>`:""}</div></section>`;
+}
+
+/* ---------- editor ---------- */
+function renderEdit(){
+  const app=$("#app"); const ro=!canEditSheet(cur); RO=ro; const R=ro?"readonly":"";
+  const canDup=canCreateSheet(), canDel=canDeleteSheet(cur) && !isNew;
+  const title = cur.jobNo || cur.project || t("untitled");
+  const si=stInfo(cur); const st=cur.status||"draft";
+  let note="";
+  if(ro && isOwner(cur)) note = st==="approved"?t("roApproved"):st==="rejected"?t("roRejected"):t("roSubmitted");
+  else if(ro) note = t("roOther")+" · "+nameOf(cur.createdBy);
+  else if(isCurrentApprover(cur) && !isOwner(cur)) note = t("apprCanEdit");
+  const lastReturn = st==="returned" ? [...(S.logs[cur.id]||[])].reverse().find(l=>l.action==="return") : null;
+  const flowFirst = !OPEN_ST.includes(st) || st==="returned";
+  const top = `<div class="ed-top">
+    <button class="btn ghost" id="back">${I.back}${esc(t("back"))}</button>
+    <h1>${esc(title)}</h1><span class="pill ${si.cls}">${esc(si.text)}</span>
+    ${ro?"":`<span class="status"></span>`}<div class="spacer"></div>
+    <span class="desk">${canDup?`<button class="btn sm bdup" id="dup">${I.copy}${esc(t("duplicate"))}</button>`:""}${canDel?`<button class="btn sm danger" id="del">${I.trash}${esc(t("del"))}</button>`:""}</span></div>
+    ${note?`<div class="note">${esc(note)}</div>`:""}
+    ${st==="approved"&&cur.decidedAt?`<div class="note purge">${esc(t("purgeNote").replace("{d}", purgeDate(cur.decidedAt)))}</div>`:""}
+    ${lastReturn?`<div class="note ret"><b>${esc(t("returnedBy"))} ${esc(nameOf(lastReturn.actor))}:</b> ${esc(lastReturn.comment)}</div>`:""}
+    <div class="tabs" role="tablist"><button role="tab" id="tab-edit" aria-selected="${view.tab==="edit"}">${esc(t("edit"))}</button><button role="tab" id="tab-form" aria-selected="${view.tab==="form"}">${esc(t("form"))}</button></div>`;
+  if(view.tab==="form"){
+    app.innerHTML = top + (cur.mode==="paper"?`<div class="note">${esc(t("paperFormNote"))}</div>`:"") + `<p style="color:var(--muted);font-size:13.5px;margin:0 0 10px;max-width:70ch">${esc(t("formHint"))}</p>
+      <div class="view-actions"><button class="btn pri" id="dl-p">${I.dl}${esc(t("dlPdf"))}</button><button class="btn" id="dl-x">${I.dl}${esc(t("dlXlsx"))}</button></div>
+      <div class="paper-wrap"><div class="paper"><style>${PF_CSS(".paper ")}</style>${formHTML(cur)}</div></div>`;
+  } else {
+    const paper = cur.mode==="paper";
+    const del = k => ro?"<span></span>":`<button class="icon-btn del" data-del="${k}" aria-label="${esc(t("removeRow"))}">${I.x}</button>`;
+    app.innerHTML = top + (flowFirst?approvalPanel():"") + `
+    <nav class="jump"><a href="#sec-info">${esc(t("info"))}</a><a href="#sec-mode">${esc(t("sheetMode"))}</a>${paper?"":`<a href="#sec-mp">${esc(t("manpower"))}</a><a href="#sec-eq">${esc(t("equipment"))}</a><a href="#sec-wk">${esc(t("work"))}</a>`}<a href="#sec-sg">${esc(t("signatures"))}</a><a href="#sec-att">${esc(t("toolbox"))}</a><a href="#sec-ap">${esc(t("approval"))}</a></nav>
+    <section class="sec" id="sec-info"><div class="sec-h"><h2>${esc(t("info"))}</h2></div><div class="sec-b info">
+      ${fld("date",t("date"),"date")}${combo("client","client",t("client"))}${combo("jobNo","job",t("jobNo"))}${combo("project","project",t("project"))}
+    </div></section>
+    <section class="sec" id="sec-mode"><div class="sec-h"><h2>${esc(t("sheetMode"))}</h2></div><div class="sec-b">
+      <div class="modes" role="radiogroup" aria-label="${esc(t("sheetMode"))}">
+        <label class="mode-opt ${!paper?"on":""}"><input type="radio" name="f-mode" value="manual" ${!paper?"checked":""} ${ro?"disabled":""}><span><b>Manual</b><small>${esc(t("modeManual"))}</small></span></label>
+        <label class="mode-opt ${paper?"on":""}"><input type="radio" name="f-mode" value="paper" ${paper?"checked":""} ${ro?"disabled":""}><span><b>Paper</b><small>${esc(t("modePaper"))}</small></span></label></div>
+      ${paper?`<p class="muted" style="margin:14px 0 4px;font-size:13px">${esc(t("paperHint"))}</p>
+        <div class="paper-att"><h3 class="h3">${esc(t("awsDraftRpt"))}</h3>${attList("paper_draft", ro)}</div>
+        <div class="paper-att"><h3 class="h3">${esc(t("awsDoneRpt"))}</h3>${attList("paper", ro)}</div>`:""}
+    </div></section>
+    ${paper?"":`<section class="sec" id="sec-mp"><div class="sec-h"><h2>${esc(t("manpower"))}</h2>
+      <span class="sum"><b id="mp-n">${cur.manpower.filter(m=>m.name).length}</b> ${esc(t("people"))}</span></div>
+      <div class="sec-b"><div class="rows">
+        <div class="r mp hd"><span>${esc(t("no"))}</span><span>${esc(t("employee"))}</span><span>${esc(t("position"))}</span><span>${esc(t("start"))}</span><span>${esc(t("finish"))}</span><span></span></div>
+        ${cur.manpower.map((m,i)=>`<div class="r mp">
+          <span class="no">${i+1}</span>
+          <div class="wide first"><span class="cl">${esc(t("employee"))}</span>${empPicker(m,i,ro)}</div>
+          <div class="wide"><span class="cl">${esc(t("position"))}</span><input class="inp" ${R} data-k="manpower.${i}.position" id="mp-pos-${i}" list="pos-list" value="${esc(m.position)}" placeholder="${esc(t("phPos"))}" aria-label="${esc(t("position"))} ${i+1}"></div>
+          <div><span class="cl">${esc(t("start"))}</span><input class="inp num" type="time" ${R} data-k="manpower.${i}.start" value="${esc(m.start)}" aria-label="${esc(t("start"))} ${i+1}"></div>
+          <div><span class="cl">${esc(t("finish"))}</span><input class="inp num" type="time" ${R} data-k="manpower.${i}.finish" value="${esc(m.finish)}" aria-label="${esc(t("finish"))} ${i+1}"></div>
+          ${del("manpower."+i)}
+        </div>`).join("")}
+      </div><datalist id="pos-list">${[...new Set((S.masters.employee||[]).map(e=>e.position).filter(Boolean))].map(p=>`<option value="${esc(p)}">`).join("")}</datalist>${ro?"":`<button class="btn sm add" data-add="manpower">${I.plus}${esc(t("addPerson"))}</button>`}</div></section>
+    <section class="sec" id="sec-eq"><div class="sec-h"><h2>${esc(t("equipment"))}</h2><span class="sum"><b>${cur.equipment.filter(e=>e.type).length}</b> ${esc(t("items"))}</span></div>
+      <div class="sec-b"><div class="rows">
+        <div class="r eq hd"><span>${esc(t("no"))}</span><span>${esc(t("type"))}</span><span>${esc(t("qty"))}</span><span></span></div>
+        ${cur.equipment.map((m,i)=>`<div class="r eq">
+          <span class="no">${i+1}</span>
+          <div class="wide first"><span class="cl">${esc(t("type"))}</span><input class="inp" ${R} data-k="equipment.${i}.type" value="${esc(m.type)}" placeholder="${esc(t("phType"))}" aria-label="${esc(t("type"))} ${i+1}"></div>
+          <div><span class="cl">${esc(t("qty"))}</span><input class="inp num" inputmode="decimal" ${R} data-k="equipment.${i}.qty" value="${esc(m.qty)}" aria-label="${esc(t("qty"))} ${i+1}"></div>
+          ${del("equipment."+i)}
+        </div>`).join("")}
+      </div>${ro?"":`<button class="btn sm add" data-add="equipment">${I.plus}${esc(t("addEquip"))}</button>`}</div></section>
+    <section class="sec" id="sec-wk"><div class="sec-h"><h2>${esc(t("work"))}</h2><span class="sum"><b>${cur.work.filter(e=>e.activity).length}</b> ${esc(t("entries"))}</span></div>
+      <div class="sec-b"><div class="rows">
+        <div class="r wk hd"><span>${esc(t("no"))}</span><span>${esc(t("time"))}</span><span>${esc(t("activity"))}</span><span></span></div>
+        ${cur.work.map((m,i)=>`<div class="r wk">
+          <span class="no">${i+1}</span>
+          <div class="wide first"><span class="cl">${esc(t("time"))}</span><input class="inp num" ${R} data-k="work.${i}.time" value="${esc(m.time)}" placeholder="${esc(t("phTime"))}" aria-label="${esc(t("time"))} ${i+1}"></div>
+          <div class="wide"><span class="cl">${esc(t("activity"))}</span><textarea class="inp" rows="1" ${R} data-k="work.${i}.activity" placeholder="${esc(t("phAct"))}" aria-label="${esc(t("activity"))} ${i+1}">${esc(m.activity)}</textarea></div>
+          ${del("work."+i)}
+        </div>`).join("")}
+      </div>${ro?"":`<button class="btn sm add" data-add="work">${I.plus}${esc(t("addWork"))}</button>`}</div></section>`}
+    ${paper?"":`<section class="sec" id="sec-done"><div class="sec-h"><h2>${esc(t("awsComplete"))}</h2><span class="sum"><b>${attsOf("completed").length}</b> ${esc(t("files"))}</span></div>
+      <div class="sec-b"><p class="muted" style="margin:0 0 12px;font-size:13px">${esc(t("awsCompleteHint"))}</p>${attList("completed", ro)}</div></section>`}
+    <section class="sec" id="sec-sg"><div class="sec-h"><h2>${esc(t("signatures"))}</h2></div><div class="sec-b sigs">
+      ${["ikm","client1","client2"].map(k=>sigBlock(k,ro)).join("")}
+    </div></section>` + attSection(ro) + (flowFirst?"":approvalPanel());
+  }
+  const ownerBar = view.tab==="edit" && !ro && OPEN_ST.includes(st) && (isOwner(cur) || isAdmin());
+  $("#mbar-slot").innerHTML = ownerBar ? `<div class="abar"><div class="abar-in"><span class="hint2">${esc(t("hintBtns"))}</span><button class="btn bdraft" id="b-draft">${esc(t("btnDraft"))}</button><button class="btn breview" id="b-saved">${esc(t("btnSaved"))}</button><button class="btn bsubmit" id="b-submit">${esc(t("btnSubmit"))}</button></div></div>`
+    : (view.tab==="edit" && canAct(cur)) ? `<div class="abar"><div class="abar-in"><span class="hint2">${esc(t("apprBarHint"))}</span>${ro?"":`<button class="btn bdraft" id="b-keep">${esc(t("btnKeep"))}</button>`}<button class="btn info" id="b-goap">${esc(t("goApprove"))}</button></div></div>`
+    : (view.tab==="edit" && !ro) ? `<div class="abar"><div class="abar-in"><span class="hint2">${esc(t("hintBtns"))}</span><button class="btn bdraft" id="b-keep">${esc(t("btnKeep"))}</button></div></div>`
+    : (view.tab==="form" ? `<div class="mbar"><button class="btn pri" id="m-p">${I.dl}PDF</button><button class="btn" id="m-x">${I.dl}Excel</button></div>` : "");
+  wireEdit(); paintStatus();
+}
+function locField(){
+  const opts=sheetLocOptions(cur); if(!opts.length) return "";
+  const v=sheetLoc(cur)||""; const lock = RO || !OPEN_ST.includes(cur.status||"draft");
+  return `<div class="field"><label for="f-loc">${esc(t("location"))}</label><select class="inp" id="f-loc" ${lock?"disabled":""}>${opts.length>1&&!v?`<option value="">${esc(t("pickLoc"))}</option>`:""}${opts.map(l=>`<option value="${esc(l.id)}" ${v===l.id?"selected":""}>${esc(l.name)}</option>`).join("")}</select></div>`;
+}
+const OTHER="__other__";
+const empOpen={};
+function empPicker(m,i,ro){
+  const emps=(S.masters.employee||[]);
+  const input=`<input class="inp" ${ro?"readonly":""} data-k="manpower.${i}.name" ${!ro&&emps.length?`data-ac="${i}" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="ac-${i}"`:""} autocomplete="off" value="${esc(m.name)}" placeholder="${esc(emps.length&&!ro?t("typeToFind"):t("phEmp"))}" aria-label="${esc(t("employee"))} ${i+1}">`;
+  if(ro || !emps.length) return input;
+  return `<div class="ac">${input}<div class="ac-list" id="ac-${i}" role="listbox" hidden></div></div>`;
+}
+function combo(k, kind, label){
+  const opts=(S.masters[kind]||[]).map(m=>m.value); const v=cur[k]||"";
+  if(RO || !opts.length) return fld(k,label);
+  const inList=opts.includes(v); const other = !!v && !inList;
+  const otherOpen = other || comboOpen[k];
+  return `<div class="field combo"><label for="f-${k}-sel">${esc(label)}${reqMark(k)}</label>
+    <select class="inp" id="f-${k}-sel" data-combo="${k}"><option value="" ${!v&&!otherOpen?"selected":""}>${esc(t("pickOne"))}</option>${opts.map(o=>`<option ${o===v?"selected":""}>${esc(o)}</option>`).join("")}<option value="${OTHER}" ${otherOpen?"selected":""}>${esc(t("otherType"))}</option></select>
+    <input class="inp" id="f-${k}" data-k="${k}" value="${esc(other?v:"")}" placeholder="${esc(t("typeHere"))}" ${otherOpen?"":"hidden"} aria-label="${esc(label)}"></div>`;
+}
+const comboOpen={};
+const REQ_FIELDS = ["date","client","jobNo","project"];   // must be filled before Submit Draft / Submit Completed AWS
+const reqMark = k => REQ_FIELDS.includes(k) ? `<span class="req" aria-hidden="true">*</span>` : "";
+const missingInfo = w => REQ_FIELDS.filter(k=>!String(w[k]||"").trim());
+function fld(k,label,type){
+  return `<div class="field"><label for="f-${k}">${esc(label)}${reqMark(k)}</label><input class="inp${type?" num":""}" id="f-${k}" ${type?`type="${type}"`:""} ${RO?"readonly":""} ${REQ_FIELDS.includes(k)?"aria-required=\"true\"":""} data-k="${k}" value="${esc(cur[k])}"></div>`;
+}
+function sigBlock(k,ro){
+  const s=cur.sign[k]; const title = k==="ikm"?t("ikmRep"):t("clientRep");
+  return `<div class="sig" data-sig="${k}">
+    <h3>${esc(title)}<span class="pill ${hasSig(s)?"signed":"draft"}">${esc(hasSig(s)?t("signedOne"):t("unsigned"))}</span></h3>
+    <div><div class="sig-row"><span class="lbl">${esc(t("signature"))}</span>${ro?"":`<button class="btn sm ghost" data-clear="${k}">${esc(t("clear"))}</button>`}</div>
+      <div class="pad"><div class="base"></div><canvas id="pad-${k}" aria-label="${esc(t("signature"))} ${esc(title)}"></canvas>${hasSig(s)||ro?"":`<div class="hint">${esc(t("signHere"))}</div>`}</div></div>
+    <div class="field"><label for="s-${k}-n">${esc(t("printName"))}</label><input class="inp" id="s-${k}-n" ${ro?"readonly":""} data-k="sign.${k}.name" value="${esc(s.name)}"></div>
+    <div class="two"><div class="field"><label for="s-${k}-p">${esc(t("position"))}</label><input class="inp" id="s-${k}-p" ${ro?"readonly":""} data-k="sign.${k}.position" value="${esc(s.position)}"></div>
+    <div class="field"><label for="s-${k}-d">${esc(t("date"))}</label><input class="inp num" type="date" id="s-${k}-d" ${ro?"readonly":""} data-k="sign.${k}.date" value="${esc(s.date)}"></div></div>
+  </div>`;
+}
+function setPath(o,path,v){ const p=path.split("."); let x=o; for(let i=0;i<p.length-1;i++) x=x[p[i]]; x[p[p.length-1]]=v; }
+function autosize(ta){ ta.style.height="auto"; ta.style.height=Math.max(40,ta.scrollHeight+2)+"px"; }
+function wireEdit(){
+  const app=$("#app");
+  $("#back").onclick=()=>guardLeave(()=>{ view.name="list"; cur=null; RO=true; render(); window.scrollTo(0,0); });
+  $("#tab-edit").onclick=()=>{ view.tab="edit"; renderEdit(); };
+  $("#tab-form").onclick=()=>{ view.tab="form"; renderEdit(); };
+  const dup=()=>guardLeave(()=>createSheet(cur.id));
+  [["#dup",dup],["#m-dup",dup],["#del",confirmDelete],["#m-del",confirmDelete],["#dl-x",dlXlsx],["#m-x",dlXlsx],["#dl-p",dlPdf],["#m-p",dlPdf],["#b-draft",()=>commit("draft")],["#b-keep",()=>commit(null)],["#b-saved",()=>commit("saved")],["#b-submit",submitSheet],
+    ["#ap-ok",()=>act("approve")],["#ap-ret",()=>act("return")],["#ap-rej",()=>act("reject")],["#ap-reopen",()=>act("reopen")],
+    ["#b-goap",()=>{ const s=$("#sec-ap"); if(s){ s.scrollIntoView({block:"start"}); const c=$("#ap-c"); if(c) setTimeout(()=>c.focus(),300); } }]].forEach(([s,f])=>{ const b=$(s); if(b) b.onclick=f; });
+  if(view.tab!=="edit") return;
+  wireAtts();
+  app.querySelectorAll("[data-ac]").forEach(inp=>{
+    const i=+inp.dataset.ac; const box=$("#ac-"+i); const pos=$("#mp-pos-"+i);
+    let hits=[], idx=-1;
+    const norm=s=>(s||"").trim().toLowerCase();
+    const show=()=>{
+      const q=norm(inp.value); const emps=S.masters.employee||[];
+      hits = (q ? emps.filter(e=>norm(e.value).includes(q)).sort((x,y)=>norm(x.value).indexOf(q)-norm(y.value).indexOf(q)) : emps).slice(0,8);
+      idx=-1;
+      if(!hits.length){ box.hidden=true; inp.setAttribute("aria-expanded","false"); return; }
+      box.innerHTML=hits.map((e,k)=>`<div class="ac-it" role="option" id="ac-${i}-${k}" data-k="${k}"><b></b><small></small></div>`).join("");
+      box.querySelectorAll(".ac-it").forEach((el,k)=>{ el.querySelector("b").textContent=hits[k].value; el.querySelector("small").textContent=hits[k].position||"";
+        el.addEventListener("pointerdown",ev=>{ ev.preventDefault(); pick(k); }); });
+      box.hidden=false; inp.setAttribute("aria-expanded","true");
+    };
+    const hide=()=>{ box.hidden=true; inp.setAttribute("aria-expanded","false"); inp.removeAttribute("aria-activedescendant"); };
+    const mark=()=>{ box.querySelectorAll(".ac-it").forEach((el,k)=>el.classList.toggle("on",k===idx)); if(idx>=0){ inp.setAttribute("aria-activedescendant",`ac-${i}-${idx}`); box.children[idx].scrollIntoView({block:"nearest"}); } };
+    const pick=k=>{ const e=hits[k]; if(!e) return; const row=cur.manpower[i];
+      inp.value=e.value; row.name=e.value; row.position=e.position||row.position||""; if(pos) pos.value=row.position;
+      $("#mp-n").textContent=cur.manpower.filter(x=>x.name).length; hide(); scheduleSave(); if(pos) pos.focus(); };
+    inp.addEventListener("input",show);
+    inp.addEventListener("focus",show);
+    inp.addEventListener("keydown",ev=>{
+      if(box.hidden && (ev.key==="ArrowDown")){ show(); return; }
+      if(box.hidden) return;
+      if(ev.key==="ArrowDown"){ ev.preventDefault(); idx=Math.min(hits.length-1,idx+1); mark(); }
+      else if(ev.key==="ArrowUp"){ ev.preventDefault(); idx=Math.max(0,idx-1); mark(); }
+      else if(ev.key==="Enter" && idx>=0){ ev.preventDefault(); pick(idx); }
+      else if(ev.key==="Escape"){ hide(); }
+    });
+    inp.addEventListener("blur",()=>{ setTimeout(hide,120);
+      // typed a full name without picking: still fill an empty position
+      const e=(S.masters.employee||[]).find(x=>norm(x.value)===norm(inp.value)); const row=cur.manpower[i];
+      if(e && row && !row.position && e.position){ row.position=e.position; if(pos) pos.value=e.position; scheduleSave(); } });
+  });
+  app.querySelectorAll('input[name="f-mode"]').forEach(r=>r.onchange=()=>{ cur.mode=r.value; scheduleSave(); rerenderAt("#sec-mode"); });
+  app.querySelectorAll("[data-combo]").forEach(sel=>sel.onchange=()=>{
+    const k=sel.dataset.combo; const inp=$("#f-"+k);
+    if(sel.value===OTHER){ comboOpen[k]=true; inp.hidden=false; inp.value=""; cur[k]=""; inp.focus(); }
+    else { comboOpen[k]=false; inp.hidden=true; inp.value=""; cur[k]=sel.value; }
+    if(k==="jobNo"||k==="project"){ $(".ed-top h1").textContent=cur.jobNo||cur.project||t("untitled"); }
+    scheduleSave();
+  });
+  app.querySelectorAll("[data-k]").forEach(el=>{
+    if(el.tagName==="TEXTAREA") autosize(el);
+    el.addEventListener("input",()=>{
+      setPath(cur, el.dataset.k, el.value);
+      if(el.tagName==="TEXTAREA") autosize(el);
+      const m=/^manpower\.(\d+)\./.exec(el.dataset.k);
+      if(m){ $("#mp-n").textContent=cur.manpower.filter(x=>x.name).length; }
+      if(el.dataset.k==="jobNo"||el.dataset.k==="project"){ $(".ed-top h1").textContent=cur.jobNo||cur.project||t("untitled"); }
+      scheduleSave();
+    });
+  });
+  app.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{
+    const k=b.dataset.add; const arr=cur[k]; const last=arr[arr.length-1];
+    arr.push(k==="manpower"? {name:"",position:"",start:last?last.start:"08:00",finish:last?last.finish:"17:00"} : k==="equipment"? {type:"",qty:""} : {time:"",activity:""});
+    scheduleSave(); renderEdit();
+    const rows=app.querySelectorAll(`#sec-${k==="manpower"?"mp":k==="equipment"?"eq":"wk"} .r:not(.hd)`);
+    const f=rows[rows.length-1] && rows[rows.length-1].querySelector("input,textarea"); if(f) f.focus();
+  });
+  app.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{
+    const [k,i]=b.dataset.del.split("."); cur[k].splice(+i,1); if(k==="manpower") Object.keys(empOpen).forEach(x=>delete empOpen[x]);
+    if(!cur[k].length) cur[k]=blank()[k];
+    scheduleSave(); renderEdit();
+  });
+  ["ikm","client1","client2"].forEach(setupPad);
+  app.querySelectorAll("[data-clear]").forEach(b=>b.onclick=()=>{ cur.sign[b.dataset.clear].sig=""; scheduleSave(); renderEdit(); });
+}
+
+/* ---------- signature pad ---------- */
+function setupPad(k){
+  const cv=$("#pad-"+k); if(!cv) return;
+  const ctx=cv.getContext("2d");
+  const r=cv.getBoundingClientRect(); const dpr=window.devicePixelRatio||1;
+  cv.width=Math.round(r.width*dpr); cv.height=Math.round(r.height*dpr); ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.lineCap="round"; ctx.lineJoin="round"; ctx.lineWidth=2.2; ctx.strokeStyle="#1B2A6B";
+  const src=cur.sign[k].sig; if(src){ const img=new Image(); img.onload=()=>{ const s=Math.min(r.width/img.width, r.height/img.height); const w=img.width*s,h=img.height*s; ctx.drawImage(img,(r.width-w)/2,(r.height-h)/2,w,h); }; img.src=src; }
+  if(RO) return;
+  let drawing=false, last=null;
+  const pt=e=>{ const b=cv.getBoundingClientRect(); return {x:e.clientX-b.left,y:e.clientY-b.top}; };
+  cv.addEventListener("pointerdown",e=>{ e.preventDefault(); drawing=true; last=pt(e); cv.setPointerCapture(e.pointerId);
+    const h=cv.parentNode.querySelector(".hint"); if(h) h.remove(); ctx.beginPath(); ctx.arc(last.x,last.y,1.1,0,Math.PI*2); ctx.fillStyle="#1B2A6B"; ctx.fill(); });
+  cv.addEventListener("pointermove",e=>{ if(!drawing) return; const p=pt(e); ctx.beginPath(); ctx.moveTo(last.x,last.y); ctx.lineTo(p.x,p.y); ctx.stroke(); last=p; });
+  const end=()=>{ if(!drawing) return; drawing=false;
+    cur.sign[k].sig = exportSig(cv);
+    if(!cur.sign[k].date){ cur.sign[k].date=today(); const d=$("#s-"+k+"-d"); if(d) d.value=cur.sign[k].date; }
+    const pill=cv.closest(".sig").querySelector("h3 .pill"); pill.className="pill signed"; pill.textContent=t("signedOne");
+    scheduleSave(); };
+  cv.addEventListener("pointerup",end); cv.addEventListener("pointercancel",end);
+}
+function exportSig(cv){
+  const s=Math.min(1, 600/cv.width);
+  const o=document.createElement("canvas"); o.width=Math.round(cv.width*s); o.height=Math.round(cv.height*s);
+  o.getContext("2d").drawImage(cv,0,0,o.width,o.height);
+  return o.toDataURL("image/png");
+}
+
+/* ---------- user management (admin) ---------- */
+function renderUsers(){
+  $("#mbar-slot").innerHTML="";
+  const app=$("#app");
+  const rl={admin:t("roleAdmin"),user:t("roleUser"),approver:t("roleApprover"),viewer:t("roleViewer"),manager:t("roleManager")};
+  const tabs=`<div class="tabs" role="tablist"><button role="tab" id="ut-u" aria-selected="${view.utab==="users"}">${esc(t("users"))}</button><button role="tab" id="ut-l" aria-selected="${view.utab==="locs"}">${esc(t("locations"))}</button><button role="tab" id="ut-m" aria-selected="${view.utab==="masters"}">${esc(t("masters"))}</button></div>`;
+  let body;
+  if(view.utab==="masters"){
+    const kinds=[["job",t("jobNo")],["project",t("project")],["client",t("client")]];
+    const emps=S.masters.employee||[];
+    const empCard=`<section class="sec mwide"><div class="sec-h"><h2>${esc(t("employees"))}</h2><span class="sum"><b>${emps.length}</b></span></div><div class="sec-b">
+      <p class="muted" style="margin:0 0 10px;font-size:13px">${esc(t("employeesHint"))}</p>
+      <form class="m-add" data-kind="employee"><input class="inp" placeholder="${esc(t("employee"))}" aria-label="${esc(t("employee"))}"><input class="inp m-pos" placeholder="${esc(t("position"))}" aria-label="${esc(t("position"))}"><button class="btn pri sm" type="submit">${I.plus}${esc(t("add"))}</button></form>
+      ${emps.length?`<ul class="mlist">${emps.map(m=>`<li><input class="inp" data-mid="${esc(m.id)}" value="${esc(m.value)}" aria-label="${esc(t("employee"))}"><input class="inp" data-mpos="${esc(m.id)}" value="${esc(m.position||"")}" placeholder="${esc(t("position"))}" aria-label="${esc(t("position"))}"><span class="m-btns"><button class="btn sm" data-msave="${esc(m.id)}">${esc(t("save"))}</button><button class="btn sm ghost danger" data-mdel="${esc(m.id)}" aria-label="${esc(t("del"))}">${I.trash}</button></span></li>`).join("")}</ul>`:`<p class="muted" style="margin:10px 0 0">${esc(t("noItems"))}</p>`}
+    </div></section>`;
+    const locSel=(v,attrs)=>`<select class="inp msel" ${attrs}><option value="">${esc(t("noLocOpt"))}</option>${S.locs.map(l=>`<option value="${esc(l.id)}" ${v===l.id?"selected":""}>${esc(l.name)}</option>`).join("")}</select>`;
+    body=`<p class="muted" style="margin:-6px 0 14px">${esc(t("mastersSub"))}</p><div class="mgrid">${kinds.map(([k,lab])=>`<section class="sec"><div class="sec-h"><h2>${esc(lab)}</h2><span class="sum"><b>${S.masters[k].length}</b></span></div><div class="sec-b">
+      <form class="m-add" data-kind="${k}"><input class="inp" placeholder="${esc(t("addNew"))} ${esc(lab)}" aria-label="${esc(t("addNew"))} ${esc(lab)}">${locSel("",`aria-label="${esc(t("location"))}"`)}<button class="btn pri sm" type="submit">${I.plus}${esc(t("add"))}</button></form>
+      ${S.masters[k].length?`<ul class="mlist">${S.masters[k].map(m=>`<li><input class="inp" data-mid="${esc(m.id)}" value="${esc(m.value)}" aria-label="${esc(lab)}">${locSel(m.location_id||"",`data-mloc="${esc(m.id)}" aria-label="${esc(t("location"))}"`)}<span class="m-btns"><button class="btn sm" data-msave="${esc(m.id)}">${esc(t("save"))}</button><button class="btn sm ghost danger" data-mdel="${esc(m.id)}" aria-label="${esc(t("del"))}">${I.trash}</button></span></li>`).join("")}</ul>`:`<p class="muted" style="margin:10px 0 0">${esc(t("noItems"))}</p>`}
+    </div></section>`).join("")}${empCard}</div>`;
+  } else if(view.utab==="locs"){
+    const approvers=Object.values(S.users).filter(u=>u.active && (u.roles||[]).includes("approver")).sort((a,b)=>(a.full_name||a.username).localeCompare(b.full_name||b.username));
+    const sel=(l,i)=>`<label class="field"><span class="lbl">${esc(t("stepN").replace("{n}",i+1))}</span><select class="inp" data-loc="${esc(l.id)}" data-i="${i}"><option value="">${esc(t("none"))}</option>${approvers.map(u=>`<option value="${esc(u.id)}" ${(l.approvers||[])[i]===u.id?"selected":""}>${esc(u.full_name||u.username)}</option>`).join("")}</select></label>`;
+    body=`<p class="muted" style="margin:-6px 0 14px">${esc(t("locSub"))}</p>
+      <section class="sec"><div class="sec-b form-grid"><div class="field"><label for="nl-n">${esc(t("locName"))}</label><input class="inp" id="nl-n" placeholder="${esc(t("locPh"))}"></div><button class="btn pri" id="nl-add">${I.plus}${esc(t("addLoc"))}</button></div></section>
+      ${S.locs.length?S.locs.map(l=>{ const members=Object.values(S.users).filter(u=>(u.location_ids||[]).includes(l.id)).length;
+        return `<section class="sec loc"><div class="sec-h"><input class="inp loc-name" data-name="${esc(l.id)}" value="${esc(l.name)}" aria-label="${esc(t("locName"))}"><span class="sum"><b>${members}</b> ${esc(t("membersN"))}</span></div>
+        <div class="sec-b"><div class="form-grid">${[0,1,2].map(i=>sel(l,i)).join("")}</div>
+        <div class="loc-acts"><button class="btn sm ghost danger" data-dloc="${esc(l.id)}">${I.trash}${esc(t("del"))}</button><button class="btn sm pri" data-sloc="${esc(l.id)}">${esc(t("save"))}</button></div></div></section>`; }).join("")
+        :`<div class="empty"><p>${esc(t("noLocs"))}</p></div>`}
+      ${approvers.length?"":`<div class="note">${esc(t("noApprovers"))}</div>`}`;
+  } else {
+    const list=Object.values(S.users).sort((a,b)=>((b.roles||[]).includes("admin")-(a.roles||[]).includes("admin")) || a.username.localeCompare(b.username));
+    body=`<p class="muted" style="margin:-6px 0 14px">${esc(t("usersSub"))}</p>
+    <section class="sec"><div class="sec-b tbl-wrap"><table class="utable">
+      <thead><tr><th>${esc(t("fullName"))}</th><th>${esc(t("username"))}</th><th>${esc(t("roles"))}</th><th>${esc(t("location"))}</th><th>${esc(t("status"))}</th><th></th></tr></thead>
+      <tbody>${list.map(u=>`<tr class="${u.active?"":"off"}">
+        <td><b class="u-n" data-id="${esc(u.id)}"></b><br><small class="muted u-p" data-id="${esc(u.id)}"></small></td>
+        <td class="num">@<span class="u-u" data-id="${esc(u.id)}"></span>${u.id===S.me?` <small class="muted">(${esc(t("you"))})</small>`:""}</td>
+        <td><span class="roles-chips">${(u.roles||[]).map(r=>`<span class="role ${r}">${esc(rl[r]||r)}</span>`).join("")}</span></td>
+        <td>${esc((u.location_ids||[]).map(locName).filter(Boolean).join(", ")||"—")}</td>
+        <td><span class="pill ${u.active?"saved":"draft"}">${esc(u.active?t("active"):t("inactive"))}</span></td>
+        <td class="c-acts"><div class="acts"><button class="btn sm" data-edit="${esc(u.id)}">${esc(t("editUser"))}</button>
+          ${u.id===S.me?"":`<button class="btn sm" data-act="${esc(u.id)}">${esc(u.active?t("deactivate"):t("activate"))}</button><button class="btn sm ghost danger" data-delu="${esc(u.id)}" aria-label="${esc(t("del"))}">${I.trash}</button>`}</div></td>
+      </tr>`).join("")}</tbody></table></div></section>
+    <section class="sec"><div class="sec-h"><h2>${esc(t("rulesT"))}</h2></div><div class="sec-b"><ul class="rule-list"><li>${esc(t("rAdmin"))}</li><li>${esc(t("rUser"))}</li><li>${esc(t("rApprover"))}</li><li>${esc(t("rViewer"))}</li><li>${esc(t("rManager"))}</li></ul></div></section>`;
+  }
+  app.innerHTML=`<div class="ed-top"><button class="btn ghost" id="back">${I.back}${esc(t("back"))}</button><h1>${esc(t("settings"))}</h1><div class="spacer"></div>
+      ${view.utab==="users"?`<button class="btn pri" id="add-u">${I.plus}${esc(t("addUser"))}</button>`:""}</div>${tabs}${body}`;
+  $("#back").onclick=()=>{ view.name="list"; render(); };
+  $("#ut-u").onclick=()=>{ view.utab="users"; renderUsers(); };
+  $("#ut-l").onclick=()=>{ view.utab="locs"; renderUsers(); };
+  $("#ut-m").onclick=()=>{ view.utab="masters"; renderUsers(); };
+  if(view.utab==="masters"){
+    const dupMsg = e => /duplicate|unique/i.test(e.message) ? t("mDup") : e.message;
+    app.querySelectorAll(".m-add").forEach(f=>f.onsubmit=async e=>{ e.preventDefault(); const inp=f.querySelector("input"); const v=inp.value.trim(); if(!v){ inp.focus(); return; }
+      const sel=f.querySelector("select"), pin=f.querySelector(".m-pos");
+      const row={ kind:f.dataset.kind, value:v }; if(sel) row.location_id=sel.value||null; if(pin) row.position=pin.value.trim();
+      const { error } = await sb.from("aws_masters").insert(row);
+      if(error){ toast(dupMsg(error)); return; } await loadMasters(); toast(t("mSaved")); renderUsers();
+      const again=app.querySelector(`.m-add[data-kind="${f.dataset.kind}"] input`); if(again) again.focus(); });
+    app.querySelectorAll("[data-msave]").forEach(b=>b.onclick=async()=>{ const id=b.dataset.msave; const v=app.querySelector(`[data-mid="${id}"]`).value.trim(); if(!v) return;
+      const patch={ value:v }; const ls=app.querySelector(`[data-mloc="${id}"]`), ps=app.querySelector(`[data-mpos="${id}"]`);
+      if(ls) patch.location_id=ls.value||null; if(ps) patch.position=ps.value.trim();
+      const { error } = await sb.from("aws_masters").update(patch).eq("id", id);
+      if(error){ toast(dupMsg(error)); return; } await loadMasters(); toast(t("mSaved")); renderUsers(); });
+    app.querySelectorAll("[data-mdel]").forEach(b=>b.onclick=()=>{ const id=b.dataset.mdel; const m=Object.values(S.masters).flat().find(x=>x.id===id);
+      confirmBox(t("mDelT"), (m?m.value+" — ":"")+t("mDelP"), t("del"), async()=>{ const { error } = await sb.from("aws_masters").delete().eq("id", id);
+        if(error){ toast(error.message); return; } await loadMasters(); renderUsers(); }); });
+    return;
+  }
+  if(view.utab==="locs"){
+    $("#nl-add").onclick=async()=>{ const n=$("#nl-n").value.trim(); if(!n){ $("#nl-n").focus(); return; }
+      const { error } = await sb.from("aws_locations").insert({ name:n });
+      if(error){ toast(/duplicate/i.test(error.message)?t("locDup"):error.message); return; }
+      await loadLocs(); toast(t("locSaved")); renderUsers(); };
+    app.querySelectorAll("[data-sloc]").forEach(b=>b.onclick=async()=>{
+      const id=b.dataset.sloc; const name=app.querySelector(`[data-name="${id}"]`).value.trim();
+      const ids=[0,1,2].map(i=>app.querySelector(`[data-loc="${id}"][data-i="${i}"]`).value).filter(Boolean);
+      if(new Set(ids).size!==ids.length){ toast(t("locDupApprover")); return; }
+      if(!name){ toast(t("locName")); return; }
+      b.disabled=true;
+      const { error } = await sb.from("aws_locations").update({ name, approvers:ids }).eq("id", id);
+      b.disabled=false;
+      if(error){ toast(/duplicate/i.test(error.message)?t("locDup"):error.message); return; }
+      await loadLocs(); toast(t("locSaved")); renderUsers(); });
+    app.querySelectorAll("[data-dloc]").forEach(b=>b.onclick=()=>confirmBox(t("delLocT"), t("delLocP"), t("del"), async()=>{
+      const { error } = await sb.from("aws_locations").delete().eq("id", b.dataset.dloc);
+      if(error){ toast(error.message); return; } await refreshAll(true); renderUsers(); }));
+    return;
+  }
+  app.querySelectorAll(".u-n").forEach(el=>el.textContent=S.users[el.dataset.id].full_name||"—");
+  app.querySelectorAll(".u-p").forEach(el=>el.textContent=S.users[el.dataset.id].position||"");
+  app.querySelectorAll(".u-u").forEach(el=>el.textContent=S.users[el.dataset.id].username);
+  $("#add-u").onclick=()=>userDialog(null);
+  app.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>userDialog(S.users[b.dataset.edit]));
+  app.querySelectorAll("[data-act]").forEach(b=>b.onclick=async()=>{ const u=S.users[b.dataset.act]; b.disabled=true;
+    try{ await adminCall({action:"update", id:u.id, active:!u.active}); await loadUsers(); toast(t("userSaved")); render(); }catch(e){ toast(e.message); b.disabled=false; } });
+  app.querySelectorAll("[data-delu]").forEach(b=>b.onclick=()=>{ const u=S.users[b.dataset.delu];
+    confirmBox(t("delUserT"), t("delUserP"), t("del"), async()=>{ try{ await adminCall({action:"delete", id:u.id}); await loadUsers(); toast(t("userDeleted")); }catch(e){ toast(e.message); } render(); }); });
+}
+function userDialog(u){
+  const slot=$("#ov-slot"); const isEdit=!!u;
+  const roles=new Set(u ? (u.roles||[]) : ["user"]);
+  slot.innerHTML=`<div class="ov" role="dialog" aria-modal="true" aria-labelledby="ud-t"><form class="dlg" id="ud" novalidate><h2 id="ud-t">${esc(isEdit?t("editUser"):t("addUser"))}</h2>
+    <div class="field"><label for="ud-f">${esc(t("fullName"))}</label><input class="inp" id="ud-f"></div>
+    <div class="field"><label for="ud-pos">${esc(t("position"))}</label><input class="inp" id="ud-pos"></div>
+    <div class="field"><label for="ud-u">${esc(t("username"))}</label><input class="inp" id="ud-u" autocapitalize="none" spellcheck="false" ${isEdit?"readonly":""}>${isEdit?"":`<small class="muted">${esc(t("unameRule"))}</small>`}</div>
+    <div class="field"><label for="ud-p">${esc(isEdit?t("resetPw"):t("password"))}</label><input class="inp" id="ud-p" type="password" autocomplete="new-password" placeholder="${isEdit?"••••••":""}"></div>
+    <div class="field"><span class="lbl">${esc(t("roles"))}</span><div class="checks">
+      ${["user","approver","manager","viewer","admin"].map(r=>`<label class="chk"><input type="checkbox" value="${r}" ${roles.has(r)?"checked":""}> ${esc(t({user:"roleUser",admin:"roleAdmin",approver:"roleApprover",viewer:"roleViewer",manager:"roleManager"}[r]))}</label>`).join("")}</div></div>
+    <div class="field"><span class="lbl">${esc(t("locationsMulti"))}</span>${S.locs.length?`<div class="checks locchk">${S.locs.map(l=>`<label class="chk"><input type="checkbox" value="${esc(l.id)}" ${u&&(u.location_ids||[]).includes(l.id)?"checked":""}> <span class="ln"></span></label>`).join("")}</div>`:`<small class="muted">${esc(t("noLocs"))}</small>`}<small class="muted">${esc(t("locHint"))}</small></div>
+    <div class="err" id="ud-err" role="alert"></div>
+    <div class="acts"><button type="button" class="btn" id="ud-c">${esc(t("cancel"))}</button><button type="submit" class="btn pri" id="ud-s">${esc(isEdit?t("save"):t("create"))}</button></div></form></div>`;
+  slot.querySelectorAll(".locchk .chk").forEach((el,i)=>{ el.querySelector(".ln").textContent=S.locs[i].name; });
+  $("#ud-f").value=u?u.full_name:""; $("#ud-pos").value=u?u.position:""; $("#ud-u").value=u?u.username:"";
+  $("#ud-c").onclick=()=>slot.innerHTML="";
+  $("#ud-f").focus();
+  $("#ud").onsubmit=async e=>{
+    e.preventDefault(); const err=$("#ud-err"), go=$("#ud-s");
+    const p=$("#ud-p").value;
+    const rs=[...slot.querySelectorAll(".checks:not(.locchk) .chk input:checked")].map(x=>x.value);
+    const locIds=[...slot.querySelectorAll(".locchk input:checked")].map(x=>x.value);
+    if(!rs.length){ err.textContent=t("needRole"); return; }
+    if((!isEdit || p) && p.length<6){ err.textContent=t("pwShort"); return; }
+    go.disabled=true; err.textContent="";
+    try{
+      if(isEdit){ const body={action:"update", id:u.id, full_name:$("#ud-f").value, position:$("#ud-pos").value, roles:rs, location_ids:locIds}; if(p) body.password=p; await adminCall(body); }
+      else await adminCall({action:"create", username:$("#ud-u").value.trim(), password:p, full_name:$("#ud-f").value, position:$("#ud-pos").value, roles:rs, location_ids:locIds});
+      await loadUsers(); if(isEdit && u.id===S.me) await loadProfile();
+      slot.innerHTML=""; toast(isEdit?t("userSaved"):t("userCreated")); render();
+    }catch(ex){ err.textContent=ex.message||t("notSaved"); go.disabled=false; }
+  };
+}
+/* ---------- Attachments: Toolbox talk photos and scanned paper AWS (not part of the PDF form) ---------- */
+const ATT_BUCKET="aws-toolbox", ATT_MAX=10*1024*1024;
+/* New files go to Google Drive through the Apps Script web app when GDRIVE_URL is set; older files stay in Supabase Storage */
+const GDRIVE_URL="https://script.google.com/macros/s/AKfycbzZkzexYTnRz6rU8n7HDXYHDPQ3ukKkjoBJwM5VtDlMtHoXN1CZ0lfvA9ObzhaaWEiP/exec".startsWith("https://") ? "https://script.google.com/macros/s/AKfycbzZkzexYTnRz6rU8n7HDXYHDPQ3ukKkjoBJwM5VtDlMtHoXN1CZ0lfvA9ObzhaaWEiP/exec" : "";
+const isGd = a => !!a && (a.path||"").includes("/gdrive/");
+async function gd(op, body){
+  const { data } = await sb.auth.getSession(); const token = data.session ? data.session.access_token : "";
+  const r = await fetch(GDRIVE_URL, { method:"POST", body: JSON.stringify(Object.assign({ op, token }, body||{})) });   // text/plain: no CORS preflight
+  const j = await r.json().catch(()=>({ error:"HTTP "+r.status }));
+  if(j.error) throw new Error(j.error); return j;
+}
+const b64Of = f => new Promise((res,rej)=>{ const fr=new FileReader(); fr.onload=()=>res(String(fr.result).split(",")[1]||""); fr.onerror=()=>rej(fr.error); fr.readAsDataURL(f); });
+const b64Blob = (b64, type) => { const bin=atob(b64); const u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i); return new Blob([u],{type}); };
+const gdThumbs = {};
+async function loadGdThumbs(sheetId){
+  const need=(S.atts[sheetId]||[]).filter(a=>isGd(a) && /^image\//.test(a.mime) && !gdThumbs[a.id]).map(a=>a.id);
+  if(!need.length || !GDRIVE_URL) return;
+  try{ const { thumbs } = await gd("thumbs", { ids:need }); Object.assign(gdThumbs, thumbs||{}); }catch(e){ return; }
+  document.querySelectorAll("[data-gdthumb]").forEach(el=>{ const u=gdThumbs[el.dataset.gdthumb]; if(u && !el.querySelector("img")){ el.innerHTML=`<img src="${esc(u)}" alt="">`; } });
+}
+async function gdOpen(a){
+  const w = isMobile() ? null : window.open("about:blank","_blank");
+  busy(true);
+  try{ const f=await gd("get",{ id:a.id }); const blob=b64Blob(f.b64, f.mime||a.mime); busy(false);
+    if(w && !w.closed){ w.location.href=URL.createObjectURL(blob); } else save(a.name, blob, a.mime); }
+  catch(e){ busy(false); if(w) w.close(); toast(t("dlFail")+" — "+e.message); }
+}
+async function removeAtt(a){
+  if(isGd(a)){ await gd("del",{ id:a.id }); return; }
+  const r1 = await sb.storage.from(ATT_BUCKET).remove([a.path]);
+  const r2 = await sb.from("aws_attachments").delete().eq("id", a.id);
+  if(r1.error||r2.error) throw new Error((r1.error||r2.error).message||"");
+}
+const ATT_TYPES=["image/jpeg","image/png","image/webp","image/heic","image/heif","image/gif","application/pdf"];
+async function loadAtts(id){
+  const { data, error } = await sb.from("aws_attachments").select("id, kind, path, name, mime, size, uploaded_by, created_at").eq("sheet_id", id).order("created_at");
+  if(error){ S.atts[id]=[]; return; }
+  let urls={};
+  const sbRows=data.filter(a=>!isGd(a));
+  if(sbRows.length){ const { data:sig } = await sb.storage.from(ATT_BUCKET).createSignedUrls(sbRows.map(a=>a.path), 3600);
+    (sig||[]).forEach(s=>{ if(s && s.signedUrl) urls[s.path]=s.signedUrl; }); }
+  S.atts[id]=data.map(a=>Object.assign(a,{kind:a.kind||"toolbox", url:urls[a.path]||""}));
+}
+const attAnchor = k => k==="toolbox" ? "#sec-att" : k==="completed" ? "#sec-done" : "#sec-mode";
+const attsOf = kind => (S.atts[cur.id]||[]).filter(a=>(a.kind||"toolbox")===kind);
+const fmtSize = n => n>=1048576 ? (n/1048576).toFixed(1)+" MB" : Math.max(1,Math.round(n/1024))+" KB";
+function attList(kind, ro){
+  const list=attsOf(kind);
+  return `${list.length?`<div class="atts">${list.map(a=>{ const img=/^image\//.test(a.mime) && a.mime!=="image/heic" && a.mime!=="image/heif";
+      const ico=`<span class="att-ico">${a.mime==="application/pdf"?"PDF":"IMG"}</span>`;
+      const thumb = isGd(a)
+        ? `<button type="button" class="att-thumb" data-attview="${esc(a.id)}" aria-label="${esc(t("view"))}"><span data-gdthumb="${esc(a.id)}">${img&&gdThumbs[a.id]?`<img src="${esc(gdThumbs[a.id])}" alt="">`:ico}</span></button>`
+        : `<a class="att-thumb" href="${esc(a.url)}" target="_blank" rel="noopener" aria-label="${esc(t("view"))}">${img&&a.url?`<img src="${esc(a.url)}" alt="" loading="lazy">`:ico}</a>`;
+      return `<div class="att">
+        ${thumb}
+        <div class="att-meta"><b class="att-n" data-att="${esc(a.id)}"></b><small class="muted">${esc(fmtSize(a.size))} · ${esc(nameOf(a.uploaded_by))}</small></div>
+        <div class="att-acts">${isGd(a)?`<button type="button" class="btn sm" data-attview="${esc(a.id)}">${esc(t("view"))}</button>`:`<a class="btn sm" href="${esc(a.url)}" target="_blank" rel="noopener">${esc(t("view"))}</a>`}<button class="btn sm" data-attdl="${esc(a.id)}" aria-label="${esc(t("download"))}">${I.dl}</button>${ro?"":`<button class="btn sm" data-attrep="${esc(a.id)}">${esc(t("replaceFile"))}</button><button class="btn sm ghost danger" data-attdel="${esc(a.id)}" aria-label="${esc(t("del"))}">${I.trash}</button>`}</div>
+      </div>`; }).join("")}</div>`:`<p class="muted" style="margin:0 0 10px">${esc(t(kind==="toolbox"?"noFiles":"noFilesAny"))}</p>`}
+    ${ro?"":`<button type="button" class="btn sm add ${({toolbox:"okb",paper_draft:"breview",paper:"bsubmit",completed:"bsubmit"})[kind]||""}" data-attadd="${kind}">${I.plus}${esc(t({toolbox:"addToolbox",paper:"addDoneRpt",paper_draft:"addDraftRpt",completed:"addComplete"}[kind]))}</button>`}`;
+}
+function attSection(ro){
+  const n=attsOf("toolbox").length;
+  return `<section class="sec tbx" id="sec-att"><div class="sec-h"><h2>${esc(t("toolbox"))} <small>${esc(t("toolboxFB"))}</small></h2><span class="sum"><b>${n}</b> ${esc(t("files"))}</span></div>
+    <div class="sec-b"><p class="muted" style="margin:0 0 12px;font-size:13px">${esc(t("toolboxHint"))}</p>${attList("toolbox", ro)}</div></section>`;
+}
+async function shrinkImage(file){
+  if(!/^image\/(jpeg|png|webp)$/.test(file.type) || file.size < 1.5*1024*1024) return file;
+  try{
+    const bmp = await createImageBitmap(file); const s=Math.min(1, 2000/Math.max(bmp.width,bmp.height));
+    const c=document.createElement("canvas"); c.width=Math.round(bmp.width*s); c.height=Math.round(bmp.height*s);
+    c.getContext("2d").drawImage(bmp,0,0,c.width,c.height);
+    const blob = await new Promise(r=>c.toBlob(r,"image/jpeg",0.85));
+    return blob && blob.size < file.size ? new File([blob], file.name.replace(/\.\w+$/,"")+".jpg", {type:"image/jpeg"}) : file;
+  }catch(e){ return file; }
+}
+// Upload files of one kind; returns how many were stored
+async function putFiles(files, kind){
+  let ok=0;
+  for(const f0 of files){
+    const type = f0.type || (/\.pdf$/i.test(f0.name)?"application/pdf":/\.(jpe?g)$/i.test(f0.name)?"image/jpeg":/\.png$/i.test(f0.name)?"image/png":/\.hei[cf]$/i.test(f0.name)?"image/heic":"");
+    if(!ATT_TYPES.includes(type)){ toast(t("badType")+": "+f0.name); continue; }
+    const f0t = f0.type ? f0 : new File([f0], f0.name, { type });
+    const f = await shrinkImage(f0t);
+    if(f.size > ATT_MAX){ toast(t("tooBig")+": "+f0.name); continue; }
+    if(GDRIVE_URL){
+      try{ const b64=await b64Of(f); await gd("upload",{ sheet_id:cur.id, kind, name:f.name, mime:f.type, b64 }); ok++; }
+      catch(e){ toast(t("notSaved")+": "+f0.name+" — "+e.message); }
+      continue;
+    }
+    const ext=(f.name.match(/\.(\w{1,5})$/)||[,f.type==="application/pdf"?"pdf":"jpg"])[1].toLowerCase();
+    const path=`${cur.id}/${uuid()}.${ext}`;
+    const up = await sb.storage.from(ATT_BUCKET).upload(path, f, { contentType:f.type, upsert:false });
+    if(up.error){ toast(t("notSaved")+": "+f0.name+" — "+up.error.message); continue; }
+    const ins = await sb.from("aws_attachments").insert({ sheet_id:cur.id, kind, path, name:f.name, mime:f.type, size:f.size, uploaded_by:S.me });
+    if(ins.error){ await sb.storage.from(ATT_BUCKET).remove([path]); toast(t("notSaved")+": "+f0.name+" — "+ins.error.message); continue; }
+    ok++;
+  }
+  return ok;
+}
+async function ensureStored(){
+  // a brand-new sheet must exist on the server before files can hang off it
+  if(isNew){ toast(t("saveFirst")); const b=$("#b-draft"); if(b) b.focus(); return false; }   // files need the sheet stored; edits stay unsaved until a button is pressed
+  return true;
+}
+function rerenderAt(sel){ const y=window.scrollY; renderEdit(); const s=$(sel); if(s) s.scrollIntoView({block:"start"}); else window.scrollTo(0,y); }
+async function uploadAtts(files, kind, saving){
+  if(!files.length || RO) return;
+  if(saving){ await saving; if(saveState==="err"){ toast(t("notSaved")+(saveErr?" — "+saveErr:"")); return; } }
+  if(!(await ensureStored())) return;
+  busy(true, t("uploading"));
+  const ok = await putFiles(files, kind);
+  await loadAtts(cur.id); busy(false);
+  if(ok) toast(t("uploaded").replace("{n}",ok));
+  rerenderAt(attAnchor(kind));
+}
+const STASH="aws-cam-stash";
+function stashCur(){ try{ if(cur && dirty && !RO) sessionStorage.setItem(STASH, JSON.stringify({ id:cur.id, at:Date.now(), w:cur })); }catch(e){} }
+function dropStash(){ try{ sessionStorage.removeItem(STASH); }catch(e){} }
+async function restoreStash(){
+  let st=null; try{ st=JSON.parse(sessionStorage.getItem(STASH)||"null"); }catch(e){} dropStash();
+  if(!st || Date.now()-st.at > 3600e3 || !S.list.find(x=>x.id===st.id)) return;
+  await openSheet(st.id); if(!cur || cur.id!==st.id || RO) return;
+  cur=Object.assign(cur, st.w, { id:st.id }); dirty=true; saveState="dirty"; renderEdit(); toast(t("restoredAfterCam"));
+}
+function pickFiles(multiple, cb){
+  stashCur();
+  const inp=document.createElement("input"); inp.type="file"; inp.accept="image/*,application/pdf"; inp.multiple=multiple;
+  inp.className="vh"; document.body.appendChild(inp);
+  inp.onchange=()=>{ const fs=[...inp.files]; inp.remove(); dropStash(); cb(fs); };
+  inp.click();
+}
+function wireAtts(){
+  const list=S.atts[cur.id]||[];
+  document.querySelectorAll(".att-n").forEach(el=>{ const a=list.find(x=>x.id===el.dataset.att); if(a) el.textContent=a.name; });
+  document.querySelectorAll("[data-attadd]").forEach(b=>b.onclick=()=>{
+    const kind=b.dataset.attadd;
+    if(!isNew){ pickFiles(true, fs=>uploadAtts(fs, kind)); return; }
+    // a brand-new sheet must be saved (as draft) first; the dialog button both saves and opens the camera/picker in the same tap
+    const slot=$("#ov-slot");
+    slot.innerHTML=`<div class="ov" role="dialog" aria-modal="true" aria-labelledby="an-t"><div class="dlg"><h2 id="an-t">${esc(t("attNeedSaveT"))}</h2><p>${esc(t("attNeedSaveP"))}</p>
+      <div class="acts"><button class="btn" id="an-c">${esc(t("cancel"))}</button><button class="btn bdraft" id="an-y">${esc(t("attSaveGo"))}</button></div></div></div>`;
+    $("#an-c").onclick=()=>slot.innerHTML="";
+    $("#an-y").onclick=()=>{ slot.innerHTML=""; cur.status="draft"; dirty=true; const saving=flush();
+      pickFiles(true, fs=>uploadAtts(fs, kind, saving)); saving.then(()=>{ if(saveState!=="err") toast(t("draftDone")); }); };
+    $("#an-y").focus(); });
+  document.querySelectorAll("[data-attview]").forEach(b=>b.onclick=()=>{ const a=list.find(x=>x.id===b.dataset.attview); if(a) gdOpen(a); });
+  loadGdThumbs(cur.id);
+  document.querySelectorAll("[data-attdl]").forEach(b=>b.onclick=async()=>{ const a=list.find(x=>x.id===b.dataset.attdl); if(!a) return;
+    if(isGd(a)){ b.disabled=true; try{ const f=await gd("get",{ id:a.id }); save(a.name, b64Blob(f.b64, f.mime||a.mime), a.mime); }catch(e){ toast(t("dlFail")+" — "+e.message); } b.disabled=false; return; }
+    b.disabled=true; const { data, error } = await sb.storage.from(ATT_BUCKET).download(a.path); b.disabled=false;
+    if(error){ toast(t("dlFail")); return; } save(a.name, data, a.mime); });
+  document.querySelectorAll("[data-attrep]").forEach(b=>b.onclick=()=>{ const a=list.find(x=>x.id===b.dataset.attrep); if(!a) return;
+    pickFiles(false, async fs=>{ if(!fs.length) return; busy(true, t("uploading"));
+      const ok = await putFiles(fs, a.kind||"toolbox");
+      if(ok){ try{ await removeAtt(a); }catch(e){} toast(t("replaced")); }
+      await loadAtts(cur.id); busy(false); rerenderAt(attAnchor(a.kind)); }); });
+  document.querySelectorAll("[data-attdel]").forEach(b=>b.onclick=()=>{ const a=list.find(x=>x.id===b.dataset.attdel); if(!a) return;
+    confirmBox(t("delFileT"), a.name, t("del"), async()=>{
+      try{ await removeAtt(a); }catch(e){ toast(t("notSaved")+" — "+e.message); }
+      await loadAtts(cur.id); rerenderAt(attAnchor(a.kind)); }); });
+}
+function changePwDialog(){
+  const slot=$("#ov-slot");
+  slot.innerHTML=`<div class="ov" role="dialog" aria-modal="true" aria-labelledby="pw-t"><form class="dlg" id="pw" novalidate><h2 id="pw-t">${esc(t("changePw"))}</h2>
+    <div class="field"><label for="pw-1">${esc(t("newPw"))}</label><input class="inp" id="pw-1" type="password" autocomplete="new-password"></div>
+    <div class="field"><label for="pw-2">${esc(t("confirmPw"))}</label><input class="inp" id="pw-2" type="password" autocomplete="new-password"></div>
+    <div class="err" id="pw-err" role="alert"></div>
+    <div class="acts"><button type="button" class="btn" id="pw-c">${esc(t("cancel"))}</button><button class="btn pri" type="submit">${esc(t("savePw"))}</button></div></form></div>`;
+  $("#pw-1").focus(); $("#pw-c").onclick=()=>slot.innerHTML="";
+  $("#pw").onsubmit=async e=>{ e.preventDefault(); const a=$("#pw-1").value, b=$("#pw-2").value, err=$("#pw-err");
+    if(a.length<6){ err.textContent=t("pwShort"); return; } if(a!==b){ err.textContent=t("pwMismatch"); return; }
+    const { error } = await sb.auth.updateUser({ password:a });
+    if(error){ err.textContent=error.message; return; }
+    slot.innerHTML=""; toast(t("pwChanged")); };
+}
+
+/* ---------- submission tracking (plan vs. actual) ---------- */
+const TRACK = { periods:[], rows:{}, actual:{} };
+const MONTHS = { th:["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."], en:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"] };
+const MONTHS_L = { th:["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"], en:["January","February","March","April","May","June","July","August","September","October","November","December"] };
+const SUBMITTED_ST = ["submitted","pending","returned","approved","rejected"];
+const pad2 = n => String(n).padStart(2,"0");
+const daysIn = (y,m) => new Date(y, m, 0).getDate();
+const shortName = id => { const u=S.users[id]; if(!u) return "?"; return (u.full_name||u.username).split(/\s+/)[0]; };
+async function loadTrack(){
+  const [p, r] = await Promise.all([
+    sb.from("aws_track_periods").select("id, year, month").order("year").order("month"),
+    sb.from("aws_track_rows").select("id, period_id, job_no, plan, sort").order("sort").order("created_at")]);
+  if(p.error||r.error){ toast(t("netErr")); return; }
+  TRACK.periods = p.data; TRACK.rows = {};
+  r.data.forEach(x=>{ (TRACK.rows[x.period_id] ||= []).push(x); });
+  const ys=[...new Set(TRACK.periods.map(x=>x.year))];
+  if(!ys.includes(view.ty)){ const now=new Date(); view.ty = ys.includes(now.getFullYear()) ? now.getFullYear() : ys[ys.length-1]; }
+  const ms=TRACK.periods.filter(x=>x.year===view.ty);
+  if(!ms.find(x=>x.id===view.tm)){ const cm=new Date().getMonth()+1; const hit=ms.find(x=>x.month===cm); view.tm = hit ? hit.id : (ms[ms.length-1]||{}).id; }
+}
+async function loadActual(pid){
+  const per=TRACK.periods.find(x=>x.id===pid); if(!per) return;
+  const from=`${per.year}-${pad2(per.month)}-01`, to=`${per.year}-${pad2(per.month)}-${pad2(daysIn(per.year,per.month))}`;
+  const { data, error } = await sb.rpc("aws_track_actual", { p_from:from, p_to:to });
+  TRACK.actual[pid] = error ? [] : data.filter(a=>a.status!=="draft");   // drafts are not shown
+}
+async function openTrack(){ view.page="track"; await loadTrack(); if(view.tm) await loadActual(view.tm); render(); }
+
+function pageTabs(){
+  return `<div class="ptabs" role="tablist"><button role="tab" id="pg-s" aria-selected="${view.page!=="track"}">${esc(t("sheets"))}</button><button role="tab" id="pg-t" aria-selected="${view.page==="track"}">${esc(t("trackT"))}</button></div>`;
+}
+function wirePageTabs(){
+  const a=$("#pg-s"), b=$("#pg-t");
+  if(a) a.onclick=()=>{ view.page="sheets"; render(); };
+  if(b) b.onclick=()=>openTrack();
+}
+
+function planOf(row,d){ const v=(row.plan||{})[d]; return Array.isArray(v)? v.filter(Boolean) : (v? [v] : []); }
+function renderTrack(){
+  $("#mbar-slot").innerHTML="";
+  const app=$("#app"); const adm=isAdmin(); const L=lang==="th"?"th":"en";
+  const years=[...new Set(TRACK.periods.map(x=>x.year))].sort((a,b)=>a-b);
+  const months=TRACK.periods.filter(x=>x.year===view.ty).sort((a,b)=>a.month-b.month);
+  const per=TRACK.periods.find(x=>x.id===view.tm);
+  const yearLabel = y => L==="th" ? `${y} (พ.ศ. ${y+543})` : String(y);
+  let html = `<div class="list-head"><div><h1>${esc(t("trackT"))}</h1><p>${esc(t("trackP"))}</p></div><div class="spacer"></div>
+    <button class="btn" id="tr-rf" aria-label="${esc(t("refresh"))}">${I.refresh}</button></div>${pageTabs()}`;
+  html += `<div class="trk-tabs"><div class="ytabs" role="tablist">${years.map(y=>`<button role="tab" data-y="${y}" aria-selected="${y===view.ty}">${esc(yearLabel(y))}</button>`).join("")}
+      ${adm?`<button class="btn sm ghost" id="tr-addy">${I.plus}${esc(t("addYear"))}</button>`:""}</div>
+    ${adm&&years.length?`<div class="trk-adm"><button class="btn sm ghost" id="tr-edy">${esc(t("editYear"))}</button><button class="btn sm ghost danger" id="tr-dely">${I.trash}${esc(t("delYear"))}</button></div>`:""}</div>`;
+  if(years.length) html += `<div class="trk-tabs"><div class="mtabs" role="tablist">${months.map(m=>`<button role="tab" data-m="${esc(m.id)}" aria-selected="${m.id===view.tm}">${esc(MONTHS[L][m.month-1])}</button>`).join("")}
+      ${adm?`<button class="btn sm ghost" id="tr-addm">${I.plus}${esc(t("addMonth"))}</button>`:""}</div>
+    ${adm&&per?`<div class="trk-adm"><button class="btn sm ghost" id="tr-edm">${esc(t("editMonth"))}</button><button class="btn sm ghost danger" id="tr-delm">${I.trash}${esc(t("delMonth"))}</button></div>`:""}</div>`;
+  if(!per){ html += `<div class="empty"><p>${esc(adm?t("trackEmptyAdm"):t("trackEmpty"))}</p></div>`; app.innerHTML=html; wireTrack(); return; }
+
+  const act=TRACK.actual[per.id]||[];
+  const nd=daysIn(per.year, per.month); const todayS=today();
+  const ymd=d=>`${per.year}-${pad2(per.month)}-${pad2(d)}`;
+  const wd = d => new Date(per.year, per.month-1, d).getDay();
+  const dname = L==="th" ? ["อา","จ","อ","พ","พฤ","ศ","ส"] : ["Su","Mo","Tu","We","Th","Fr","Sa"];
+  let d1=Math.min(Math.max(1,view.td1||1),nd), d2=Math.min(Math.max(1,view.td2||nd),nd); if(d2<d1){ const x=d1; d1=d2; d2=x; }
+  const days=[]; for(let d=d1; d<=d2; d++) days.push(d);
+  // rows: only accounts that hold the User role (also when they have other roles too); Admin, Manager, Viewer or
+  // Approver alone are left out. Each work sheet counts for the account that signed in and created it.
+  const emps=Object.values(S.users).filter(u=>u.active && (u.roles||[]).includes("user"))
+    .map(u=>({ id:u.id, value:u.full_name||u.username, position:u.position||"" })).sort((a,b)=>a.value.localeCompare(b.value));
+  TRACK.people=emps;
+  const byDay={}; act.forEach(a=>{ (byDay[a.work_date] ||= []).push(a); });
+  const cellsOf = e => days.map(d=>(byDay[ymd(d)]||[]).filter(a=>a.created_by===e.id));
+  const rows=emps.map(e=>({ e, cells:cellsOf(e) }));
+  const active=rows.filter(r=>r.cells.some(c=>c.length)).length;
+  const dOpt = sel => Array.from({length:nd},(_,i)=>i+1).map(d=>`<option value="${d}" ${d===sel?"selected":""}>${d} ${dname[wd(d)]}</option>`).join("");
+  const cls = d => `${[0,6].includes(wd(d))?"we":""} ${ymd(d)===todayS?"td":""}`;
+  const ST=["saved","pending","returned","approved","rejected"];
+  const chip = a => `<button class="achip s-${esc(a.status)}" data-sheet="${esc(a.sheet_id)}" title="${esc(t("ts_"+a.status))}"><span class="ast s-${esc(a.status)}">${esc(t("ts_"+a.status))}</span>${a.has_toolbox?`<i>TB</i>`:""}</button>`;
+  const filtered = !!view.tjob || d1>1 || d2<nd;
+  html += `<h2 class="trk-title">${esc(t("trackHead"))} · ${esc(MONTHS_L[L][per.month-1])} ${L==="th"?per.year+543:per.year}</h2>
+    <div class="stats trk-stats"><span><b>${emps.length}</b>${esc(t("empN"))}</span><span><b>${active}</b>${esc(t("empActiveN"))}</span><span><b>${act.length}</b>${esc(t("sheetsN"))}</span></div>
+    <div class="trk-legend">${esc(t("statusInCell"))}: ${ST.map(s=>`<span class="ast s-${s}">${esc(t("ts_"+s))}</span>`).join("")}<span class="lg lg-tb">TB = ${esc(t("toolbox"))}</span></div>
+    <div class="trk-filt" role="search">
+      <label class="tf tf-name"><span>${I.search}${esc(t("empName"))}</span><div class="ac"><input class="inp" id="tf-name" type="search" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="tf-ac" placeholder="${esc(t("typeToFind"))}" value="${esc(view.tjob)}"><div class="ac-list" id="tf-ac" role="listbox" hidden></div></div></label>
+      <label class="tf"><span>${esc(t("fDays"))}</span><select class="inp" id="tf-d1" aria-label="${esc(t("fDays"))}">${dOpt(d1)}</select></label>
+      <label class="tf"><span>${esc(t("toDay"))}</span><select class="inp" id="tf-d2" aria-label="${esc(t("toDay"))}">${dOpt(d2)}</select></label>
+      <button class="btn sm ghost" id="tf-clr" ${filtered?"":"hidden"}>${I.x}${esc(t("clearF"))}</button>
+    </div>
+    ${emps.length?"":`<div class="note">${esc(t("noEmp"))}</div>`}
+    <div class="trk-wrap"><table class="trk trk-p"><thead>
+      <tr><th class="c-no" rowspan="2">NO.</th><th class="c-name" rowspan="2">NAME</th><th class="c-month" colspan="${days.length}">${esc(MONTHS_L[L][per.month-1])} ${L==="th"?per.year+543:per.year}</th></tr>
+      <tr class="r-days">${days.map(d=>`<th class="${cls(d)}"><small>${dname[wd(d)]}</small>${d}</th>`).join("")}</tr></thead><tbody>
+    ${rows.map((r,ri)=>`<tr data-name="${esc(personKey(r.e.value))}"><td class="c-no">${ri+1}</td><th class="c-name"><span class="jn">${esc(r.e.value)}</span>${r.e.position?`<small class="muted">${esc(r.e.position)}</small>`:""}</th>
+      ${r.cells.map((c,i)=>`<td class="${cls(days[i])} ${c.length?"has":""}">${c.map(chip).join("")}</td>`).join("")}</tr>`).join("")}
+    <tr class="no-match" hidden><td colspan="${days.length+2}" class="muted" style="text-align:left;padding:14px">${esc(t("noEmpMatch"))}</td></tr>
+    </tbody></table></div>`;
+  app.innerHTML=html; wireTrack(); applyNameFilter();
+}
+function personKey(s){ return String(s||"").toLowerCase().replace(/^\s*(mr|mrs|ms|miss)\.?\s+/,"").replace(/^\s*(นางสาว|นาย|นาง|น\.ส\.)\s*/,"").replace(/\s+/g," ").trim(); }
+function applyNameFilter(){
+  const q=personKey(view.tjob); let n=0;
+  document.querySelectorAll(".trk-p tbody tr[data-name]").forEach(tr=>{ const show=!q || tr.dataset.name.includes(q); tr.hidden=!show; if(show){ n++; const c=tr.querySelector(".c-no"); if(c) c.textContent=n; } });
+  const nm=document.querySelector(".trk-p .no-match"); if(nm) nm.hidden = n>0 || !document.querySelector(".trk-p tbody tr[data-name]");
+  const c=$("#tf-clr"); if(c) c.hidden = !(view.tjob || (view.td1||0)>1 || view.td2);
+}
+
+function wireTrack(){
+  wirePageTabs();
+  const app=$("#app"); const adm=isAdmin();
+  const per=TRACK.periods.find(x=>x.id===view.tm);
+  const reload=async()=>{ await loadTrack(); if(view.tm) await loadActual(view.tm); renderTrack(); };
+  const rf=$("#tr-rf"); if(rf) rf.onclick=async()=>{ await refreshAll(true); await reload(); };
+  app.querySelectorAll("[data-y]").forEach(b=>b.onclick=async()=>{ view.ty=+b.dataset.y; view.tm=null; await reload(); });
+  app.querySelectorAll("[data-m]").forEach(b=>b.onclick=async()=>{ view.tm=b.dataset.m; view.td1=0; view.td2=0; await loadActual(view.tm); renderTrack(); });
+  app.querySelectorAll("[data-sheet]").forEach(b=>b.onclick=()=>openSheet(b.dataset.sheet));
+  // name search: filters rows as you type and suggests names from Admin settings
+  const fn=$("#tf-name"), box=$("#tf-ac");
+  if(fn){
+    let hits=[], idx=-1;
+    const hide=()=>{ box.hidden=true; fn.setAttribute("aria-expanded","false"); };
+    const show=()=>{ const q=personKey(fn.value); hits=q?(TRACK.people||[]).filter(e=>personKey(e.value).includes(q)).slice(0,8):[]; idx=-1;
+      if(!hits.length){ hide(); return; }
+      box.innerHTML=hits.map((e,k)=>`<div class="ac-it" role="option" id="tf-ac-${k}"><b></b><small></small></div>`).join("");
+      box.querySelectorAll(".ac-it").forEach((el,k)=>{ el.querySelector("b").textContent=hits[k].value; el.querySelector("small").textContent=hits[k].position||"";
+        el.addEventListener("pointerdown",ev=>{ ev.preventDefault(); pick(k); }); });
+      box.hidden=false; fn.setAttribute("aria-expanded","true"); };
+    const pick=k=>{ const e=hits[k]; if(!e) return; fn.value=e.value; view.tjob=e.value; applyNameFilter(); hide(); };
+    fn.addEventListener("input",()=>{ view.tjob=fn.value; applyNameFilter(); show(); });
+    fn.addEventListener("focus",show);
+    fn.addEventListener("blur",()=>setTimeout(hide,120));
+    fn.addEventListener("keydown",ev=>{
+      if(box.hidden) return;
+      if(ev.key==="ArrowDown"){ ev.preventDefault(); idx=Math.min(hits.length-1,idx+1); }
+      else if(ev.key==="ArrowUp"){ ev.preventDefault(); idx=Math.max(0,idx-1); }
+      else if(ev.key==="Enter"){ ev.preventDefault(); if(idx>=0) pick(idx); else hide(); return; }
+      else if(ev.key==="Escape"){ hide(); return; } else return;
+      box.querySelectorAll(".ac-it").forEach((el,k)=>el.classList.toggle("on",k===idx)); });
+  }
+  const fd1=$("#tf-d1"), fd2=$("#tf-d2");
+  if(fd1) fd1.onchange=()=>{ view.td1=+fd1.value; if(+fd2.value<view.td1) view.td2=view.td1; renderTrack(); };
+  if(fd2) fd2.onchange=()=>{ view.td2=+fd2.value; if(+fd1.value>view.td2) view.td1=view.td2; renderTrack(); };
+  const fc=$("#tf-clr"); if(fc) fc.onclick=()=>{ view.tjob=""; view.td1=0; view.td2=0; renderTrack(); };
+  if(!adm) return;
+  const L=lang==="th"?"th":"en";
+  const monthOpts = sel => MONTHS_L[L].map((m,i)=>`<option value="${i+1}" ${sel===i+1?"selected":""}>${esc(m)}</option>`).join("");
+  const dbErr = e => /duplicate|unique/i.test(e.message) ? t("periodDup") : e.message;
+  const ay=$("#tr-addy"); if(ay) ay.onclick=()=>formDialog(t("addYear"), `<div class="field"><label for="fd-y">${esc(t("yearCE"))}</label><input class="inp num" id="fd-y" type="number" min="2000" max="2100" value="${(Math.max(0,...TRACK.periods.map(x=>x.year))||new Date().getFullYear()-1)+1}"></div>
+      <div class="field"><label for="fd-m">${esc(t("firstMonth"))}</label><select class="inp" id="fd-m">${monthOpts(1)}</select></div>`, async()=>{
+      const y=+$("#fd-y").value, m=+$("#fd-m").value; if(!(y>=2000&&y<=2100)) return t("yearCE");
+      const { data, error } = await sb.from("aws_track_periods").insert({ year:y, month:m }).select().single(); if(error) return dbErr(error);
+      view.ty=y; view.tm=data.id; await reload(); });
+  const am=$("#tr-addm"); if(am) am.onclick=()=>{ const used=TRACK.periods.filter(x=>x.year===view.ty).map(x=>x.month); const free=[...Array(12)].map((_,i)=>i+1).filter(m=>!used.includes(m));
+    if(!free.length){ toast(t("periodDup")); return; }
+    formDialog(t("addMonth")+" "+view.ty, `<div class="field"><label for="fd-m">${esc(t("month"))}</label><select class="inp" id="fd-m">${free.map(m=>`<option value="${m}">${esc(MONTHS_L[L][m-1])}</option>`).join("")}</select></div>
+      ${per?`<label class="chk"><input type="checkbox" id="fd-copy"> ${esc(t("copyJobs"))}</label>`:""}`, async()=>{
+      const m=+$("#fd-m").value; const { data, error } = await sb.from("aws_track_periods").insert({ year:view.ty, month:m }).select().single(); if(error) return dbErr(error);
+      const cp=$("#fd-copy"); if(cp && cp.checked){ const src=TRACK.rows[per.id]||[]; if(src.length) await sb.from("aws_track_rows").insert(src.map((r,i)=>({ period_id:data.id, job_no:r.job_no, plan:{}, sort:i+1 }))); }
+      view.tm=data.id; await reload(); }); };
+  const ey=$("#tr-edy"); if(ey) ey.onclick=()=>formDialog(t("editYear"), `<div class="field"><label for="fd-y">${esc(t("yearCE"))}</label><input class="inp num" id="fd-y" type="number" min="2000" max="2100" value="${view.ty}"></div>`, async()=>{
+      const y=+$("#fd-y").value; if(!(y>=2000&&y<=2100)) return t("yearCE"); if(y===view.ty) return;
+      if(TRACK.periods.some(x=>x.year===y)) return t("yearExists");
+      for(const p of TRACK.periods.filter(x=>x.year===view.ty)){ const { error } = await sb.from("aws_track_periods").update({ year:y }).eq("id", p.id); if(error) return dbErr(error); }
+      view.ty=y; await reload(); });
+  const dy=$("#tr-dely"); if(dy) dy.onclick=()=>confirmBox(t("delYearT").replace("{y}",view.ty), t("delYearP"), t("del"), async()=>{
+      const { error } = await sb.from("aws_track_periods").delete().eq("year", view.ty); if(error){ toast(error.message); return; } view.ty=null; view.tm=null; await reload(); });
+  const em=$("#tr-edm"); if(em) em.onclick=()=>formDialog(t("editMonth"), `<div class="field"><label for="fd-y">${esc(t("yearCE"))}</label><input class="inp num" id="fd-y" type="number" min="2000" max="2100" value="${per.year}"></div>
+      <div class="field"><label for="fd-m">${esc(t("month"))}</label><select class="inp" id="fd-m">${monthOpts(per.month)}</select></div>`, async()=>{
+      const y=+$("#fd-y").value, m=+$("#fd-m").value; const { error } = await sb.from("aws_track_periods").update({ year:y, month:m }).eq("id", per.id); if(error) return dbErr(error);
+      view.ty=y; await reload(); });
+  const dm=$("#tr-delm"); if(dm) dm.onclick=()=>confirmBox(t("delMonthT"), t("delMonthP"), t("del"), async()=>{
+      const { error } = await sb.from("aws_track_periods").delete().eq("id", per.id); if(error){ toast(error.message); return; } view.tm=null; await reload(); });
+  // job rows
+  const js=$("#tr-job"), jt=$("#tr-jobtxt");
+  if(js) js.onchange=()=>{ jt.hidden = js.value!==OTHER; if(!jt.hidden) jt.focus(); };
+  const fr=$("#tr-addrow"); if(fr) fr.onsubmit=async e=>{ e.preventDefault();
+    const job = (!js || js.value===OTHER || !js.value) ? jt.value.trim() : js.value; if(!job){ jt.hidden=false; jt.focus(); return; }
+    const rows=TRACK.rows[per.id]||[]; if(rows.some(r=>r.job_no.trim().toLowerCase()===job.toLowerCase())){ toast(t("jobInTable")); return; }
+    const { error } = await sb.from("aws_track_rows").insert({ period_id:per.id, job_no:job, plan:{}, sort:rows.length+1 }); if(error){ toast(error.message); return; } await reload(); };
+  app.querySelectorAll("[data-rdel]").forEach(b=>b.onclick=()=>{ const r=(TRACK.rows[per.id]||[]).find(x=>x.id===b.dataset.rdel);
+    confirmBox(t("delJobRowT"), r?r.job_no:"", t("del"), async()=>{ const { error } = await sb.from("aws_track_rows").delete().eq("id", r.id); if(error){ toast(error.message); return; } await reload(); }); });
+  app.querySelectorAll("[data-redit]").forEach(b=>b.onclick=()=>{ const r=(TRACK.rows[per.id]||[]).find(x=>x.id===b.dataset.redit);
+    formDialog(t("editJobRow"), `<div class="field"><label for="fd-j">${esc(t("jobNo"))}</label><input class="inp" id="fd-j" value="${esc(r.job_no)}" list="fd-jl"><datalist id="fd-jl">${(S.masters.job||[]).map(m=>`<option value="${esc(m.value)}">`).join("")}</datalist></div>`, async()=>{
+      const v=$("#fd-j").value.trim(); if(!v) return t("jobNo"); const { error } = await sb.from("aws_track_rows").update({ job_no:v }).eq("id", r.id); if(error) return error.message; await reload(); }); });
+  // plan cells (multi-person)
+  app.querySelectorAll(".pcell").forEach(b=>b.onclick=()=>{
+    const r=(TRACK.rows[per.id]||[]).find(x=>x.id===b.dataset.row); const d=+b.dataset.d;
+    let sel=planOf(r,d).slice();
+    const people=Object.values(S.users).filter(u=>u.active && ((u.roles||[]).includes("user")||(u.roles||[]).includes("admin"))).sort((x,y)=>(x.full_name||x.username).localeCompare(y.full_name||y.username));
+    const nd=daysIn(per.year, per.month); const norm=s=>(s||"").trim().toLowerCase();
+    const ymd=`${per.year}-${pad2(per.month)}-${pad2(d)}`;
+    const filed=u=>(TRACK.actual[per.id]||[]).some(a=>a.created_by===u && a.work_date===ymd && norm(a.job_no)===norm(r.job_no));
+    formDialog(`${r.job_no} · ${d} ${MONTHS_L[L][per.month-1]}`, `<div class="field"><label for="fd-q">${esc(t("whoSubmits"))}</label>
+        <div class="pchips" id="fd-chips" aria-live="polite"></div>
+        <div class="ac"><input class="inp" id="fd-q" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="fd-al" placeholder="${esc(t("addPerson"))}"><div class="ac-list" id="fd-al" role="listbox" hidden></div></div></div>
+      <div class="field"><span class="lbl">${esc(t("applyTo"))}</span><div class="checks col">
+        <label class="chk"><input type="radio" name="fd-sc" value="day" checked> ${esc(t("thisDay"))}</label>
+        <label class="chk"><input type="radio" name="fd-sc" value="wd"> ${esc(t("weekdaysRest"))}</label>
+        <label class="chk"><input type="radio" name="fd-sc" value="all"> ${esc(t("allRest"))}</label></div></div>`, async()=>{
+      const sc=(document.querySelector('input[name="fd-sc"]:checked')||{}).value||"day";
+      const plan=Object.assign({}, r.plan);
+      for(let x=d; x<=nd; x++){
+        if(sc==="day" && x!==d) break;
+        const w=new Date(per.year, per.month-1, x).getDay(); if(sc==="wd" && (w===0||w===6)) continue;
+        if(sel.length) plan[x]=sel.slice(); else delete plan[x];
+      }
+      const { error } = await sb.from("aws_track_rows").update({ plan }).eq("id", r.id); if(error) return error.message;
+      r.plan=plan; renderTrack(); });
+    const inp=$("#fd-q"), box=$("#fd-al"), chips=$("#fd-chips");
+    let hits=[], idx=-1;
+    const drawChips=()=>{ chips.innerHTML = sel.length ? sel.map(u=>`<span class="pchip ${filed(u)?"done":""}"><span>${esc(nameOf(u))}</span>${filed(u)?`<small>✓ ${esc(t("filedAlready"))}</small>`:""}<button type="button" data-rm="${esc(u)}" aria-label="${esc(t("del"))} ${esc(nameOf(u))}">${I.x}</button></span>`).join("") : `<span class="muted">${esc(t("noPeople"))}</span>`;
+      chips.querySelectorAll("[data-rm]").forEach(x=>x.onclick=()=>{ sel=sel.filter(u=>u!==x.dataset.rm); drawChips(); inp.focus(); }); };
+    const hide=()=>{ box.hidden=true; inp.setAttribute("aria-expanded","false"); inp.removeAttribute("aria-activedescendant"); };
+    const show=()=>{ const q=norm(inp.value);
+      const nm=u=>u.full_name||u.username;
+      hits=people.filter(u=>!sel.includes(u.id) && (!q || norm(nm(u)).includes(q) || norm(u.username).includes(q))).slice(0,8); idx=hits.length&&q?0:-1;
+      if(!hits.length){ hide(); return; }
+      box.innerHTML=hits.map((u,k)=>`<div class="ac-it ${k===idx?"on":""}" role="option" id="fd-al-${k}"><b></b><small></small></div>`).join("");
+      box.querySelectorAll(".ac-it").forEach((el,k)=>{ el.querySelector("b").textContent=nm(hits[k]); el.querySelector("small").textContent=hits[k].username;
+        el.addEventListener("pointerdown",ev=>{ ev.preventDefault(); pick(k); }); });
+      box.hidden=false; inp.setAttribute("aria-expanded","true"); };
+    const mark=()=>{ box.querySelectorAll(".ac-it").forEach((el,k)=>el.classList.toggle("on",k===idx)); if(idx>=0){ inp.setAttribute("aria-activedescendant","fd-al-"+idx); box.children[idx].scrollIntoView({block:"nearest"}); } };
+    const pick=k=>{ const u=hits[k]; if(!u) return; sel.push(u.id); inp.value=""; drawChips(); hide(); inp.focus(); };
+    inp.addEventListener("input",show); inp.addEventListener("click",show);
+    inp.addEventListener("blur",()=>setTimeout(hide,120));
+    inp.addEventListener("keydown",ev=>{
+      if(ev.key==="Enter"){ if(!box.hidden && idx>=0){ ev.preventDefault(); pick(idx); return; } if(inp.value.trim()){ ev.preventDefault(); return; } return; }
+      if(ev.key==="Backspace" && !inp.value && sel.length){ sel.pop(); drawChips(); return; }
+      if(box.hidden){ if(ev.key==="ArrowDown") show(); return; }
+      if(ev.key==="ArrowDown"){ ev.preventDefault(); idx=Math.min(hits.length-1,idx+1); mark(); }
+      else if(ev.key==="ArrowUp"){ ev.preventDefault(); idx=Math.max(0,idx-1); mark(); }
+      else if(ev.key==="Escape"){ ev.stopPropagation(); hide(); }
+    });
+    drawChips();
+  });
+}
+function formDialog(title, fields, onSave){
+  const slot=$("#ov-slot");
+  slot.innerHTML=`<div class="ov" role="dialog" aria-modal="true" aria-labelledby="fd-t"><form class="dlg" id="fd" novalidate><h2 id="fd-t">${esc(title)}</h2>${fields}
+    <div class="err" id="fd-err" role="alert"></div>
+    <div class="acts"><button type="button" class="btn" id="fd-c">${esc(t("cancel"))}</button><button type="submit" class="btn pri" id="fd-s">${esc(t("save"))}</button></div></form></div>`;
+  $("#fd-c").onclick=()=>slot.innerHTML="";
+  const first=slot.querySelector("input,select"); if(first) first.focus();
+  $("#fd").onsubmit=async e=>{ e.preventDefault(); const go=$("#fd-s"); go.disabled=true;
+    const err = await onSave(); if(err){ $("#fd-err").textContent=err; go.disabled=false; return; } slot.innerHTML=""; };
+}
+
+/* ---------- overlay / toast ---------- */
+function confirmBox(title, text, okLabel, onOk, plain){
+  const okCls = plain==="info" ? "btn info" : "btn pri";
+  const slot=$("#ov-slot");
+  slot.innerHTML=`<div class="ov" role="dialog" aria-modal="true" aria-labelledby="dt"><div class="dlg"><h2 id="dt">${esc(title)}</h2><p>${esc(text)}</p>
+    <div class="acts"><button class="btn" id="dc">${esc(t("cancel"))}</button><button class="${okCls}" id="dk">${plain?"":I.trash}${esc(okLabel)}</button></div></div></div>`;
+  $("#dc").onclick=()=>slot.innerHTML=""; $("#dc").focus();
+  $("#dk").onclick=()=>{ slot.innerHTML=""; onOk(); };
+}
+function confirmDelete(){
+  confirmBox(t("delT"), t("delP"), t("del"), async()=>{
+    const id=cur.id; clearTimeout(saveTimer); dirty=false;
+    const all=S.atts[id]||[]; const paths=all.filter(x=>!isGd(x)).map(x=>x.path); if(paths.length) await sb.storage.from(ATT_BUCKET).remove(paths);
+    for(const a of all.filter(isGd)){ try{ await gd("del",{ id:a.id }); }catch(e){} }
+    const { error } = await sb.from("aws_worksheets").delete().eq("id", id);
+    if(error){ toast(t("notSaved")+" "+error.message); return; }
+    S.list=S.list.filter(x=>x.id!==id); view.name="list"; cur=null; toast(t("deleted")); render();
+  });
+}
+let toastT; function toast(msg){ let el=$(".toast"); if(!el){ el=document.createElement("div"); el.className="toast"; el.setAttribute("role","status"); document.body.appendChild(el);} el.textContent=msg; clearTimeout(toastT); toastT=setTimeout(()=>el.remove(),3000); }
+
+/* ---------- paper form (TH-OPS-FRM-071 Rev 1 layout) ---------- */
+function PF_CSS(p){ p=p||""; return `
+${p}.pf{font-family:"IBM Plex Sans Thai",Arial,"Tahoma",sans-serif;color:#111;font-size:11px;line-height:1.3}
+${p}.pf-top{display:grid;grid-template-columns:320px 1fr 330px;align-items:start;gap:10px;margin-bottom:12px}
+${p}.pf-logo{display:flex;align-items:center;gap:8px}
+${p}.pf-logo .lg{width:50px;height:auto;display:block}
+${p}.pf-logo b{font-size:12px}
+${p}.pf-title{text-align:center;font-weight:700;font-size:15px;padding-top:12px;letter-spacing:.02em}
+${p}.pf-meta{display:grid;grid-template-columns:auto 1fr;gap:3px 6px;font-size:10.5px}
+${p}.pf-meta span{text-align:right;color:#333}
+${p}.pf-meta i{font-style:normal;border-bottom:1px dotted #555;min-height:14px;padding:0 2px;overflow-wrap:anywhere}
+${p}.pf-grid{display:grid;grid-template-columns:36fr 24fr 40fr;gap:6px}
+${p}.pf table{border-collapse:collapse;width:100%;table-layout:fixed}
+${p}.pf th,${p}.pf td{border:1px solid #111;padding:2px 4px;height:19px;vertical-align:middle;overflow-wrap:anywhere}
+${p}.pf th{font-weight:600;font-size:10.5px;text-align:center}
+${p}.pf th.cap{font-weight:700;font-size:11px}
+${p}.pf td.c{text-align:center}
+${p}.pf-sign{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:8px}
+${p}.pf-sign h4{margin:0 0 4px;text-align:center;font-size:11px}
+${p}.pf-sign .ln{display:grid;grid-template-columns:70px 1fr;gap:2px 4px;align-items:end;margin-bottom:3px}
+${p}.pf-sign .ln span{text-align:right}
+${p}.pf-sign .ln i{font-style:normal;border-bottom:1px dotted #555;min-height:16px;padding:0 2px}
+${p}.pf-sign img{height:34px;display:block}
+${p}.pf-foot{display:flex;justify-content:space-between;font-size:9.5px;color:#333;margin-top:10px}
+`; }
+const LOGO = () => $("#logo-img").src;
+function fmtPaper(iso){ if(!iso) return ""; const p=iso.split("-"); return p.length===3? `${p[2]}/${p[1]}/${p[0]}` : iso; }
+function fileBase(w){ return ("AWS_"+(w.jobNo||"nojob")+"_"+(w.date||"")).replace(/[^\w\-.]+/g,"_"); }
+function formHTML(w){
+  const n=Math.max(20, w.manpower.length, w.equipment.length, w.work.length);
+  const mp=[],eq=[],wk=[];
+  for(let i=0;i<n;i++){
+    const m=w.manpower[i]||{}, e=w.equipment[i]||{}, k=w.work[i]||{}; const filled=m.name||m.position;
+    mp.push(`<tr><td class="c">${filled?i+1:""}</td><td>${esc(m.name)}</td><td>${esc(m.position)}</td><td class="c">${filled?esc(m.start):""}</td><td class="c">${filled?esc(m.finish):""}</td></tr>`);
+    eq.push(`<tr><td>${esc(e.type)}</td><td class="c">${esc(e.qty)}</td></tr>`);
+    wk.push(`<tr><td class="c">${esc(k.time)}</td><td>${esc(k.activity)}</td></tr>`);
+  }
+  const sg=(k,title)=>{ const s=w.sign[k]||{}; return `<div><h4>${title}</h4>
+    <div class="ln"><span>Signature :</span><i>${s.sig?`<img src="${s.sig}" alt="signature">`:""}</i></div>
+    <div class="ln"><span>Print name :</span><i>${esc(s.name)}</i></div>
+    <div class="ln"><span>Position :</span><i>${esc(s.position)}</i></div>
+    <div class="ln"><span>Date :</span><i>${esc(s.date?fmtPaper(s.date):"")}</i></div></div>`; };
+  return `<div class="pf">
+  <div class="pf-top"><div class="pf-logo"><img class="lg" src="${LOGO()}" alt="IKM"><b>IKM TESTING (THAILAND) CO.,LTD.</b></div>
+    <div class="pf-title">ACTIVITIES WORK SHEET</div>
+    <div class="pf-meta"><span>Date :</span><i>${esc(fmtPaper(w.date))}</i><span>Client Name :</span><i>${esc(w.client)}</i><span>Job No. :</span><i>${esc(w.jobNo)}</i><span>Project Name :</span><i>${esc(w.project)}</i></div></div>
+  <div class="pf-grid">
+    <table><colgroup><col style="width:8%"><col style="width:38%"><col style="width:26%"><col style="width:14%"><col style="width:14%"></colgroup>
+      <thead><tr><th class="cap" colspan="5">Manpower</th></tr><tr><th>No</th><th>Employee</th><th>Position</th><th>Start</th><th>Finish</th></tr></thead><tbody>${mp.join("")}</tbody></table>
+    <table><colgroup><col style="width:76%"><col style="width:24%"></colgroup>
+      <thead><tr><th class="cap" colspan="2">Equipment</th></tr><tr><th>Type</th><th>Q'ty</th></tr></thead><tbody>${eq.join("")}</tbody></table>
+    <table><colgroup><col style="width:20%"><col style="width:80%"></colgroup>
+      <thead><tr><th class="cap" colspan="2">Work description</th></tr><tr><th>Time</th><th>Activity</th></tr></thead><tbody>${wk.join("")}</tbody></table>
+  </div>
+  <div class="pf-sign">${sg("ikm","IKM Representative")}${sg("client1","Client Representative")}${sg("client2","Client Representative")}</div>
+  <div class="pf-foot"><span>Location: Operation Folder</span><span>1/1</span><span>TH-OPS-FRM-071 Rev 1</span></div>
+  </div>`;
+}
+
+/* ---------- downloads ---------- */
+const isMobile = () => (window.matchMedia && matchMedia("(pointer:coarse)").matches) || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+function save(filename, data, type){
+  const blob = data instanceof Blob ? (type ? new Blob([data],{type}) : data) : new Blob([data], {type});
+  const url=URL.createObjectURL(blob);
+  if(!isMobile()){
+    const a=document.createElement("a"); a.href=url; a.download=filename; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 60000); return;
+  }
+  // Phones: the file is offered in a dialog so the tap that saves it is a fresh tap
+  // (share sheets and downloads are refused when they start long after the original tap).
+  let file=null; try{ file=new File([blob], filename, {type:blob.type}); }catch(e){}
+  const canShare = !!(file && navigator.canShare && navigator.canShare({files:[file]}));
+  const slot=$("#ov-slot");
+  slot.innerHTML=`<div class="ov" role="dialog" aria-modal="true" aria-labelledby="rd-t"><div class="dlg"><h2 id="rd-t">${esc(t("readyT"))}</h2><p>${esc(t("readyP"))}<br><b class="rd-n"></b></p>
+    <div class="ready">${canShare?`<button class="btn pri" id="rd-s">${esc(t("share"))}</button>`:""}
+      <a class="btn ${canShare?"":"pri"}" id="rd-o" href="${url}" download="${esc(filename)}" target="_blank" rel="noopener">${esc(t("openFile"))}</a>
+      <button class="btn ghost" id="rd-c">${esc(t("cancel"))}</button></div>
+    <p class="muted" style="font-size:12.5px;margin:12px 0 0">${esc(t("lineTip"))}</p></div></div>`;
+  slot.querySelector(".rd-n").textContent=filename;
+  const close=()=>{ slot.innerHTML=""; setTimeout(()=>URL.revokeObjectURL(url), 60000); };
+  $("#rd-c").onclick=close;
+  $("#rd-o").addEventListener("click",()=>setTimeout(close,400));
+  const sb2=$("#rd-s"); if(sb2) sb2.onclick=async()=>{ try{ await navigator.share({files:[file], title:filename}); close(); }catch(e){ if(e && e.name!=="AbortError") toast(t("dlFail")); } };
+}
+function busy(on, msg){ let el=$(".busy-ov"); if(on){ if(!el){ el=document.createElement("div"); el.className="busy-ov"; el.setAttribute("role","status"); document.body.appendChild(el);} el.textContent=msg||t("makingPdf"); } else if(el) el.remove(); }
+function loadScript(src, globalName){ return new Promise((res,rej)=>{ if(window[globalName]) return res(window[globalName]);
+  const s=document.createElement("script"); s.src=src; s.onload=()=>res(window[globalName]); s.onerror=rej; document.head.appendChild(s); }); }
+async function dlPdf(){
+  busy(true);
+  let h2c, jsPDF;
+  try{
+    h2c = await loadScript("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js","html2canvas");
+    await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js","jspdf");
+    jsPDF = window.jspdf.jsPDF;
+  }catch(e){ busy(false); toast(t("dlFail")); return; }
+  // Fixed-size stage wider than any phone screen so the A4 layout is never clipped.
+  const shell=document.createElement("div");
+  shell.style.cssText="position:fixed;left:0;top:0;width:1200px;height:2400px;overflow:hidden;pointer-events:none;z-index:-1";
+  const host=document.createElement("div");
+  host.className="pdfsrc"; host.style.cssText="position:absolute;left:0;top:0;width:1123px;background:#fff;padding:18px 22px;color:#111";
+  host.innerHTML=`<style>${PF_CSS(".pdfsrc ")}</style>${formHTML(cur)}`;
+  shell.appendChild(host); document.body.appendChild(shell);
+  try{
+    try{ await document.fonts.ready; }catch(e){}
+    await Promise.all([...host.querySelectorAll("img")].map(im=>im.complete?0:new Promise(r=>{im.onload=im.onerror=r;})));
+    const scale = isMobile() ? 1.6 : 2;
+    const canvas = await h2c(host,{scale,backgroundColor:"#ffffff",logging:false,scrollX:0,scrollY:0,windowWidth:1200,windowHeight:Math.max(1200,host.scrollHeight+40),width:host.offsetWidth,height:host.offsetHeight});
+    const pdf = new jsPDF({orientation:"landscape",unit:"mm",format:"a4"});
+    const W=297,H=210,m=7; const ratio=canvas.width/canvas.height;
+    let w=W-2*m, h=w/ratio; if(h>H-2*m){ h=H-2*m; w=h*ratio; }
+    pdf.addImage(canvas.toDataURL("image/jpeg",0.92),"JPEG",(W-w)/2,m,w,h);
+    pdf.setProperties({title:"Activities Work Sheet "+(cur.jobNo||"")+" "+(cur.date||""), creator:"IKM Activities Work Sheet"});
+    busy(false);
+    save(fileBase(cur)+".pdf", pdf.output("blob"), "application/pdf");
+  }catch(e){ busy(false); toast(t("dlFail")); }
+  finally{ shell.remove(); }
+}
+async function dlXlsx(){
+  let X; try{ X=await loadScript("https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js","XLSX"); }catch(e){ toast(t("dlFail")); return; }
+  const w=cur; const n=Math.max(20,w.manpower.length,w.equipment.length,w.work.length);
+  const A=[]; const row=()=>Array(12).fill(""); let r;
+  r=row(); r[10]="Date :"; r[11]=fmtPaper(w.date); A.push(r);
+  r=row(); r[1]="IKM TESTING (THAILAND) CO.,LTD."; r[10]="Client Name :"; r[11]=w.client; A.push(r);
+  r=row(); r[4]="ACTIVITIES WORK SHEET"; r[10]="Job No. :"; r[11]=w.jobNo; A.push(r);
+  r=row(); r[10]="Project Name :"; r[11]=w.project; A.push(r);
+  A.push(row());
+  r=row(); r[0]="Manpower"; r[6]="Equipment"; r[10]="Work description"; A.push(r);
+  r=row(); r[0]="No"; r[1]="Employee"; r[2]="Position"; r[3]="Start"; r[4]="Finish"; r[6]="Type"; r[8]="Q'ty"; r[10]="Time"; r[11]="Activity"; A.push(r);
+  for(let i=0;i<n;i++){ const m=w.manpower[i]||{}, e=w.equipment[i]||{}, k=w.work[i]||{}; r=row();
+    if(m.name||m.position){ r[0]=i+1; r[1]=m.name||""; r[2]=m.position||""; r[3]=m.start||""; r[4]=m.finish||""; }
+    r[6]=e.type||""; r[8]= e.qty!==""&&e.qty!=null&&!isNaN(+e.qty) ? +e.qty : (e.qty||"");
+    r[10]=k.time||""; r[11]=k.activity||""; A.push(r); }
+  A.push(row());
+  const s=w.sign; const sgn=x=>x&&x.sig?"(signed electronically)":"";
+  r=row(); r[0]="IKM Representative"; r[6]="Client Representative"; r[10]="Client Representative"; A.push(r);
+  [["Signature :",sgn],["Print name :",x=>x.name||""],["Position :",x=>x.position||""],["Date :",x=>fmtPaper(x.date)]].forEach(([l,f])=>{
+    r=row(); r[0]=l; r[1]=f(s.ikm||{}); r[6]=l; r[7]=f(s.client1||{}); r[10]=l; r[11]=f(s.client2||{}); A.push(r); });
+  A.push(row()); r=row(); r[0]="Location: Operation Folder"; r[11]="TH-OPS-FRM-071 Rev 1"; A.push(r);
+  const ws=X.utils.aoa_to_sheet(A);
+  ws["!cols"]=[5,24,16,8,8,2,22,6,6,2,12,48].map(w=>({wch:w}));
+  const M=(r1,c1,r2,c2)=>({s:{r:r1,c:c1},e:{r:r2,c:c2}});
+  ws["!merges"]=[M(1,1,2,3),M(2,4,2,8),M(5,0,5,4),M(5,6,5,8),M(5,10,5,11),M(6,6,6,7)];
+  for(let i=0;i<n;i++) ws["!merges"].push(M(7+i,6,7+i,7));
+  const wb=X.utils.book_new(); X.utils.book_append_sheet(wb, ws, "FORM");
+  save(fileBase(w)+".xlsx", X.write(wb,{bookType:"xlsx",type:"array"}), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+}
+
+/* ---------- language + boot ---------- */
+function setLang(l){ lang=l; try{ localStorage.setItem("ikm-aws-lang",l); }catch(e){} const err=$(".err"); render(); }
+$("#lang-en").onclick=()=>setLang("en"); $("#lang-th").onclick=()=>setLang("th");
+window.addEventListener("beforeunload",e=>{ if(dirty && !RO){ e.preventDefault(); e.returnValue=""; } });
+// leaving the sheet with unsaved changes asks: Save / Don't save / Cancel
+function guardLeave(go){
+  if(!(cur && dirty && !RO)){ go(); return; }
+  const slot=$("#ov-slot");
+  slot.innerHTML=`<div class="ov" role="dialog" aria-modal="true" aria-labelledby="lv-t"><div class="dlg"><h2 id="lv-t">${esc(t("leaveT"))}</h2><p>${esc(t("leaveP"))}</p>
+    <div class="acts"><button class="btn" id="lv-c">${esc(t("cancel"))}</button><button class="btn ghost danger" id="lv-n">${esc(t("leaveNo"))}</button><button class="btn bdraft" id="lv-y">${esc(t("leaveYes"))}</button></div></div></div>`;
+  $("#lv-c").onclick=()=>slot.innerHTML="";
+  $("#lv-n").onclick=()=>{ slot.innerHTML=""; dirty=false; saveState="saved"; go(); };
+  $("#lv-y").onclick=async()=>{ slot.innerHTML=""; await flush(); if(saveState==="err"){ toast(t("notSaved")+(saveErr?" — "+saveErr:"")); return; } toast(t("keptDone")); go(); };
+  $("#lv-y").focus();
+}
+
+async function boot(){
+  render();
+  try{
+    if(await loadProfile()){ await refreshAll(true); S.phase="app"; render(); await restoreStash(); return; }
+    if(S.me){ await sb.auth.signOut(); }
+    const { data, error } = await sb.rpc("aws_needs_setup");
+    S.phase = (!error && data===true) ? "setup" : "login"; render();
+  }catch(e){ S.phase="login"; render(); }
+}
+boot();
+})();
+</script>
+</body>
+</html>
