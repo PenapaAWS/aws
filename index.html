@@ -357,6 +357,12 @@ button.att-thumb{border:0;padding:0;cursor:pointer;font:inherit;color:inherit}
 .trk .c-name small{display:block;font-size:11px;font-weight:500}
 .trk-p td{min-width:78px}
 #tf-clr[hidden]{display:none}
+.trk-scroll{max-height:calc(100vh - 170px);min-height:260px;overflow:auto;overscroll-behavior:contain}
+.trk .c-month span{position:sticky;left:236px}
+@media (max-width:560px){.trk .c-month span{left:164px}}
+.trk-nav{display:flex;gap:8px;justify-content:flex-end;margin:0 0 8px}
+.trk-nav [hidden]{display:none}
+.trk-scroll::-webkit-scrollbar{height:12px;width:12px}.trk-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:6px;border:3px solid var(--surface)}
 .trk-p .achip{padding:3px 2px}
 @media (max-width:560px){.trk-filt .tf:first-child{flex:1 1 100%}.trk-filt #tf-job,.trk-filt #tf-name{width:100%}.trk .c-name{min-width:120px;max-width:140px}.trk .c-no{min-width:32px;width:32px}.trk .c-name{left:32px}}
 .trk-filt select.inp{width:auto;min-width:92px}
@@ -486,7 +492,7 @@ const T = {
   btnDraft:"Save as draft",btnSaved:"Submit Draft",draftDone:"Saved as draft",savedDone:"Saved as Submit Draft",
   lockT:"Save and lock this work sheet?",lockP:"The client has signed. After saving you can no longer edit this sheet — only an admin can.",lockOk:"Save and lock",
   lockedNote:"Saved with client signature — locked. Only an admin can edit.",reopenNote:"Editing changes this sheet back to Draft. Press Saved again when done.",
-  showFor:"Show",everyone:"Everyone",hintBtns:"Nothing is saved until you press a button.",empN:"users",empActiveN:"with work sheets",sheetsN:"work sheets",empName:"Name",noEmp:"No users yet. An admin adds them in Settings → Users.",noEmpAdm:"No employees yet. Add them in Settings → Employees.",noEmpMatch:"No one matches this name",needInfo:"Please fill in",noTbT:"No Toolbox talk attached",noTbP:"This work sheet has no Toolbox talk photo or file. Do you want to send it anyway?",sendAnyway:"Send anyway",olderNote:"Showing work sheets of the last 30 days and any still open.",olderBtn:"Load older work sheets",purgeNote:"Approved sheets are removed automatically 30 days after the final approval. This sheet will be removed on {d} — download the PDF and files before then if you need to keep them.",attNeedSaveT:"Save as draft to attach files",attNeedSaveP:"A new work sheet must be saved as a draft before photos or files can be attached.",attSaveGo:"Save draft & attach",restoredAfterCam:"The page reloaded while the camera was open. Your typing was restored — please attach the photo again.",btnKeep:"Save changes",keptDone:"Changes saved",unsaved:"Not saved yet",leaveT:"Save changes?",leaveP:"You have changes on this work sheet that are not saved yet. Do you want to save them before leaving?",leaveYes:"Save",leaveNo:"Don't save",saveFirst:"Press Save as draft first, then attach files.",
+  showFor:"Show",everyone:"Everyone",hintBtns:"Nothing is saved until you press a button.",scrollL:"Previous days",scrollR:"Next days",todayBtn:"Today",empN:"users",empActiveN:"with work sheets",sheetsN:"work sheets",empName:"Name",noEmp:"No users yet. An admin adds them in Settings → Users.",noEmpAdm:"No employees yet. Add them in Settings → Employees.",noEmpMatch:"No one matches this name",needInfo:"Please fill in",noTbT:"No Toolbox talk attached",noTbP:"This work sheet has no Toolbox talk photo or file. Do you want to send it anyway?",sendAnyway:"Send anyway",olderNote:"Showing work sheets of the last 30 days and any still open.",olderBtn:"Load older work sheets",purgeNote:"Approved sheets are removed automatically 30 days after the final approval. This sheet will be removed on {d} — download the PDF and files before then if you need to keep them.",attNeedSaveT:"Save as draft to attach files",attNeedSaveP:"A new work sheet must be saved as a draft before photos or files can be attached.",attSaveGo:"Save draft & attach",restoredAfterCam:"The page reloaded while the camera was open. Your typing was restored — please attach the photo again.",btnKeep:"Save changes",keptDone:"Changes saved",unsaved:"Not saved yet",leaveT:"Save changes?",leaveP:"You have changes on this work sheet that are not saved yet. Do you want to save them before leaving?",leaveYes:"Save",leaveNo:"Don't save",saveFirst:"Press Save as draft first, then attach files.",
   readyT:"File ready",readyP:"Choose how to save it on this phone.",share:"Share / Save to Files",openFile:"Download / Open",lineTip:"If nothing happens inside LINE or Facebook, open this page in Safari or Chrome.",
   act_submit:"Submitted",act_approve:"Approved",act_reject:"Rejected",act_return:"Returned for revision",act_reopen:"Reopened by admin",
   addFile:"Add file",addLoc:"Add location",allSheets:"All work sheets",apprBarHint:"This work sheet is waiting for your approval.",
@@ -570,7 +576,7 @@ const T = {
   btnDraft:"บันทึกร่าง (Draft)",btnSaved:"Submit Draft",draftDone:"บันทึกร่างแล้ว",savedDone:"บันทึกเป็น Submit Draft แล้ว",
   lockT:"บันทึกและล็อกใบงานนี้?",lockP:"ลูกค้าเซ็นชื่อแล้ว หลังบันทึกคุณจะแก้ไขใบงานนี้ไม่ได้ — แก้ไขได้เฉพาะ Admin",lockOk:"บันทึกและล็อก",
   lockedNote:"บันทึกพร้อมลายเซ็นลูกค้าแล้ว — ล็อก แก้ไขได้เฉพาะ Admin",reopenNote:"การแก้ไขจะเปลี่ยนใบงานกลับเป็นฉบับร่าง แก้เสร็จแล้วกด บันทึก (Saved) อีกครั้ง",
-  showFor:"แสดง",everyone:"ทุกคน",hintBtns:"ระบบจะบันทึกเมื่อกดปุ่มเท่านั้น",empN:"ผู้ใช้งาน",empActiveN:"คนที่มีใบงาน",sheetsN:"ใบงาน",empName:"ชื่อ",noEmp:"ยังไม่มีผู้ใช้งาน Admin เพิ่มได้ที่ ตั้งค่า → ผู้ใช้",noEmpAdm:"ยังไม่มีรายชื่อพนักงาน เพิ่มได้ที่ ตั้งค่า → พนักงาน",noEmpMatch:"ไม่พบชื่อนี้",needInfo:"กรุณากรอก",noTbT:"ยังไม่ได้แนบ Toolbox talk",noTbP:"ใบงานนี้ยังไม่มีรูปหรือไฟล์ Toolbox talk ต้องการส่งต่อหรือไม่",sendAnyway:"ส่งต่อ",olderNote:"แสดงใบงาน 30 วันล่าสุด และใบที่ยังไม่ปิดงาน",olderBtn:"โหลดใบงานเก่ากว่านี้",purgeNote:"ใบงานที่อนุมัติครบแล้วจะถูกลบออกจากระบบอัตโนมัติหลังอนุมัติ 30 วัน ใบงานนี้จะถูกลบวันที่ {d} หากต้องการเก็บไว้ กรุณาดาวน์โหลด PDF และไฟล์แนบก่อน",attNeedSaveT:"ต้องบันทึกร่างก่อนแนบไฟล์",attNeedSaveP:"ใบงานใหม่ต้องบันทึกเป็นฉบับร่าง (Draft) ก่อน จึงจะถ่ายรูปหรือแนบไฟล์ได้",attSaveGo:"บันทึกร่างและแนบไฟล์",restoredAfterCam:"หน้าเว็บโหลดใหม่ระหว่างเปิดกล้อง ระบบกู้ข้อมูลที่พิมพ์ไว้ให้แล้ว กรุณาถ่าย/แนบรูปอีกครั้ง",btnKeep:"บันทึกการแก้ไข",keptDone:"บันทึกการแก้ไขแล้ว",unsaved:"ยังไม่ได้บันทึก",leaveT:"ต้องการบันทึกหรือไม่?",leaveP:"ใบงานนี้มีการแก้ไขที่ยังไม่ได้บันทึก ต้องการบันทึกก่อนออกหรือไม่",leaveYes:"บันทึก",leaveNo:"ไม่บันทึก",saveFirst:"กรุณากดบันทึกร่าง (Draft) ก่อน แล้วจึงแนบไฟล์",
+  showFor:"แสดง",everyone:"ทุกคน",hintBtns:"ระบบจะบันทึกเมื่อกดปุ่มเท่านั้น",scrollL:"วันก่อนหน้า",scrollR:"วันถัดไป",todayBtn:"วันนี้",empN:"ผู้ใช้งาน",empActiveN:"คนที่มีใบงาน",sheetsN:"ใบงาน",empName:"ชื่อ",noEmp:"ยังไม่มีผู้ใช้งาน Admin เพิ่มได้ที่ ตั้งค่า → ผู้ใช้",noEmpAdm:"ยังไม่มีรายชื่อพนักงาน เพิ่มได้ที่ ตั้งค่า → พนักงาน",noEmpMatch:"ไม่พบชื่อนี้",needInfo:"กรุณากรอก",noTbT:"ยังไม่ได้แนบ Toolbox talk",noTbP:"ใบงานนี้ยังไม่มีรูปหรือไฟล์ Toolbox talk ต้องการส่งต่อหรือไม่",sendAnyway:"ส่งต่อ",olderNote:"แสดงใบงาน 30 วันล่าสุด และใบที่ยังไม่ปิดงาน",olderBtn:"โหลดใบงานเก่ากว่านี้",purgeNote:"ใบงานที่อนุมัติครบแล้วจะถูกลบออกจากระบบอัตโนมัติหลังอนุมัติ 30 วัน ใบงานนี้จะถูกลบวันที่ {d} หากต้องการเก็บไว้ กรุณาดาวน์โหลด PDF และไฟล์แนบก่อน",attNeedSaveT:"ต้องบันทึกร่างก่อนแนบไฟล์",attNeedSaveP:"ใบงานใหม่ต้องบันทึกเป็นฉบับร่าง (Draft) ก่อน จึงจะถ่ายรูปหรือแนบไฟล์ได้",attSaveGo:"บันทึกร่างและแนบไฟล์",restoredAfterCam:"หน้าเว็บโหลดใหม่ระหว่างเปิดกล้อง ระบบกู้ข้อมูลที่พิมพ์ไว้ให้แล้ว กรุณาถ่าย/แนบรูปอีกครั้ง",btnKeep:"บันทึกการแก้ไข",keptDone:"บันทึกการแก้ไขแล้ว",unsaved:"ยังไม่ได้บันทึก",leaveT:"ต้องการบันทึกหรือไม่?",leaveP:"ใบงานนี้มีการแก้ไขที่ยังไม่ได้บันทึก ต้องการบันทึกก่อนออกหรือไม่",leaveYes:"บันทึก",leaveNo:"ไม่บันทึก",saveFirst:"กรุณากดบันทึกร่าง (Draft) ก่อน แล้วจึงแนบไฟล์",
   readyT:"ไฟล์พร้อมแล้ว",readyP:"เลือกวิธีบันทึกไฟล์บนมือถือ",share:"แชร์ / บันทึกลงไฟล์",openFile:"ดาวน์โหลด / เปิดไฟล์",lineTip:"ถ้าเปิดผ่าน LINE หรือ Facebook แล้วไม่มีอะไรเกิดขึ้น ให้เปิดหน้านี้ด้วย Safari หรือ Chrome",
   act_submit:"ส่งอนุมัติ",act_approve:"อนุมัติ",act_reject:"ไม่อนุมัติ",act_return:"ส่งกลับแก้ไข",act_reopen:"Admin เปิดให้แก้ไขใหม่",
   addFile:"เพิ่มไฟล์",addLoc:"เพิ่ม Location",allSheets:"ใบงานทั้งหมด",apprBarHint:"ใบงานนี้รอการอนุมัติจากคุณ",
@@ -1780,8 +1786,9 @@ function renderTrack(){
       <button class="btn sm ghost" id="tf-clr" ${filtered?"":"hidden"}>${I.x}${esc(t("clearF"))}</button>
     </div>
     ${emps.length?"":`<div class="note">${esc(t("noEmp"))}</div>`}
-    <div class="trk-wrap"><table class="trk trk-p"><thead>
-      <tr><th class="c-no" rowspan="2">NO.</th><th class="c-name" rowspan="2">NAME</th><th class="c-month" colspan="${days.length}">${esc(MONTHS_L[L][per.month-1])} ${L==="th"?per.year+543:per.year}</th></tr>
+    <div class="trk-nav"><button class="btn sm" id="tr-left" aria-label="${esc(t("scrollL"))}">‹ ${esc(t("scrollL"))}</button><button class="btn sm" id="tr-today">${esc(t("todayBtn"))}</button><button class="btn sm" id="tr-right" aria-label="${esc(t("scrollR"))}">${esc(t("scrollR"))} ›</button></div>
+    <div class="trk-wrap trk-scroll" id="trk-scroll"><table class="trk trk-p"><thead>
+      <tr><th class="c-no" rowspan="2">NO.</th><th class="c-name" rowspan="2">NAME</th><th class="c-month" colspan="${days.length}"><span>${esc(MONTHS_L[L][per.month-1])} ${L==="th"?per.year+543:per.year}</span></th></tr>
       <tr class="r-days">${days.map(d=>`<th class="${cls(d)}"><small>${dname[wd(d)]}</small>${d}</th>`).join("")}</tr></thead><tbody>
     ${rows.map((r,ri)=>`<tr data-name="${esc(personKey(r.e.value))}"><td class="c-no">${ri+1}</td><th class="c-name"><span class="jn">${esc(r.e.value)}</span>${r.e.position?`<small class="muted">${esc(r.e.position)}</small>`:""}</th>
       ${r.cells.map((c,i)=>`<td class="${cls(days[i])} ${c.length?"has":""}">${c.map(chip).join("")}</td>`).join("")}</tr>`).join("")}
@@ -1804,7 +1811,7 @@ function wireTrack(){
   const reload=async()=>{ await loadTrack(); if(view.tm) await loadActual(view.tm); renderTrack(); };
   const rf=$("#tr-rf"); if(rf) rf.onclick=async()=>{ await refreshAll(true); await reload(); };
   app.querySelectorAll("[data-y]").forEach(b=>b.onclick=async()=>{ view.ty=+b.dataset.y; view.tm=null; await reload(); });
-  app.querySelectorAll("[data-m]").forEach(b=>b.onclick=async()=>{ view.tm=b.dataset.m; view.td1=0; view.td2=0; await loadActual(view.tm); renderTrack(); });
+  app.querySelectorAll("[data-m]").forEach(b=>b.onclick=async()=>{ view.trkX=null; view.tm=b.dataset.m; view.td1=0; view.td2=0; await loadActual(view.tm); renderTrack(); });
   app.querySelectorAll("[data-sheet]").forEach(b=>b.onclick=()=>openSheet(b.dataset.sheet));
   // name search: filters rows as you type and suggests names from Admin settings
   const fn=$("#tf-name"), box=$("#tf-ac");
@@ -1828,6 +1835,20 @@ function wireTrack(){
       else if(ev.key==="Enter"){ ev.preventDefault(); if(idx>=0) pick(idx); else hide(); return; }
       else if(ev.key==="Escape"){ hide(); return; } else return;
       box.querySelectorAll(".ac-it").forEach((el,k)=>el.classList.toggle("on",k===idx)); });
+  }
+  // the table scrolls inside its own box, so the left–right scrollbar is always on screen; buttons move a week at a time
+  const sc=$("#trk-scroll");
+  if(sc){
+    const step=()=>{ const th=sc.querySelector("thead tr.r-days th"); return (th?th.offsetWidth:80)*7; };
+    const l=$("#tr-left"), r=$("#tr-right"), td=$("#tr-today");
+    if(l) l.onclick=()=>sc.scrollBy({left:-step(),behavior:"smooth"});
+    if(r) r.onclick=()=>sc.scrollBy({left:step(),behavior:"smooth"});
+    const goToday=smooth=>{ const c=sc.querySelector("thead tr.r-days th.td"); if(!c) return; const fixed=(sc.querySelector("thead .c-no")?.offsetWidth||0)+(sc.querySelector("thead .c-name")?.offsetWidth||0);
+      const x=sc.scrollLeft + c.getBoundingClientRect().left - sc.getBoundingClientRect().left - fixed - 8;
+      sc.scrollTo({left:Math.max(0,x), behavior:smooth?"smooth":"auto"}); };
+    if(td){ td.hidden=!sc.querySelector("thead tr.r-days th.td"); td.onclick=()=>goToday(true); }
+    if(view.trkX!=null) sc.scrollLeft=view.trkX; else goToday(false);
+    sc.addEventListener("scroll",()=>{ view.trkX=sc.scrollLeft; },{passive:true});
   }
   const fd1=$("#tf-d1"), fd2=$("#tf-d2");
   if(fd1) fd1.onchange=()=>{ view.td1=+fd1.value; if(+fd2.value<view.td1) view.td2=view.td1; renderTrack(); };
