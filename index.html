@@ -113,7 +113,7 @@ svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-l
 .mode-strip b{font-weight:700}
 .mode-strip.m-manual{background:#EFF4FF}.mode-strip.m-manual b{color:#1D4ED8}
 .mode-strip.m-paper{background:#FFF4E5}.mode-strip.m-paper b{color:#B45309}
-.ex-opts{display:grid;gap:10px;margin:6px 0 14px}.ex-opt{display:flex;flex-direction:column;gap:4px;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:12px 14px;cursor:pointer;font:inherit;color:var(--ink)}.ex-opt:hover,.ex-opt:focus-visible{border-color:#D32F2F;box-shadow:0 0 0 3px rgba(211,47,47,.12)}.ex-opt b{font-size:15px}.ex-opt span{font-size:13px;color:var(--muted)}
+.ex-opts{display:grid;gap:10px;margin:6px 0 14px}.ex-opt{display:flex;flex-direction:column;gap:4px;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:12px 14px;cursor:pointer;font:inherit;color:var(--ink)}.ex-opt:hover,.ex-opt:focus-visible{border-color:#D32F2F;box-shadow:0 0 0 3px rgba(211,47,47,.12)}.ex-opt b{font-size:15px}.ex-tb{margin:2px 4px 0;font-size:13.5px}.ex-opt span{font-size:13px;color:var(--muted)}
 .btn.bpdf{background:#D32F2F;border-color:#D32F2F;color:#fff}.btn.bpdf:hover{filter:brightness(1.08)}
 .pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--f-ui);font-size:11.5px;font-weight:600;border-radius:999px;padding:1px 8px;letter-spacing:.02em}
 .pill.draft{background:var(--warn-soft);color:var(--warn)}
@@ -498,7 +498,7 @@ const T = {
   btnDraft:"Save as draft",btnSaved:"Submit Draft",draftDone:"Saved as draft",savedDone:"Saved as Submit Draft",
   lockT:"Save and lock this work sheet?",lockP:"The client has signed. After saving you can no longer edit this sheet — only an admin can.",lockOk:"Save and lock",
   lockedNote:"Saved with client signature — locked. Only an admin can edit.",reopenNote:"Editing changes this sheet back to Draft. Press Saved again when done.",
-  showFor:"Show",everyone:"Everyone",hintBtns:"Nothing is saved until you press a button.",exSumT:"Summary list",exSumP:"One table of the work sheets shown (date, job, client, project, type, status).",exFullT:"Full work sheets",exFullP:"Every work sheet as its full form with signatures, one per page. Paper sheets include their scanned pages. Takes longer for many sheets.",exPreparing:"Preparing PDF…",exMaking:"Making PDF {n} / {t}…",exPaperNote:"the filled paper form follows on the next page(s)",exPdfAtt:"attached as PDF files (not included)",exSkipped:"{n} work sheet(s) could not be opened and were skipped",exportPdf:"Export to PDF",scrollL:"Previous days",scrollR:"Next days",todayBtn:"Today",empN:"users",empActiveN:"with work sheets",sheetsN:"work sheets",empName:"Name",noEmp:"No users yet. An admin adds them in Settings → Users.",noEmpAdm:"No employees yet. Add them in Settings → Employees.",noEmpMatch:"No one matches this name",needInfo:"Please fill in",noTbT:"No Toolbox talk attached",noTbP:"This work sheet has no Toolbox talk photo or file. Do you want to send it anyway?",sendAnyway:"Send anyway",olderNote:"Showing work sheets of the last 30 days and any still open.",olderBtn:"Load older work sheets",purgeNote:"Approved sheets are removed automatically 30 days after the final approval. This sheet will be removed on {d} — download the PDF and files before then if you need to keep them.",attNeedSaveT:"Save as draft to attach files",attNeedSaveP:"A new work sheet must be saved as a draft before photos or files can be attached.",attSaveGo:"Save draft & attach",restoredAfterCam:"The page reloaded while the camera was open. Your typing was restored — please attach the photo again.",btnKeep:"Save changes",keptDone:"Changes saved",unsaved:"Not saved yet",leaveT:"Save changes?",leaveP:"You have changes on this work sheet that are not saved yet. Do you want to save them before leaving?",leaveYes:"Save",leaveNo:"Don't save",saveFirst:"Press Save as draft first, then attach files.",
+  showFor:"Show",everyone:"Everyone",hintBtns:"Nothing is saved until you press a button.",exWithTb:"Include Toolbox talk photos (with full work sheets)",exTbNote:"{n} photo page(s) follow",exNoTb:"no Toolbox talk attached",exSumT:"Summary list",exSumP:"One table of the work sheets shown (date, job, client, project, type, status).",exFullT:"Full work sheets",exFullP:"Every work sheet as its full form with signatures, one per page, followed by its paper-form scans and Toolbox talk photos. Takes longer for many sheets.",exPreparing:"Preparing PDF…",exMaking:"Making PDF {n} / {t}…",exPaperNote:"the filled paper form follows on the next page(s)",exPdfAtt:"attached as PDF files (not included)",exSkipped:"{n} work sheet(s) could not be opened and were skipped",exportPdf:"Export to PDF",scrollL:"Previous days",scrollR:"Next days",todayBtn:"Today",empN:"users",empActiveN:"with work sheets",sheetsN:"work sheets",empName:"Name",noEmp:"No users yet. An admin adds them in Settings → Users.",noEmpAdm:"No employees yet. Add them in Settings → Employees.",noEmpMatch:"No one matches this name",needInfo:"Please fill in",noTbT:"No Toolbox talk attached",noTbP:"This work sheet has no Toolbox talk photo or file. Do you want to send it anyway?",sendAnyway:"Send anyway",olderNote:"Showing work sheets of the last 30 days and any still open.",olderBtn:"Load older work sheets",purgeNote:"Approved sheets are removed automatically 30 days after the final approval. This sheet will be removed on {d} — download the PDF and files before then if you need to keep them.",attNeedSaveT:"Save as draft to attach files",attNeedSaveP:"A new work sheet must be saved as a draft before photos or files can be attached.",attSaveGo:"Save draft & attach",restoredAfterCam:"The page reloaded while the camera was open. Your typing was restored — please attach the photo again.",btnKeep:"Save changes",keptDone:"Changes saved",unsaved:"Not saved yet",leaveT:"Save changes?",leaveP:"You have changes on this work sheet that are not saved yet. Do you want to save them before leaving?",leaveYes:"Save",leaveNo:"Don't save",saveFirst:"Press Save as draft first, then attach files.",
   readyT:"File ready",readyP:"Choose how to save it on this phone.",share:"Share / Save to Files",openFile:"Download / Open",lineTip:"If nothing happens inside LINE or Facebook, open this page in Safari or Chrome.",
   act_submit:"Submitted",act_approve:"Approved",act_reject:"Rejected",act_return:"Returned for revision",act_reopen:"Reopened by admin",
   addFile:"Add file",addLoc:"Add location",allSheets:"All work sheets",apprBarHint:"This work sheet is waiting for your approval.",
@@ -582,7 +582,7 @@ const T = {
   btnDraft:"บันทึกร่าง (Draft)",btnSaved:"Submit Draft",draftDone:"บันทึกร่างแล้ว",savedDone:"บันทึกเป็น Submit Draft แล้ว",
   lockT:"บันทึกและล็อกใบงานนี้?",lockP:"ลูกค้าเซ็นชื่อแล้ว หลังบันทึกคุณจะแก้ไขใบงานนี้ไม่ได้ — แก้ไขได้เฉพาะ Admin",lockOk:"บันทึกและล็อก",
   lockedNote:"บันทึกพร้อมลายเซ็นลูกค้าแล้ว — ล็อก แก้ไขได้เฉพาะ Admin",reopenNote:"การแก้ไขจะเปลี่ยนใบงานกลับเป็นฉบับร่าง แก้เสร็จแล้วกด บันทึก (Saved) อีกครั้ง",
-  showFor:"แสดง",everyone:"ทุกคน",hintBtns:"ระบบจะบันทึกเมื่อกดปุ่มเท่านั้น",exSumT:"ตารางสรุปรายการ",exSumP:"ตารางเดียวของใบงานที่แสดงอยู่ (วันที่ งาน ลูกค้า โครงการ รูปแบบ สถานะ)",exFullT:"ใบงานเต็มทุกใบ",exFullP:"แบบฟอร์มใบงานเต็มพร้อมลายเซ็น ใบละหน้า แบบ Paper จะมีรูปใบงานกระดาษต่อท้าย ถ้ามีหลายใบจะใช้เวลานานขึ้น",exPreparing:"กำลังเตรียม PDF…",exMaking:"กำลังสร้าง PDF {n} / {t}…",exPaperNote:"รูปใบงานกระดาษอยู่ในหน้าถัดไป",exPdfAtt:"ไฟล์ที่แนบเป็น PDF (ไม่ได้รวมไว้)",exSkipped:"มีใบงาน {n} ใบที่เปิดไม่ได้ จึงข้ามไป",exportPdf:"Export to PDF",scrollL:"วันก่อนหน้า",scrollR:"วันถัดไป",todayBtn:"วันนี้",empN:"ผู้ใช้งาน",empActiveN:"คนที่มีใบงาน",sheetsN:"ใบงาน",empName:"ชื่อ",noEmp:"ยังไม่มีผู้ใช้งาน Admin เพิ่มได้ที่ ตั้งค่า → ผู้ใช้",noEmpAdm:"ยังไม่มีรายชื่อพนักงาน เพิ่มได้ที่ ตั้งค่า → พนักงาน",noEmpMatch:"ไม่พบชื่อนี้",needInfo:"กรุณากรอก",noTbT:"ยังไม่ได้แนบ Toolbox talk",noTbP:"ใบงานนี้ยังไม่มีรูปหรือไฟล์ Toolbox talk ต้องการส่งต่อหรือไม่",sendAnyway:"ส่งต่อ",olderNote:"แสดงใบงาน 30 วันล่าสุด และใบที่ยังไม่ปิดงาน",olderBtn:"โหลดใบงานเก่ากว่านี้",purgeNote:"ใบงานที่อนุมัติครบแล้วจะถูกลบออกจากระบบอัตโนมัติหลังอนุมัติ 30 วัน ใบงานนี้จะถูกลบวันที่ {d} หากต้องการเก็บไว้ กรุณาดาวน์โหลด PDF และไฟล์แนบก่อน",attNeedSaveT:"ต้องบันทึกร่างก่อนแนบไฟล์",attNeedSaveP:"ใบงานใหม่ต้องบันทึกเป็นฉบับร่าง (Draft) ก่อน จึงจะถ่ายรูปหรือแนบไฟล์ได้",attSaveGo:"บันทึกร่างและแนบไฟล์",restoredAfterCam:"หน้าเว็บโหลดใหม่ระหว่างเปิดกล้อง ระบบกู้ข้อมูลที่พิมพ์ไว้ให้แล้ว กรุณาถ่าย/แนบรูปอีกครั้ง",btnKeep:"บันทึกการแก้ไข",keptDone:"บันทึกการแก้ไขแล้ว",unsaved:"ยังไม่ได้บันทึก",leaveT:"ต้องการบันทึกหรือไม่?",leaveP:"ใบงานนี้มีการแก้ไขที่ยังไม่ได้บันทึก ต้องการบันทึกก่อนออกหรือไม่",leaveYes:"บันทึก",leaveNo:"ไม่บันทึก",saveFirst:"กรุณากดบันทึกร่าง (Draft) ก่อน แล้วจึงแนบไฟล์",
+  showFor:"แสดง",everyone:"ทุกคน",hintBtns:"ระบบจะบันทึกเมื่อกดปุ่มเท่านั้น",exWithTb:"รวมรูป Toolbox talk ด้วย (สำหรับแบบใบงานเต็ม)",exTbNote:"รูปอยู่ในหน้าถัดไป {n} หน้า",exNoTb:"ไม่ได้แนบ Toolbox talk",exSumT:"ตารางสรุปรายการ",exSumP:"ตารางเดียวของใบงานที่แสดงอยู่ (วันที่ งาน ลูกค้า โครงการ รูปแบบ สถานะ)",exFullT:"ใบงานเต็มทุกใบ",exFullP:"แบบฟอร์มใบงานเต็มพร้อมลายเซ็น ใบละหน้า ต่อท้ายด้วยรูปใบงานกระดาษ (แบบ Paper) และรูป Toolbox talk ถ้ามีหลายใบจะใช้เวลานานขึ้น",exPreparing:"กำลังเตรียม PDF…",exMaking:"กำลังสร้าง PDF {n} / {t}…",exPaperNote:"รูปใบงานกระดาษอยู่ในหน้าถัดไป",exPdfAtt:"ไฟล์ที่แนบเป็น PDF (ไม่ได้รวมไว้)",exSkipped:"มีใบงาน {n} ใบที่เปิดไม่ได้ จึงข้ามไป",exportPdf:"Export to PDF",scrollL:"วันก่อนหน้า",scrollR:"วันถัดไป",todayBtn:"วันนี้",empN:"ผู้ใช้งาน",empActiveN:"คนที่มีใบงาน",sheetsN:"ใบงาน",empName:"ชื่อ",noEmp:"ยังไม่มีผู้ใช้งาน Admin เพิ่มได้ที่ ตั้งค่า → ผู้ใช้",noEmpAdm:"ยังไม่มีรายชื่อพนักงาน เพิ่มได้ที่ ตั้งค่า → พนักงาน",noEmpMatch:"ไม่พบชื่อนี้",needInfo:"กรุณากรอก",noTbT:"ยังไม่ได้แนบ Toolbox talk",noTbP:"ใบงานนี้ยังไม่มีรูปหรือไฟล์ Toolbox talk ต้องการส่งต่อหรือไม่",sendAnyway:"ส่งต่อ",olderNote:"แสดงใบงาน 30 วันล่าสุด และใบที่ยังไม่ปิดงาน",olderBtn:"โหลดใบงานเก่ากว่านี้",purgeNote:"ใบงานที่อนุมัติครบแล้วจะถูกลบออกจากระบบอัตโนมัติหลังอนุมัติ 30 วัน ใบงานนี้จะถูกลบวันที่ {d} หากต้องการเก็บไว้ กรุณาดาวน์โหลด PDF และไฟล์แนบก่อน",attNeedSaveT:"ต้องบันทึกร่างก่อนแนบไฟล์",attNeedSaveP:"ใบงานใหม่ต้องบันทึกเป็นฉบับร่าง (Draft) ก่อน จึงจะถ่ายรูปหรือแนบไฟล์ได้",attSaveGo:"บันทึกร่างและแนบไฟล์",restoredAfterCam:"หน้าเว็บโหลดใหม่ระหว่างเปิดกล้อง ระบบกู้ข้อมูลที่พิมพ์ไว้ให้แล้ว กรุณาถ่าย/แนบรูปอีกครั้ง",btnKeep:"บันทึกการแก้ไข",keptDone:"บันทึกการแก้ไขแล้ว",unsaved:"ยังไม่ได้บันทึก",leaveT:"ต้องการบันทึกหรือไม่?",leaveP:"ใบงานนี้มีการแก้ไขที่ยังไม่ได้บันทึก ต้องการบันทึกก่อนออกหรือไม่",leaveYes:"บันทึก",leaveNo:"ไม่บันทึก",saveFirst:"กรุณากดบันทึกร่าง (Draft) ก่อน แล้วจึงแนบไฟล์",
   readyT:"ไฟล์พร้อมแล้ว",readyP:"เลือกวิธีบันทึกไฟล์บนมือถือ",share:"แชร์ / บันทึกลงไฟล์",openFile:"ดาวน์โหลด / เปิดไฟล์",lineTip:"ถ้าเปิดผ่าน LINE หรือ Facebook แล้วไม่มีอะไรเกิดขึ้น ให้เปิดหน้านี้ด้วย Safari หรือ Chrome",
   act_submit:"ส่งอนุมัติ",act_approve:"อนุมัติ",act_reject:"ไม่อนุมัติ",act_return:"ส่งกลับแก้ไข",act_reopen:"Admin เปิดให้แก้ไขใหม่",
   addFile:"เพิ่มไฟล์",addLoc:"เพิ่ม Location",allSheets:"ใบงานทั้งหมด",apprBarHint:"ใบงานนี้รอการอนุมัติจากคุณ",
@@ -1134,11 +1134,12 @@ function exportChoice(){
   const slot=$("#ov-slot");
   slot.innerHTML=`<div class="ov" role="dialog" aria-modal="true" aria-labelledby="ex-t"><div class="dlg"><h2 id="ex-t">Export to PDF · ${n} ${esc(t("total"))}</h2>
     <div class="ex-opts"><button class="ex-opt" id="ex-sum"><b>${esc(t("exSumT"))}</b><span>${esc(t("exSumP"))}</span></button>
-    <button class="ex-opt" id="ex-full"><b>${esc(t("exFullT"))}</b><span>${esc(t("exFullP"))}</span></button></div>
+    <button class="ex-opt" id="ex-full"><b>${esc(t("exFullT"))}</b><span>${esc(t("exFullP"))}</span></button>
+    <label class="chk ex-tb"><input type="checkbox" id="ex-tb" checked> ${esc(t("exWithTb"))}</label></div>
     <div class="acts"><button class="btn" id="ex-c">${esc(t("cancel"))}</button></div></div></div>`;
   $("#ex-c").onclick=()=>slot.innerHTML="";
   $("#ex-sum").onclick=()=>{ slot.innerHTML=""; listPdf(); };
-  $("#ex-full").onclick=()=>{ slot.innerHTML=""; fullPdf(); };
+  $("#ex-full").onclick=()=>{ const tb=$("#ex-tb").checked; slot.innerHTML=""; fullPdf(tb); };
   $("#ex-sum").focus();
 }
 const blobToDataURL = b => new Promise((res,rej)=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=()=>rej(fr.error); fr.readAsDataURL(b); });
@@ -1154,7 +1155,7 @@ async function attImageData(a){
   c.getContext("2d").drawImage(im,0,0,c.width,c.height); return { url:c.toDataURL("image/jpeg",0.85), w:c.width, h:c.height };
 }
 // Export every work sheet in the list as its full form (one page each, with signatures); Paper sheets add their scanned pages
-async function fullPdf(){
+async function fullPdf(withTb){
   const rows=LIST_ROWS.rows||[]; if(!rows.length){ toast(t("noMatch")); return; }
   busy(true, t("exPreparing"));
   let h2c, jsPDF;
@@ -1176,15 +1177,18 @@ async function fullPdf(){
       const part=ids.slice(i,i+10);
       const [full, att] = await Promise.all([
         sb.from("aws_worksheets").select("*").in("id", part),
-        sb.from("aws_attachments").select("id, sheet_id, kind, path, name, mime, created_at").in("sheet_id", part).in("kind", ["paper","paper_draft"]).order("created_at")]);
+        sb.from("aws_attachments").select("id, sheet_id, kind, path, name, mime, created_at").in("sheet_id", part).in("kind", withTb?["paper","paper_draft","toolbox"]:["paper","paper_draft"]).order("created_at")]);
       if(full.error) throw full.error;
       const byId={}; full.data.forEach(r=>byId[r.id]=rowToSheet(r));
       for(const id of part){
         const w=byId[id]; if(!w){ skipped++; continue; }
         busy(true, t("exMaking").replace("{n}", ids.indexOf(id)+1).replace("{t}", ids.length));
-        const papers=(att.data||[]).filter(a=>a.sheet_id===id);
-        const pdfFiles=papers.filter(a=>!/^image\//.test(a.mime)||/hei[cf]/.test(a.mime));
-        const note = w.mode==="paper" ? `<div style="margin-top:6px;font-size:12px;color:#7A3E00"><b>Paper</b> — ${esc(t("exPaperNote"))}${pdfFiles.length?" · "+esc(t("exPdfAtt"))+": "+pdfFiles.map(a=>esc(a.name)).join(", "):""}</div>` : "";
+        const mine=(att.data||[]).filter(a=>a.sheet_id===id);
+        const notImg = a => !/^image\//.test(a.mime) || /hei[cf]/.test(a.mime);
+        const papers=mine.filter(a=>a.kind!=="toolbox"), tbs=mine.filter(a=>a.kind==="toolbox");
+        const pdfFiles=papers.filter(notImg), tbPdf=tbs.filter(notImg);
+        const note = (w.mode==="paper" ? `<div style="margin-top:6px;font-size:12px;color:#7A3E00"><b>Paper</b> — ${esc(t("exPaperNote"))}${pdfFiles.length?" · "+esc(t("exPdfAtt"))+": "+pdfFiles.map(a=>esc(a.name)).join(", "):""}</div>` : "")
+          + (withTb ? `<div style="margin-top:4px;font-size:12px;color:#1F6B3A"><b>Toolbox talk</b> — ${tbs.length ? esc(t("exTbNote").replace("{n}", tbs.length-tbPdf.length)) + (tbPdf.length?" · "+esc(t("exPdfAtt"))+": "+tbPdf.map(a=>esc(a.name)).join(", "):"") : esc(t("exNoTb"))}</div>` : "");
         shell.innerHTML=`<div class="pdfsrc" style="position:absolute;left:0;top:0;width:1123px;background:#fff;padding:18px 22px;color:#111"><style>${PF_CSS(".pdfsrc ")}</style>${formHTML(w)}${note}</div>`;
         const host=shell.firstChild;
         await Promise.all([...host.querySelectorAll("img")].map(im=>im.complete?0:new Promise(r=>{im.onload=im.onerror=r;})));
@@ -1192,7 +1196,7 @@ async function fullPdf(){
         const ratio=canvas.width/canvas.height; let cw=W-2*m, ch=cw/ratio; if(ch>H-2*m){ ch=H-2*m; cw=ch*ratio; }
         addPage(); pdf.addImage(canvas.toDataURL("image/jpeg",0.88),"JPEG",(W-cw)/2,m,cw,ch);
         // Paper sheets: the scanned paper form images follow, one per page
-        for(const a of papers.filter(x=>!pdfFiles.includes(x))){
+        for(const a of [...papers.filter(x=>!pdfFiles.includes(x)), ...tbs.filter(x=>!tbPdf.includes(x))]){
           try{ const im=await attImageData(a); if(!im) continue;
             const portrait=im.h>im.w; const PW=portrait?210:297, PH=portrait?297:210;
             let iw=PW-2*m, ih=iw*im.h/im.w; if(ih>PH-2*m){ ih=PH-2*m; iw=ih*im.w/im.h; }
