@@ -363,6 +363,7 @@ button.att-thumb{border:0;padding:0;cursor:pointer;font:inherit;color:inherit}
 .trk .c-name small{display:block;font-size:11px;font-weight:500}
 .trk-p td{min-width:78px}
 #tf-clr[hidden]{display:none}
+.m-ver{font-size:11px;color:var(--muted);padding:6px 12px 2px;font-family:var(--f-num)}
 .trk-p td.nosend{background:#FDECEC;box-shadow:inset 0 0 0 1px #F5B5B5}
 .trk-p td.dim .achip{opacity:.35}
 .trk-scroll{max-height:calc(100vh - 170px);min-height:260px;overflow:auto;overscroll-behavior:contain}
@@ -1013,7 +1014,7 @@ function toggleMenu(){
   if(open){ open.remove(); $("#me-btn").setAttribute("aria-expanded","false"); return; }
   const pop=document.createElement("div"); pop.className="menu-pop";
   pop.innerHTML=`<div class="who-line"><b class="m-n"></b><br><span class="m-u"></span></div>
-    <button id="m-pw">${esc(t("changePw"))}</button><button id="m-out">${esc(t("logout"))}</button>`;
+    <button id="m-pw">${esc(t("changePw"))}</button><button id="m-out">${esc(t("logout"))}</button><div class="m-ver">${APP_VERSION}</div>`;
   pop.querySelector(".m-n").textContent=S.profile.full_name||S.profile.username;
   pop.querySelector(".m-u").textContent="@"+S.profile.username;
   host.appendChild(pop); $("#me-btn").setAttribute("aria-expanded","true");
@@ -1404,6 +1405,7 @@ function locField(){
   const v=sheetLoc(cur)||""; const lock = RO || !OPEN_ST.includes(cur.status||"draft");
   return `<div class="field"><label for="f-loc">${esc(t("location"))}</label><select class="inp" id="f-loc" ${lock?"disabled":""}>${opts.length>1&&!v?`<option value="">${esc(t("pickLoc"))}</option>`:""}${opts.map(l=>`<option value="${esc(l.id)}" ${v===l.id?"selected":""}>${esc(l.name)}</option>`).join("")}</select></div>`;
 }
+const APP_VERSION="v2026.11.06";   // shown in the account menu, to check which version a phone or browser has
 const OTHER="__other__";
 const empOpen={};
 function empPicker(m,i,ro){
@@ -2333,3 +2335,4 @@ boot();
 </script>
 </body>
 </html>
+
